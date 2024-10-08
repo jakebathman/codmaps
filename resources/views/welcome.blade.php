@@ -18,9 +18,9 @@
 
 </head>
 
-<body class="h-screen w-full bg-white dark:bg-black">
+<body class="h-dvh w-full bg-white dark:bg-black">
     <div
-        class="h-screen w-full bg-gradient-to-b from-indigo-950/20 via-purple-950/20 to-pink-950/20 dark:text-purple-100 dark:bg-gradient-to-b dark:from-indigo-950/50 dark:via-purple-950/50 dark:to-pink-950/50">
+        class="h-dvh w-full bg-gradient-to-b from-indigo-950/20 via-purple-950/20 to-pink-950/20 dark:text-purple-100 dark:bg-gradient-to-b dark:from-indigo-950/50 dark:via-purple-950/50 dark:to-pink-950/50">
 
         <div
             x-data="randomizer"
