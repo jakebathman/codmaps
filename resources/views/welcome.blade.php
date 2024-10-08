@@ -18,9 +18,22 @@
 
 </head>
 
-<body class="h-screen w-full">
-    <div x-data="randomizer" class="flex flex-col justify-center items-center h-full">
-        <div class="text-3xl font-bold" x-text="selected?.name"></div>
+<body class="h-screen w-full dark:text-white dark:bg-gray-900">
+    <div
+        x-data="randomizer"
+        class="flex flex-col justify-center items-center h-full p-6"
+    >
+        <div
+            class="text-4xl lg:text-6xl font-bold text-center pb-6"
+            x-text="selected?.name"
+        ></div>
+        <div class="rounded-xl overflow-hidden">
+            <img
+                :src="imageSrc"
+                class="object-cover h-screen sm:h-80 w-[640px] lg:w-screen lg:h-[620px] mx-auto"
+                alt="Map Image"
+            />
+        </div>
     </div>
 </body>
 <script>
@@ -37,6 +50,10 @@
             roll() {
                 const randomIndex = Math.floor(Math.random() * this.maps.length)
                 this.selected = this.maps[randomIndex]
+            },
+
+            imageSrc() {
+                return '/images/' + this.selected?.image
             }
         }))
     })
