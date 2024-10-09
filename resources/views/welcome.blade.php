@@ -58,7 +58,7 @@
                     <button
                         @click="toggleFilter(filter)"
                         x-text="filter"
-                        class="rounded-lg font-semibold bg-purple-950/5 text-gray-950/40 dark:bg-white/5 dark:text-purple-300/50 text-xl tracking-wide px-2 py-1 mr-1 sm:px-4 sm:py-2.5 sm:mr-2"
+                        class="rounded-lg font-semibold bg-purple-950/5 text-gray-950/40 dark:bg-white/5 dark:text-purple-300/50 text-md sm:text-xl tracking-wide px-1.5 py-0.5 mr-1 sm:px-4 sm:py-2.5 sm:mr-2"
                         :class="{ 'bg-purple-950 text-gray-50 dark:bg-purple-950 dark:text-white': filterIsActive(filter) }"
                     ></button>
                 </template>
