@@ -3,5 +3,10 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome', ['maps' => config('maps')]);
+    $config = config('maps');
+    return view('welcome', [
+        'maps' => $config['maps'],
+        'filters' => $config['filters'],
+        'games' => $config['games'],
+    ]);
 });
