@@ -74,22 +74,27 @@
             <div
                 class="rounded-xl relative h-full sm:h-auto"
                 x-show="!noPossibleMaps"
+                style="will-change: filter;"
             >
                 <img
                     :src="imageSrc"
-                    class="object-cover h-full sm:h-80 w-[640px] md:w-screen md:h-[420px] lg:w-screen lg:h-[520px] mx-auto rounded-xl"
+                    class="object-cover z-10 h-full sm:h-80 w-[640px] md:w-screen md:h-[420px] lg:w-screen lg:h-[520px] mx-auto rounded-xl"
                     alt="Map Image"
+                    style="will-change: filter;"
                 />
                 <img
                     :src="imageSrc"
-                    class="absolute -z-10 object-cover h-full sm:h-80 w-screen md:h-[420px] lg:w-screen lg:h-[520px] blur-xl sm:blur-2xl opacity-80 top-0 rounded-xl"
+                    x-ref="bgBlurImage"
+                    x-show="selected?.image"
+                    class="object-cover absolute top-0 -z-10 h-full w-full blur2 rounded-xl"
                     alt="Image ambient blur"
+                    style="will-change: filter;"
                 />
             </div>
             <div class="mt-10 sm:mt-auto flex flex-col justify-center gap-3">
                 <button
                     @click="roll"
-                    class="mt-10 sm:mt-auto rounded-lg font-semibold bg-purple-950/20 text-purple-950 dark:bg-white/20 dark:text-purple-100 text-xl tracking-wide px-4 py-2.5 "
+                    class="mt-10 sm:mt-auto rounded-lg font-semibold bg-purple-950/20 text-purple-950 dark:bg-white/20 dark:text-purple-100 text-xl tracking-wide px-4 py-2.5"
                 >Re-roll</button>
                 <div class="text-gray-500 dark:text-gray-300"><span x-text="filteredMaps.length"></span> maps possible
                 </div>
@@ -136,7 +141,25 @@
                 this.selected = this.filteredMaps[randomIndex]
                 this.lastSelected = this.selected
                 console.debug('selected', this.selected)
+
+                // Force background image to re-paint (fix a safari issue with blur clipping)
+                this.$nextTick(() => {
+                    this.forceRepaint()
+                })
             },
+
+            forceRepaint() {
+                // wait before re-enabling the blur and paint
+                let img = this.$refs.bgBlurImage;
+
+                img.style.display = 'none';
+                setTimeout(() => {
+                    img.offsetHeight;
+                    img.style.filter = 'blur(40px)';
+                    img.style.display = '';
+                }, 75);
+            },
+
 
             filterIsActive(value) {
                 return this.selectedFilters.includes(value)
