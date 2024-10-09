@@ -108,6 +108,7 @@
             filteredMaps: [],
             noPossibleMaps: false,
             lastSelected: null,
+            filtersAreExclusive: true,
 
             init() {
                 console.log(this.maps)
@@ -142,11 +143,20 @@
             },
 
             toggleFilter(value) {
+
                 if (this.selectedFilters.includes(value)) {
-                    this.selectedFilters = this.selectedFilters.filter(filter => filter !== value)
+                    this.selectedFilters = this.selectedFilters.filter(filter => filter !==
+                        value)
                 } else {
-                    this.selectedFilters.push(value)
+                    if (this.filtersAreExclusive === true) {
+                        // Only one filter active at a time
+                        this.selectedFilters = [value]
+                    } else {
+                        // Add the filter to the list
+                        this.selectedFilters.push(value)
+                    }
                 }
+
                 console.debug('selectedFilters', this.selectedFilters)
 
                 // No filters are selected, so use all maps
