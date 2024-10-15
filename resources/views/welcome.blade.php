@@ -97,7 +97,7 @@
                 <div class="text-gray-500 dark:text-gray-300"><span x-text="filteredMaps.length"></span> maps possible
                 </div>
             </div>
-            <div class="absolute right-0 bottom-0 p-3 text-xs text-gray-200 dark:text-gray-200/20">{{ $commitHash }}</div>
+            <div class="absolute right-0 bottom-0 p-1.5 text-xs text-gray-100 dark:text-gray-200/5">{{ $commitHash }}</div>
         </div>
     </div>
 </body>
