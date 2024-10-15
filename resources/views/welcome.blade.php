@@ -6,7 +6,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1"
     >
-    <meta name="theme-color" content="#cccccc">
+    <meta name="theme-color" content="#cccccc" media="(prefers-color-scheme: light)">
   
     <meta name="theme-color" content="#222222" media="(prefers-color-scheme: dark)">
             
