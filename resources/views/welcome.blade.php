@@ -80,7 +80,6 @@
                     :src="imageSrc"
                     class="object-cover z-10 h-full sm:h-80 w-[640px] md:w-screen md:h-[420px] lg:w-screen lg:h-[520px] mx-auto rounded-xl"
                     alt="Map Image"
-                    style="will-change: filter;"
                 />
                 <img
                     :src="imageSrc"
@@ -88,7 +87,6 @@
                     x-show="selected?.image"
                     class="object-cover absolute top-0 -z-10 h-full w-full blur2 rounded-xl"
                     alt="Image ambient blur"
-                    style="will-change: filter;"
                 />
             </div>
             <div class="mt-10 sm:mt-auto flex flex-col justify-center gap-3">
@@ -155,7 +153,7 @@
                 img.style.display = 'none';
                 setTimeout(() => {
                     img.offsetHeight;
-                    img.style.filter = 'blur(40px)';
+                    // img.style.filter = 'blur(40px)';
                     img.style.display = '';
                 }, 75);
             },
