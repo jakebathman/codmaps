@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="bg-gradient-to-b from-indigo-950/5 via-purple-950/5 to-pink-950/5 dark:text-purple-100 dark:bg-gradient-to-b dark:from-indigo-950/30 dark:via-purple-950/30 dark:to-pink-950/30">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" >
 <head>
     <meta charset="utf-8">
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1"
     >
+    <meta name="theme-color" content="#aaaaaa">
+  
+    <meta name="theme-color" content="#872e4e" media="(prefers-color-scheme: dark)">
+            
+                      
     <link
         rel="apple-touch-icon"
         sizes="180x180"
