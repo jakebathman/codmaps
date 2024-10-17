@@ -19,7 +19,6 @@
         media="(prefers-color-scheme: dark)"
     >
 
-
     <link
         rel="apple-touch-icon"
         sizes="180x180"
@@ -86,7 +85,6 @@
             <div
                 class="rounded-xl relative h-full sm:h-auto"
                 x-show="!noPossibleMaps"
-                style="will-change: filter;"
             >
                 <img
                     :src="imageSrc"
@@ -97,7 +95,7 @@
                     :src="imageSrc"
                     x-ref="bgBlurImage"
                     x-show="selected?.image"
-                    class="object-cover absolute top-0 -z-10 h-full w-full blur-2xl rounded-xl"
+                    class="object-cover absolute top-0 -z-10 h-full w-full blur-sm rounded-xl"
                     alt="Image ambient blur"
                 />
             </div>
@@ -114,6 +112,7 @@
         </div>
     </div>
 </body>
+
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('randomizer', () => ({
@@ -178,7 +177,6 @@
             },
 
             toggleFilter(value) {
-
                 if (this.selectedFilters.includes(value)) {
                     this.selectedFilters = this.selectedFilters.filter(filter => filter !==
                         value)
@@ -192,21 +190,16 @@
                     }
                 }
 
-                console.debug('selectedFilters', this.selectedFilters)
-
                 // No filters are selected, so use all maps
                 if (this.selectedFilters.length === 0) {
                     this.filteredMaps = this.maps
                 } else {
-
-                    console.log('filter', value)
                     this.filteredMaps = this.maps.filter(map => {
                         let intersection = map.filters.filter(x => this.selectedFilters
                             .includes(x));
                         return intersection.length == this.selectedFilters.length
                     })
                 }
-                console.log('filtered', this.filteredMaps)
 
                 this.roll()
             },
