@@ -1,16 +1,25 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" >
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1"
     >
-    <meta name="theme-color" content="#cccccc" media="(prefers-color-scheme: light)">
-  
-    <meta name="theme-color" content="#222222" media="(prefers-color-scheme: dark)">
-            
-                      
+    <meta
+        name="theme-color"
+        content="#cccccc"
+        media="(prefers-color-scheme: light)"
+    >
+
+    <meta
+        name="theme-color"
+        content="#222222"
+        media="(prefers-color-scheme: dark)"
+    >
+
+
     <link
         rel="apple-touch-icon"
         sizes="180x180"
@@ -42,7 +51,6 @@
     ></script>
 
     @vite('resources/js/app.js')
-
 
 </head>
 
@@ -89,7 +97,7 @@
                     :src="imageSrc"
                     x-ref="bgBlurImage"
                     x-show="selected?.image"
-                    class="object-cover absolute top-0 -z-10 h-full w-full blur2 rounded-xl"
+                    class="object-cover absolute top-0 -z-10 h-full w-full blur-2xl rounded-xl"
                     alt="Image ambient blur"
                 />
             </div>
@@ -101,7 +109,8 @@
                 <div class="text-gray-500 dark:text-gray-300"><span x-text="filteredMaps.length"></span> maps possible
                 </div>
             </div>
-            <div class="absolute right-0 bottom-0 p-1.5 text-xs text-gray-100 dark:text-gray-200/5">{{ $commitHash }}</div>
+            <div class="absolute right-0 bottom-0 p-1.5 text-xs text-gray-100 dark:text-gray-200/5">{{ $commitHash }}
+            </div>
         </div>
     </div>
 </body>
