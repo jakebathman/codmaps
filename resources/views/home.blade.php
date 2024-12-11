@@ -8,18 +8,40 @@
             x-data="randomizer"
             class="flex flex-col justify-center items-center h-full gap-6 py-6 px-6 md:px-12 lg:px-24"
         >
-            <div class="w-full h-10">
-                <template
-                    x-for="filter in filters"
-                    class="inline-block"
-                >
-                    <button
-                        @click="toggleFilter(filter)"
-                        x-text="filter"
-                        class="rounded-lg font-semibold bg-purple-950/5 text-gray-950/40 dark:bg-white/5 dark:text-purple-300/50 text-md sm:text-xl tracking-wide px-1.5 py-0.5 mr-1 sm:px-4 sm:py-2.5 sm:mr-2"
-                        :class="{ 'bg-purple-950 text-gray-50 dark:bg-purple-950 dark:text-white': filterIsActive(filter) }"
-                    ></button>
-                </template>
+            <div class="w-full flex flex-col-reverse gap-4 sm:flex-row sm:justify-between">
+                <div class="w-full flex-row h-10 gap-y-2 flex justify-center sm:justify-start sm:w-1/2 flex-wrap">
+                    <template
+                        x-for="filter in filters"
+                        class="inline-block"
+                    >
+                        <button
+                            @click="toggleFilter(filter)"
+                            x-text="filter"
+                            class="rounded-lg font-semibold bg-purple-100 text-gray-600 dark:bg-white/5 dark:text-purple-300/50 text-md sm:text-lg tracking-wide px-1.5 py-0.5 sm:px-3 sm:py-2 mr-2"
+                            :class="{ 'bg-purple-950 text-white dark:bg-purple-950 dark:text-white': filterIsActive(filter) }"
+                        ></button>
+                    </template>
+                </div>
+                <div class="w-full h-10 flex justify-center sm:justify-end flex-wrap sm:w-1/2">
+                    <template
+                        x-for="(game, gameId) in games"
+                        class="inline-block"
+                    >
+                        <button
+                            @click="filterMapsForGame(gameId)"
+                            x-text="game.name"
+                            class="rounded-lg font-semibold text-md sm:text-lg tracking-wide px-1.5 py-0.5 mr-1 sm:px-4 sm:py-2.5 sm:mr-2"
+                            :class="{
+                                'bg-purple-100 text-gray-600 dark:bg-white/5 dark:text-purple-300/50': !gameIsActive(
+                                    gameId),
+                                'bg-bo6 text-gray-900 dark:bg-gray-900 dark:text-bo6': gameIsActive(gameId) &&
+                                    gameId == 'bo6',
+                                'bg-mwiii text-white dark:bg-gray-900 dark:text-mwiii': gameIsActive(gameId) &&
+                                    gameId == 'mwiii',
+                            }"
+                        ></button>
+                    </template>
+                </div>
             </div>
             <div
                 x-show="noPossibleMaps"
@@ -65,19 +87,27 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('randomizer', () => ({
+                allMaps: @js($maps),
                 maps: @js($maps),
                 filters: @js($filters),
                 games: @js($games),
                 selected: null,
                 selectedFilters: [],
+                selectedGames: ['bo6'],
                 filteredMaps: [],
                 noPossibleMaps: false,
                 lastSelected: null,
                 filtersAreExclusive: true,
+                defaultGame: 'bo6',
 
                 init() {
-                    console.log(this.maps)
+
+                    // filter this.maps to only include maps that are in the selected games
+                    this.filterMapsForGame(this.defaultGame)
+
                     this.filteredMaps = this.maps
+
+                    this.filterMaps()
                     this.roll()
                 },
 
@@ -100,7 +130,6 @@
 
                     this.selected = this.filteredMaps[randomIndex]
                     this.lastSelected = this.selected
-                    console.debug('selected', this.selected)
 
                     // Force background image to re-paint (fix a safari issue with blur clipping)
                     this.$nextTick(() => {
@@ -125,6 +154,17 @@
                     return this.selectedFilters.includes(value)
                 },
 
+                gameIsActive(value) {
+                    return this.selectedGames.includes(value)
+                },
+
+                filterMapsForGame(value) {
+                    this.selectedGames = [value]
+
+                    this.filterMaps()
+                    this.roll()
+                },
+
                 toggleFilter(value) {
                     if (this.selectedFilters.includes(value)) {
                         this.selectedFilters = this.selectedFilters.filter(filter => filter !==
@@ -139,18 +179,26 @@
                         }
                     }
 
+                    this.filterMaps()
+
+                    this.roll()
+                },
+
+                filterMaps() {
                     // No filters are selected, so use all maps
                     if (this.selectedFilters.length === 0) {
-                        this.filteredMaps = this.maps
+                        this.filteredMaps = this.maps.filter(map => map.games.some(g => this
+                            .selectedGames
+                            .includes(g)))
                     } else {
                         this.filteredMaps = this.maps.filter(map => {
                             let intersection = map.filters.filter(x => this.selectedFilters
                                 .includes(x));
-                            return intersection.length == this.selectedFilters.length
+                            return intersection.length == this.selectedFilters.length && map
+                                .games.some(g => this.selectedGames.includes(g))
                         })
                     }
 
-                    this.roll()
                 },
 
                 imageSrc() {
