@@ -320,6 +320,7 @@
                         }
 
                         return [
+                            'Activision Account',
                             'Activision SAR Report',
                             'How We Use Your Personal Information',
                             'Copy of Your Data',
