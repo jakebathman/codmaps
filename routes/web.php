@@ -12,3 +12,5 @@ Route::get('/', function () {
         'commitHash' => $hash,
     ]);
 });
+
+Route::view('data', 'data');
