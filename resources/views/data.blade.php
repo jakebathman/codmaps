@@ -3,7 +3,9 @@
 @section('content')
     <div
         class="p-6 sm:p-10 md:p-16 flex flex-col gap-10 max-w-5xl mx-auto"
+        :class="{ 'cursor-wait': processing }"
         x-data="processHtml"
+        x-cloak
     >
         <div class="flex flex-col gap-2">
             <h1 class="text-3xl text-amber-950 font-bold font-mono">Process Your Call of Duty HTML File</h1>
@@ -40,18 +42,60 @@
             {{-- Options --}}
             <div class="flex flex-col gap-7">
                 <div class="flex flex-col gap-2">
-                    <div class="text-xl text-amber-950 font-bold font-mono">Options</div>
-                    <div class="text-amber-800">
-                        There's a few sections that are omitted by default, but feel free to change what's included in
-                        the
-                        output:
+                    <div class="flex justify-between items-baseline py-1">
+                        <div class="text-xl text-amber-950 font-bold font-mono">Options</div>
+                        <div
+                            x-show="optionsAreAtDefaults() == false"
+                            x-transition.duration.300ms
+                            class="text-sm text-amber-950/50 hover:bg-amber-50/50 hover:text-amber-950/70 px-2 py-1 -mr-2 -mb-1 transition cursor-pointer"
+                            @click="restoreDefaultOptions"
+                        >restore defaults</div>
+                    </div>
+                    <div class="text-amber-800 text-justify">
+                        There's a few sections that are omitted by default,
+                        but feel free to change what's included in the output:
                     </div>
                 </div>
 
                 <div class="flex justify-start">
-                    <div class="flex flex-col gap-2">
+                    <div class="flex flex-col gap-2 w-full">
+
                         <div
-                            class="flex items-center justify-center gap-10"
+                            class="flex items-center justify-center gap-14 mb-5"
+                            @click="shouldDeDuplicate = !shouldDeDuplicate"
+                        >
+                            <span class="flex grow flex-col ">
+                                <span
+                                    class="text-sm/6 text-gray-900 font-bold"
+                                    id="availability-label"
+                                >Try to de-duplicate</span>
+                                <span
+                                    class="text-sm text-gray-500"
+                                    id="availability-description"
+                                >Uses Match ID and other fields</span>
+                            </span>
+
+                            <button
+                                type="button"
+                                :class="{ 'bg-amber-600': shouldDeDuplicate, 'bg-gray-200': !shouldDeDuplicate }"
+                                class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-0 focus:ring-amber-600 focus:ring-offset-2"
+                                role="switch"
+                                aria-checked="false"
+                                aria-labelledby="availability-label"
+                                aria-describedby="availability-description"
+                            >
+                                <span
+                                    aria-hidden="true"
+                                    :class="{ 'translate-x-5': shouldDeDuplicate, 'translate-x-0': !shouldDeDuplicate }"
+                                    class="pointer-events-none inline-block size-5 translate-x-0 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                                ></span>
+                            </button>
+                        </div>
+
+
+
+                        <div
+                            class="flex items-center justify-center gap-14"
                             @click="toggleAllOptions"
                         >
                             <span class="flex grow flex-col ">
@@ -84,7 +128,7 @@
                             :key="index"
                         >
                             <div
-                                class="flex items-center justify-center gap-10"
+                                class="flex items-center justify-center gap-14"
                                 @click="option.value = !option.value"
                             >
                                 <span class="flex grow flex-col">
@@ -135,61 +179,84 @@
                 file: null,
                 sectionTitles: {},
                 csvResult: '',
+                newName: '',
                 downloadButtonDisabled: true,
                 output: '',
-                includeAllOptions: false,
+                countDuplicates: 0,
+                processing: false,
+                shouldDeDuplicate: Alpine.$persist(true).as('should_de_duplicate'),
+                includeAllOptions: Alpine.$persist(false).as('include_all_options'),
                 options: {
                     includeMultiplayerData: {
                         label: 'Include Multiplayer Match Data',
-                        value: true
+                        value: Alpine.$persist(true).as('include_multiplayer_data'),
+                        default: true,
                     },
                     includeZombies: {
                         label: 'Include Zombies',
-                        value: true
+                        value: Alpine.$persist(true).as('include_zombies'),
+                        default: true,
                     },
                     includeCampaigns: {
                         label: 'Include Campaigns',
-                        value: false
+                        value: Alpine.$persist(false).as('include_campaigns'),
+                        default: false,
                     },
                     includeSessionData: {
                         label: 'Include Session Data',
-                        value: false
+                        value: Alpine.$persist(false).as('include_session_data'),
+                        default: false,
                     },
                     includeGamertagData: {
                         label: 'Include Gamertag Data',
-                        value: false
+                        value: Alpine.$persist(false).as('include_gamertag_data'),
+                        default: false,
                     },
                     includeCoOpMatchData: {
                         label: 'Include CoOp Match Data',
-                        value: false
+                        value: Alpine.$persist(false).as('include_co_op_match_data'),
+                        default: false,
                     },
                     includePromoCodes: {
                         label: 'Include Promo Codes',
-                        value: false
+                        value: Alpine.$persist(false).as('include_promo_codes'),
+                        default: false,
                     },
                 },
 
                 init() {
                     // watch options for changes
-                    this.$watch('options', (newVal) => {
+                    this.$watch('options, shouldDeDuplicate', (newVal) => {
                         // If any options are false, make includeAllOptions false
                         this.includeAllOptions = Object.values(this.options).every(
                             (option) => option.value
                         );
 
-                        if (this.file) {
+                        if (this.file && !this.processing) {
                             this.$nextTick(() => {
-                                setTimeout(() => {
-                                    this.processFile({
-                                        target: {
-                                            files: [this.file]
-                                        }
-                                    });
+                                this.processFile({
+                                    target: {
+                                        files: [this.file]
+                                    }
+                                });
 
-                                }, 100);
                             });
                         }
                     });
+                },
+
+                optionsAreAtDefaults() {
+                    let basicOptions = Object.values(this.options).every((option) => option.value ===
+                        option.default);
+                    return basicOptions && this.shouldDeDuplicate === true;
+                },
+
+                restoreDefaultOptions() {
+                    Object.entries(this.options).forEach(([key, option]) => {
+                        option.value = option.default;
+                    });
+
+                    this.shouldDeDuplicate = true;
                 },
 
                 toggleAllOptions() {
@@ -209,6 +276,14 @@
                         return;
                     }
 
+                    let fileNoExtension = this.file.name.replace(/\.[^/.]+$/, "")
+
+                    // Add datetime after old file name
+                    let date = new Date();
+                    this.newName = fileNoExtension + '_' + (new Date()).toISOString().replaceAll('-',
+                            '')
+                        .replaceAll('T', '').replaceAll(':', '').slice(0, 14) + '.csv';
+
                     let that = this;
                     const reader = new FileReader();
                     reader.onload = async function(e) {
@@ -220,8 +295,14 @@
                         let rowCount = Number(csvData.split('\n').length - 1).toLocaleString();
 
                         that.output = "Complete! You can now download the CSV file.\n\nRows: " +
-                            (rowCount) + "\n\nSections: " + "\n\n";
+                            (rowCount) + "\n\n";
 
+                        that.output += (that.shouldDeDuplicate ? 'Duplicates removed: ' :
+                                'Duplicates found (but not removed): ') + Number(that
+                                .countDuplicates)
+                            .toLocaleString() + '\n\n----------------\n\n';
+
+                        that.output += 'Sections:\n\n';
 
                         Object.entries(that.sectionTitles).forEach(([game, sections]) => {
                             that.output += game + '\n';
@@ -232,8 +313,16 @@
 
                         // document.getElementById('output').textContent = csvData;
                         that.downloadButtonDisabled = false;
+                        that.processing = false;
                     };
-                    reader.readAsText(this.file);
+
+
+                    this.processing = true;
+                    setTimeout(() => {
+                        this.$nextTick(() => {
+                            reader.readAsText(this.file);
+                        });
+                    }, 100);
                 },
 
                 downloadCsv() {
@@ -251,11 +340,25 @@
                     // Create a link to download the file
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = 'processed-result.csv'; // Default filename
+                    a.download = this.newName;
                     a.click();
 
                     // Clean up the URL object
                     URL.revokeObjectURL(url);
+                },
+
+                hashString(input) {
+                    const combinedString = input.join('');
+                    let hash = 0x811c9dc5; // FNV-1a 32-bit offset basis
+
+                    for (let i = 0; i < combinedString.length; i++) {
+                        hash ^= combinedString.charCodeAt(i);
+                        // Multiply by FNV prime and ensure 32-bit overflow
+                        hash = (hash * 0x01000193) >>> 0;
+                    }
+
+                    // Convert hash to hexadecimal
+                    return hash.toString(16).padStart(8, '0');
                 },
 
                 processHtmlToCsv(html) {
@@ -266,6 +369,9 @@
                     let includeSessionData = this.options.includeSessionData.value ?? false;
                     let includeGamertagData = this.options.includeGamertagData.value ?? false;
                     let includeCoOpMatchData = this.options.includeCoOpMatchData.value ?? false;
+
+                    let matchIds = [];
+                    this.countDuplicates = 0;
 
                     let slugify = (text) => {
                         return text
@@ -278,7 +384,8 @@
                             .replace(/-+/g, '-'); // Collapse multiple hyphens
                     };
 
-                    let headers = ['Game', 'Section'];
+
+                    let headers = ['Game', 'Section', 'hash'];
 
                     let skipSection = (sectionTitle) => {
                         if (!includePromoCodes && sectionTitle.toLowerCase().includes(
@@ -430,6 +537,11 @@
 
                                 rowData['Game'] = mainTitle;
                                 rowData['Section'] = sectionTitle;
+                                rowData['hash'] = '';
+
+                                let matchId = null;
+                                let isDuplicate = false;
+                                let deDupStrings = [];
 
                                 $(trElement)
                                     .find('th, td')
@@ -441,15 +553,62 @@
                                             // console.log('header:', val);
                                             orderedHeaders.push(val);
                                         } else {
-                                            // console.log({h: orderedHeaders[l], v: val});
-                                            rowData[orderedHeaders[l]] =
-                                                val;
+                                            let field = orderedHeaders[l];
+                                            if (field ===
+                                                'Match ID') {
+                                                matchId = val;
+
+                                                if (matchId.length > 0) {
+
+                                                    if (matchIds.includes(
+                                                            val) && k > 0) {
+                                                        isDuplicate = true;
+                                                        this
+                                                            .countDuplicates++;
+                                                    } else {
+                                                        matchIds.push(val);
+                                                    }
+                                                }
+                                            }
+
+                                            // Gather strings to hash for deduplication
+                                            if ([
+                                                    'UTC Timestamp',
+                                                    'Match ID', 'Map',
+                                                    'Game Type',
+                                                    'Game Type Screen Name',
+                                                    'redeemDate',
+                                                    'Checkpoint',
+                                                ].indexOf(field) > -1) {
+                                                deDupStrings.push(val);
+                                            }
+
+                                            rowData[field] = val;
                                         }
                                     });
 
+                                let hashString = 'hash::' + this.hashString(
+                                    deDupStrings);
+                                rowData['hash'] = hashString;
+
+                                // If the hash matches one before, also mark as duplicate
+                                if (matchIds.includes(hashString) && k > 0) {
+                                    if (!isDuplicate) {
+                                        this.countDuplicates++;
+                                        isDuplicate = true;
+                                        // console.log('Duplicate hash:', hashString);
+                                    }
+                                } else {
+                                    matchIds.push(hashString);
+                                }
+
                                 // Only push if not the first (header) row
                                 if (k > 0) {
-                                    sectionData.rows.push(rowData);
+                                    if (this.shouldDeDuplicate && isDuplicate) {
+                                        // console.log('Skipping duplicate:', matchId);
+                                    } else {
+                                        sectionData.rows.push(rowData);
+                                    }
                                 }
                             });
 
@@ -457,7 +616,7 @@
                         });
 
                         if (sections.length === 0) {
-                            console.log('No sections found for:', mainTitle);
+                            // console.log('No sections found for:', mainTitle);
                         } else {
                             if (!data[mainTitle]) {
                                 data[mainTitle] = [];

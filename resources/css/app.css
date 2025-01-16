@@ -8,3 +8,5 @@
 		margin-right: 0;
 	}
 }
+
+[x-cloak] { display: none !important; }
