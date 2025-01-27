@@ -11,7 +11,8 @@
             <h1 class="text-3xl text-amber-950 font-bold font-mono">Process Your Call of Duty HTML File</h1>
             <div class="text-amber-800">
                 This will merge your data from your file into one big CSV, with unified headers. All
-                processing is done in your browser, and no data is stored.
+                processing is done in your browser, and no data is stored. You can provide <strong>multiple HTML files</strong>
+                at one time and they'll be combined and deduplicated (if you have that setting selected below).
             </div>
         </div>
         <div class="flex flex-col md:flex-row justify-between gap-10">
@@ -20,6 +21,7 @@
                     <input
                         type="file"
                         id="fileInput"
+                        multiple
                         accept=".html"
                         class="w-full file:cursor-pointer flex-1 file:text-amber-900 file:font-semibold file:bg-amber-100 file:border-none file:py-2.5 file:px-5 file:rounded-full file:mr-5"
                         @change="processFile"
@@ -92,8 +94,6 @@
                             </button>
                         </div>
 
-
-
                         <div
                             class="flex items-center justify-center gap-14"
                             @click="toggleAllOptions"
@@ -160,7 +160,19 @@
                 </div>
 
             </div>
+        </div>
 
+        <div
+            class="flex flex-col gap-5"
+            x-show="showDebug"
+        >
+            <div class="text-amber-950 font-bold font-mono text-2xl">Row Counts</div>
+            <template x-for="section in rowCounts">
+                <div
+                    class="text-amber-800"
+                    x-text="section.rows + ' - ' + section.game + ': ' + section.section"
+                ></div>
+            </template>
         </div>
 
         <pre
@@ -171,12 +183,11 @@
     </div>
 @endsection
 
-
 @section('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('processHtml', () => ({
-                file: null,
+                files: null,
                 sectionTitles: {},
                 csvResult: '',
                 newName: '',
@@ -184,8 +195,10 @@
                 output: '',
                 countDuplicates: 0,
                 processing: false,
+                rowCounts: [],
                 shouldDeDuplicate: Alpine.$persist(true).as('should_de_duplicate'),
                 includeAllOptions: Alpine.$persist(false).as('include_all_options'),
+                showDebug: false,
                 options: {
                     includeMultiplayerData: {
                         label: 'Include Multiplayer Match Data',
@@ -232,11 +245,11 @@
                             (option) => option.value
                         );
 
-                        if (this.file && !this.processing) {
+                        if (this.files && !this.processing) {
                             this.$nextTick(() => {
                                 this.processFile({
                                     target: {
-                                        files: [this.file]
+                                        files: this.files
                                     }
                                 });
 
@@ -246,8 +259,7 @@
                 },
 
                 optionsAreAtDefaults() {
-                    let basicOptions = Object.values(this.options).every((option) => option.value ===
-                        option.default);
+                    let basicOptions = Object.values(this.options).every((option) => option.value === option.default);
                     return basicOptions && this.shouldDeDuplicate === true;
                 },
 
@@ -269,20 +281,23 @@
 
                 processFile(e) {
                     this.output = 'Processing...';
-                    this.file = e.target.files[0];
-                    if (!this.file) {
+                    this.rowCounts = [];
+                    this.files = e.target.files;
+                    if (!this.files) {
                         console.debug('No file selected.');
                         this.output = 'No file selected.';
                         return;
                     }
 
-                    let fileNoExtension = this.file.name.replace(/\.[^/.]+$/, "")
+                    let fileNoExtension = this.files[0].name.replace(/\.[^/.]+$/, "")
 
                     // Add datetime after old file name
                     let date = new Date();
-                    this.newName = fileNoExtension + '_' + (new Date()).toISOString().replaceAll('-',
-                            '')
-                        .replaceAll('T', '').replaceAll(':', '').slice(0, 14) + '.csv';
+                    this.newName = fileNoExtension + '_' + (new Date()).toISOString()
+                        .replaceAll('-', '')
+                        .replaceAll('T', '')
+                        .replaceAll(':', '')
+                        .slice(0, 14) + '.csv';
 
                     let that = this;
                     const reader = new FileReader();
@@ -297,10 +312,11 @@
                         that.output = "Complete! You can now download the CSV file.\n\nRows: " +
                             (rowCount) + "\n\n";
 
-                        that.output += (that.shouldDeDuplicate ? 'Duplicates removed: ' :
-                                'Duplicates found (but not removed): ') + Number(that
-                                .countDuplicates)
-                            .toLocaleString() + '\n\n----------------\n\n';
+                        that.output += (that.shouldDeDuplicate ?
+                                'Duplicates removed: ' :
+                                'Duplicates found (but not removed): ') +
+                            Number(that.countDuplicates).toLocaleString() +
+                            '\n\n----------------\n\n';
 
                         that.output += 'Sections:\n\n';
 
@@ -316,13 +332,58 @@
                         that.processing = false;
                     };
 
-
                     this.processing = true;
-                    setTimeout(() => {
-                        this.$nextTick(() => {
-                            reader.readAsText(this.file);
+
+                    this.combineFilesIntoBlob(this.files)
+                        .then((blob) => {
+                            console.log("Blob created:", blob);
+                            reader.readAsText(blob);
+                        })
+                        .catch((error) => {
+                            console.error("Error combining files:", error);
                         });
-                    }, 100);
+
+
+                },
+
+                combineFilesIntoBlob(files) {
+
+                    return new Promise((resolve, reject) => {
+                        const readerForHtml = new FileReader();
+                        let concatenatedContent = "";
+                        let index = 0;
+
+                        function readNextFile() {
+                            if (index >= files.length) {
+                                // All files are read, resolve the promise
+                                const blob = new Blob([concatenatedContent], {
+                                    type: "text/html"
+                                });
+                                resolve(blob);
+                                return;
+                            }
+
+                            readerForHtml.onload = () => {
+                                concatenatedContent += readerForHtml.result + "\n";
+                                index++;
+                                readNextFile(); // Move to the next file
+                            };
+
+                            readerForHtml.onerror = (error) => {
+                                reject(error); // Reject the promise on any error
+                            };
+
+                            readerForHtml.readAsText(files[index]); // Read the current file
+                        }
+
+                        if (files.length === 0) {
+                            resolve(new Blob([""], {
+                                type: "text/html"
+                            })); // Empty Blob if no files
+                        } else {
+                            readNextFile(); // Start reading the first file
+                        }
+                    });
                 },
 
                 downloadCsv() {
@@ -371,14 +432,14 @@
                     let includeCoOpMatchData = this.options.includeCoOpMatchData.value ?? false;
 
                     let matchIds = [];
+                    let matchIdsToGame = new Map([]);
+                    let hashesToSkip = new Set();
                     this.countDuplicates = 0;
 
                     let slugify = (text) => {
                         return text
                             .toLowerCase() // Convert to lowercase
-                            .replace(/[^a-z0-9\s-]/g,
-                                ''
-                            ) // Remove non-alphanumeric characters (except spaces and hyphens)
+                            .replace(/[^a-z0-9\s-]/g, '') // Remove non-alphanumeric characters (except spaces and hyphens)
                             .trim() // Remove leading/trailing whitespace
                             .replace(/\s+/g, '-') // Replace spaces with hyphens
                             .replace(/-+/g, '-'); // Collapse multiple hyphens
@@ -388,8 +449,7 @@
                     let headers = ['Game', 'Section', 'hash'];
 
                     let skipSection = (sectionTitle) => {
-                        if (!includePromoCodes && sectionTitle.toLowerCase().includes(
-                                'promocodes')) {
+                        if (!includePromoCodes && sectionTitle.toLowerCase().includes('promocodes')) {
                             return true;
                         }
 
@@ -409,13 +469,11 @@
                             return true;
                         }
 
-                        if (!includeMultiplayerData && sectionTitle.toLowerCase().includes(
-                                'multiplayer')) {
+                        if (!includeMultiplayerData && sectionTitle.toLowerCase().includes('multiplayer')) {
                             return true;
                         }
 
-                        if (!includeGamertagData && sectionTitle.toLowerCase().includes(
-                                'gamertag')) {
+                        if (!includeGamertagData && sectionTitle.toLowerCase().includes('gamertag')) {
                             return true;
                         }
 
@@ -471,8 +529,7 @@
                                 $(trElement)
                                     .find('th, td')
                                     .each((l, cellElement) => {
-                                        let val = $(cellElement).text()
-                                            .trim();
+                                        let val = $(cellElement).text().trim();
                                         headers.push(val);
                                     });
 
@@ -508,8 +565,7 @@
                                 .trim();
 
                             if (skipSection(sectionTitle)) {
-                                this.sectionTitles[mainTitle].push(sectionTitle +
-                                    ' (Skipped)');
+                                this.sectionTitles[mainTitle].push(sectionTitle + ' (Skipped)');
                                 return;
                             }
 
@@ -530,8 +586,7 @@
                             table.find('tr').each((k, trElement) => {
                                 // This row is an object with keys as headers and values as the cell values, if any
                                 let rowData = headers.reduce((acc, key) => {
-                                    acc[key] =
-                                        ''; // Assign empty string as the value
+                                    acc[key] = ''; // Assign empty string as the value
                                     return acc;
                                 }, {});
 
@@ -546,25 +601,20 @@
                                 $(trElement)
                                     .find('th, td')
                                     .each((l, cellElement) => {
-                                        let val = $(cellElement).text()
-                                            .trim();
+                                        let val = $(cellElement).text().trim();
 
                                         if (k === 0) {
                                             // console.log('header:', val);
                                             orderedHeaders.push(val);
                                         } else {
                                             let field = orderedHeaders[l];
-                                            if (field ===
-                                                'Match ID') {
+                                            if (field === 'Match ID') {
                                                 matchId = val;
 
                                                 if (matchId.length > 0) {
-
-                                                    if (matchIds.includes(
-                                                            val) && k > 0) {
+                                                    if (matchIds.includes(val) && k > 0) {
                                                         isDuplicate = true;
-                                                        this
-                                                            .countDuplicates++;
+                                                        this.countDuplicates++;
                                                     } else {
                                                         matchIds.push(val);
                                                     }
@@ -574,7 +624,8 @@
                                             // Gather strings to hash for deduplication
                                             if ([
                                                     'UTC Timestamp',
-                                                    'Match ID', 'Map',
+                                                    'Match ID',
+                                                    'Map',
                                                     'Game Type',
                                                     'Game Type Screen Name',
                                                     'redeemDate',
@@ -587,12 +638,14 @@
                                         }
                                     });
 
-                                let hashString = 'hash::' + this.hashString(
-                                    deDupStrings);
+                                let hashString = 'hash::' + this.hashString(deDupStrings);
                                 rowData['hash'] = hashString;
 
                                 // If the hash matches one before, also mark as duplicate
                                 if (matchIds.includes(hashString) && k > 0) {
+                                    if (hashString === 'hash::a1d52a34') {
+                                        console.debug('hash::a1d52a34', 'repeat');
+                                    }
                                     if (!isDuplicate) {
                                         this.countDuplicates++;
                                         isDuplicate = true;
@@ -600,15 +653,88 @@
                                     }
                                 } else {
                                     matchIds.push(hashString);
+
+                                    if (hashString === 'hash::a1d52a34') {
+                                        console.debug('hash::a1d52a34', 'first time');
+                                    }
                                 }
 
                                 // Only push if not the first (header) row
                                 if (k > 0) {
                                     if (this.shouldDeDuplicate && isDuplicate) {
                                         // console.log('Skipping duplicate:', matchId);
+
+                                        /**
+                                         * They put duplicate matches under MW, MW II, and MW III,
+                                         * so if it's a MW II game it'll show up twice. We want to
+                                         * keep only the latest one (the game with the longest name).
+                                         *
+                                         * This is hard. The one we keep could be this one, it could be
+                                         * one we've logged already in another section (not in this loop),
+                                         * or it could be a future one.
+                                         *
+                                         * The matchIdsToGame map will keep track of the hash (as key),
+                                         * where we've seen it before (to find it again in the
+                                         * sections array), and the game name (as value).
+                                         *
+                                         * matchIdsToGame: {
+                                         *  'hash::12345678': [{
+                                         *     gameName: 'Modern Warfare II',
+                                         *     section: 'Multiplayer',
+                                         *     key: 123,
+                                         *  }]
+                                         * }
+                                         *
+                                         * So if we see a duplicate hash, we look in this object to see
+                                         * if the games' already been logged.
+                                         *
+                                         *  - If the game name in matchIdsToGame is longer than
+                                         *      the one we're looking at, ignore the current row.
+                                         *      No change to matchIdsToGame.
+                                         *  - If the game name in matchIdsToGame is shorter,
+                                         *      update the game name in the matchIdsToGame object
+                                         *      and remove the old row from the sections array,
+                                         *      using the key.
+                                         */
+
+
+                                        let gameName = mainTitle;
+                                        // Existing game name by hash ID
+                                        if (matchIdsToGame.has(hashString)) {
+                                            gameName = matchIdsToGame.get(hashString).gameName;
+                                        }
+
+                                        if (mainTitle.length > gameName.length) {
+                                            // This game is longer than the one logged before,
+                                            // so we want to keep this one and nuke the other one
+                                            gameName = mainTitle;
+                                            rowData['Game'] = gameName;
+
+                                            // Remove the old row from the sections array
+                                            let oldRow = matchIdsToGame.get(hashString);
+
+                                            hashesToSkip.add(oldRow.gameName + ' - ' + hashString);
+
+                                            // Add this current row to the section
+                                            sectionData.rows.push(rowData);
+
+                                            matchIdsToGame.set(hashString, {
+                                                gameName: rowData['Game'],
+                                                section: sections.length,
+                                                key: k,
+                                            });
+                                        }
                                     } else {
                                         sectionData.rows.push(rowData);
+
+                                        matchIdsToGame.set(hashString, {
+                                            gameName: rowData['Game'],
+                                            section: sections.length,
+                                            key: k,
+                                        });
                                     }
+
+
                                 }
                             });
 
@@ -621,10 +747,12 @@
                             if (!data[mainTitle]) {
                                 data[mainTitle] = [];
                             }
-                            data[mainTitle].push(...
-                                sections); // Add each `h1` grouped section to the main data
+                            data[mainTitle].push(...sections); // Add each `h1` grouped section to the main data
                         }
                     });
+
+                    console.debug(data)
+                    console.debug(matchIdsToGame);
 
                     // Write a big single csv
                     let headersString = headers.map((val) => `"${val}"`).join(',') + '\n';
@@ -636,7 +764,18 @@
                     // Add the data
                     Object.entries(data).forEach(([game, sections]) => {
                         sections.forEach((section) => {
+                            this.rowCounts.push({
+                                game: game,
+                                section: section.section,
+                                rows: section.rows.length,
+                            });
+
                             section.rows.forEach((row) => {
+                                if (this.shouldDeDuplicate && hashesToSkip.has(game + ' - ' + row['hash'])) {
+                                    // console.debug('skipping: ', game + ' - ' + row['hash']);
+                                    return;
+                                }
+
                                 csv +=
                                     Object.values(row)
                                     .map((val) => {
@@ -647,6 +786,10 @@
 
                         });
                     });
+
+                    // hash::8245859c
+                    console.log('debug match')
+                    console.debug(matchIdsToGame.get('hash::a1d52a34'));
 
                     return csv;
                 },
