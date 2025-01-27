@@ -28,6 +28,10 @@
                     >
                 </div>
 
+                <div x-show="processing || percentage > 0">
+                    <div class="text-amber-900/80 font-bold font-mono text-5xl text-center flex justify-center"><pre x-text="`${percentage}`.padStart(3)">0</pre>%</div>
+                </div>
+
                 <div>
                     <button
                         id="downloadBtn"
@@ -195,6 +199,7 @@
                 output: '',
                 countDuplicates: 0,
                 processing: false,
+                percentage: 0,
                 rowCounts: [],
                 shouldDeDuplicate: Alpine.$persist(true).as('should_de_duplicate'),
                 includeAllOptions: Alpine.$persist(false).as('include_all_options'),
@@ -281,6 +286,7 @@
 
                 processFile(e) {
                     this.output = 'Processing...';
+                    this.percentage = 0;
                     this.rowCounts = [];
                     this.files = e.target.files;
                     if (!this.files) {
@@ -305,7 +311,7 @@
                         const htmlContent = e.target.result;
 
                         // Run your HTML-to-CSV script
-                        const csvData = that.processHtmlToCsv(htmlContent);
+                        const csvData = await that.processHtmlToCsv(htmlContent);
                         that.csvResult = csvData;
                         let rowCount = Number(csvData.split('\n').length - 1).toLocaleString();
 
@@ -347,7 +353,6 @@
                 },
 
                 combineFilesIntoBlob(files) {
-
                     return new Promise((resolve, reject) => {
                         const readerForHtml = new FileReader();
                         let concatenatedContent = "";
@@ -422,7 +427,8 @@
                     return hash.toString(16).padStart(8, '0');
                 },
 
-                processHtmlToCsv(html) {
+                async processHtmlToCsv(html) {
+                    this.output = 'Reading headers...';
                     let includeMultiplayerData = this.options.includeMultiplayerData.value ?? false;
                     let includeZombies = this.options.includeZombies.value ?? false;
                     let includePromoCodes = this.options.includePromoCodes.value ?? false;
@@ -497,23 +503,30 @@
                     };
 
                     const $ = cheerio.load(html);
+                    const elements = $('h1');
+                    const totalHeaders = elements.length;
 
                     // Parse the file only for table headers, so we can get a big unique list of headers
+                    let headerCount = 0
 
                     // Loop through each h1
-                    $('h1').each((i, h1Element) => {
+                    for (let i = 0; i < totalHeaders; i++) {
+                        const h1Element = elements[i];
+
+                        headerCount++;
+                        await this.updateProgress(headerCount, totalHeaders * 2);
+
                         const mainTitle = $(h1Element).text().trim();
 
                         if (skipSection(mainTitle)) {
                             this.sectionTitles[mainTitle + ' (Skipped)'] = [];
-                            return;
+                            continue;
                         }
 
                         this.sectionTitles[mainTitle] = [];
 
                         // Look for the h2s that are under the current h1
                         let currentH2 = $(h1Element).nextUntil('h1', 'h2');
-
                         currentH2.each((j, h2Element) => {
                             const sectionTitle = $(h2Element).text().trim();
 
@@ -537,22 +550,30 @@
                                 return false;
                             });
                         });
-                    });
+                    }
 
+                    console.debug('Headers:', headers);
                     // Make the headers array only unique values
                     headers = [...new Set(headers)];
 
                     // Loop through everything again for the data
                     const data = {};
 
+                    this.output = 'Processing data...';
+
                     // Loop through each h1
-                    $('h1').each((i, h1Element) => {
+                    for (let i = 0; i < totalHeaders; i++) {
+                        const h1Element = elements[i];
+
+                        headerCount++;
+                        await this.updateProgress(headerCount, totalHeaders * 2);
+
                         const mainTitle = $(h1Element).text().trim();
                         const sections = [];
 
                         // Skip the preamble sections
                         if (skipSection(mainTitle)) {
-                            return;
+                            continue;
                         }
 
                         // Look for the h2s that are under the current h1
@@ -749,7 +770,8 @@
                             }
                             data[mainTitle].push(...sections); // Add each `h1` grouped section to the main data
                         }
-                    });
+                    }
+                    // end of header loop
 
                     console.debug(data)
                     console.debug(matchIdsToGame);
@@ -793,6 +815,18 @@
 
                     return csv;
                 },
+
+                async updateProgress(current, total) {
+                    this.percentage = Math.round((current / total) * 100);
+
+                    // Small delay to allow repaint
+                    await this.sleep(10);
+                },
+
+                sleep(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                },
+
             }));
         });
     </script>
