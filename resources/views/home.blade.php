@@ -1,8 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div
-        class="h-dvh w-full bg-gradient-to-b from-indigo-950/5 via-purple-950/5 to-pink-950/5 dark:text-purple-100 dark:bg-gradient-to-b dark:from-indigo-950/30 dark:via-purple-950/30 dark:to-pink-950/30">
+    <div class="h-dvh w-full bg-gradient-to-b from-indigo-950/5 via-purple-950/5 to-pink-950/5 dark:text-purple-100 dark:bg-gradient-to-b dark:from-indigo-950/30 dark:via-purple-950/30 dark:to-pink-950/30">
 
         <div
             x-data="randomizer"
@@ -68,12 +67,31 @@
                     alt="Image ambient blur"
                 />
             </div>
-            <div class="mt-10 sm:mt-auto flex flex-col justify-center gap-3">
-                <button
-                    @click="roll"
-                    class="mt-10 sm:mt-auto rounded-lg font-semibold bg-purple-950/20 text-purple-950 dark:bg-white/20 dark:text-purple-100 text-xl tracking-wide px-4 py-2.5"
-                >Re-roll</button>
-                <div class="text-gray-500 dark:text-gray-300"><span x-text="filteredMaps.length"></span> maps possible
+
+            <div class="flex w-full justify-between">
+                <div class="mt-10 sm:mt-auto flex flex-col justify-center items-center gap-3">
+                    <button
+                        @click="hideMap"
+                        class="mt-10 sm:mt-auto rounded-lg font-semibold bg-pink-950/10 text-pink-950 dark:bg-white/10 dark:text-pink-100 text-xl tracking-wide px-4 py-2.5"
+                    >Hide Map</button>
+                    <div class="text-gray-500 dark:text-gray-300 text-center relative">
+                        <div>
+                            <span x-text="hiddenMaps.length"></span> maps hidden
+                        </div>
+                        <div
+                            x-show="hiddenMaps.length > 0"
+                            class="w-full text-xs text-gray-500 dark:text-gray-300 cursor-pointer absolute -bottom-4 left-0"
+                            @click="unhideAllMaps"
+                        >Unhide all</div>
+                    </div>
+                </div>
+                <div class="mt-10 sm:mt-auto flex flex-col justify-center items-center gap-3">
+                    <button
+                        @click="roll"
+                        class="mt-10 sm:mt-auto rounded-lg font-semibold bg-purple-950/20 text-purple-950 dark:bg-white/20 dark:text-purple-100 text-xl tracking-wide px-4 py-2.5"
+                    >Re-roll</button>
+                    <div class="text-gray-500 dark:text-gray-300"><span x-text="filteredMaps.length"></span> maps possible
+                    </div>
                 </div>
             </div>
             <div class="absolute right-0 bottom-0 p-1.5 text-xs text-gray-100 dark:text-gray-200/5">{{ $commitHash }}
@@ -81,7 +99,6 @@
         </div>
     </div>
 @endsection
-
 
 @section('scripts')
     <script>
@@ -92,18 +109,19 @@
                 filters: @js($filters),
                 games: @js($games),
                 selected: null,
-                selectedFilters: [],
-                selectedGames: ['bo6'],
+                selectedFilters: Alpine.$persist([]).as('selectedFilters'),
+                selectedGames: Alpine.$persist(['bo6']).as('selectedGames'),
                 filteredMaps: [],
                 noPossibleMaps: false,
                 lastSelected: null,
                 filtersAreExclusive: true,
                 defaultGame: 'bo6',
+                hiddenMaps: Alpine.$persist([]).as('hiddenMaps'),
 
                 init() {
 
                     // filter this.maps to only include maps that are in the selected games
-                    this.filterMapsForGame(this.defaultGame)
+                    this.filterMapsForGame(this.selectedGames[0])
 
                     this.filteredMaps = this.maps
 
@@ -135,6 +153,22 @@
                     this.$nextTick(() => {
                         this.forceRepaint()
                     })
+                },
+
+                hideMap() {
+                    if (this.selected) {
+                        console.log('Hidden map:', this.selected)
+                        this.hiddenMaps.push(this.selected.name)
+
+                        this.filterMaps()
+                        this.roll()
+                    }
+                },
+
+                unhideAllMaps() {
+                    this.hiddenMaps = []
+                    this.filterMaps()
+                    this.roll()
                 },
 
                 forceRepaint() {
@@ -188,15 +222,18 @@
                     // No filters are selected, so use all maps
                     if (this.selectedFilters.length === 0) {
                         this.filteredMaps = this.maps.filter(map => map.games.some(g => this
-                            .selectedGames
-                            .includes(g)))
+                                .selectedGames
+                                .includes(g)))
+                            .filter(map => !this.hiddenMaps.includes(map.name))
                     } else {
                         this.filteredMaps = this.maps.filter(map => {
-                            let intersection = map.filters.filter(x => this.selectedFilters
-                                .includes(x));
-                            return intersection.length == this.selectedFilters.length && map
-                                .games.some(g => this.selectedGames.includes(g))
-                        })
+                                let intersection = map.filters.filter(x => this.selectedFilters
+                                    .includes(x));
+                                return intersection.length == this.selectedFilters.length && map
+                                    .games.some(g => this.selectedGames.includes(g))
+                            })
+                            .filter(map => !this.hiddenMaps.includes(map.name))
+
                     }
 
                 },
