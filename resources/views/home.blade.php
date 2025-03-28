@@ -85,12 +85,47 @@
                         >Unhide all</div>
                     </div>
                 </div>
-                <div class="mt-10 sm:mt-auto flex flex-col justify-center items-center gap-3">
+
+                {{-- fav button --}}
+                <div class="group mt-10 sm:mt-none flex flex-col justify-center items-center gap-3">
+                    <button
+                        @click="fav"
+                        x-cloak
+                        class="relative mt-10 sm:mt-none rounded-lg font-semibold bg-none text-pink-500/20 dark:bg-none dark:text-pink-100 text-xl tracking-wide px-4 py-2.5"
+                        :class="{ 'text-pink-500 bg-pink-500/10': isFavorite(), 'text-pink-500/20': !isFavorite() }"
+                    >
+                        <span
+                            class="absolute -top-1 right-0 p-0.5"
+                            x-text="favoriteMaps.length"
+                        ></span>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            :fill="isFavorite() ? `currentColor` : `none`"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            :stroke="isFavorite() ? `none` : `currentColor`"
+                            class="size-8"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                            />
+                        </svg>
+                    </button>
+                    <div class="text-pink-500/35 dark:text-pink-300 text-center text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-[100ms]">
+                        <span x-show="isFavorite()"><span class="flex sm:hidden">Unfav</span><span class="hidden sm:flex">Remove Fav</span></span>
+                        <span x-show="!isFavorite()"><span class="flex sm:hidden">Fav</span><span class="hidden sm:flex">Add Favorite</span></span>
+                    </div>
+                </div>
+
+                {{-- roll button --}}
+                <div class="mt-10 sm:mt-auto flex flex-col justify-center items-center gap-3 w-1/7">
                     <button
                         @click="roll"
                         class="mt-10 sm:mt-auto rounded-lg font-semibold bg-purple-950/20 text-purple-950 dark:bg-white/20 dark:text-purple-100 text-xl tracking-wide px-4 py-2.5"
                     >Re-roll</button>
-                    <div class="text-gray-500 dark:text-gray-300"><span x-text="filteredMaps.length"></span> maps possible
+                    <div class="text-gray-500 dark:text-gray-300"><span x-text="filteredMaps.length"></span> <span x-text="filteredMaps.length == 1 ? 'map' : 'maps'"></span> possible
                     </div>
                 </div>
             </div>
@@ -117,6 +152,7 @@
                 filtersAreExclusive: true,
                 defaultGame: 'bo6',
                 hiddenMaps: Alpine.$persist([]).as('hiddenMaps'),
+                favoriteMaps: Alpine.$persist([]).as('favoriteMaps'),
 
                 init() {
 
@@ -127,6 +163,22 @@
 
                     this.filterMaps()
                     this.roll()
+                },
+
+                fav() {
+                    if (this.selected) {
+                        if (this.favoriteMaps.includes(this.selected.name)) {
+                            this.favoriteMaps = this.favoriteMaps.filter(map => map !== this.selected.name)
+                        } else {
+                            this.favoriteMaps.push(this.selected.name)
+                        }
+                    }
+
+                    this.filterMaps()
+                },
+
+                isFavorite() {
+                    return this.favoriteMaps.includes(this.selected.name)
                 },
 
                 roll() {
@@ -227,13 +279,27 @@
                             .filter(map => !this.hiddenMaps.includes(map.name))
                     } else {
                         this.filteredMaps = this.maps.filter(map => {
+                                // If the filter is for fav maps, filter that separately
+                                if (this.selectedFilters.includes('❤️')) {
+                                    return this.favoriteMaps.includes(map.name)
+                                }
+
                                 let intersection = map.filters.filter(x => this.selectedFilters
                                     .includes(x));
                                 return intersection.length == this.selectedFilters.length && map
                                     .games.some(g => this.selectedGames.includes(g))
                             })
                             .filter(map => !this.hiddenMaps.includes(map.name))
+                    }
 
+                    // If no maps are available, set selected to null
+                    if (this.filteredMaps.length === 0) {
+                        console.log('No maps available')
+                        this.selected = null
+                        this.noPossibleMaps = true
+                    } else {
+                        console.log('Maps available')
+                        this.noPossibleMaps = false
                     }
 
                 },

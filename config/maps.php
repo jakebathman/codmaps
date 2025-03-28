@@ -7,6 +7,7 @@ return [
         'medium',
         'large',
         'shipment',
+        '❤️',
     ],
     'games' => [
         'mwiii' => [
