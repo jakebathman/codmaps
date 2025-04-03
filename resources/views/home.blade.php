@@ -4,9 +4,11 @@
     <div class="h-dvh w-full bg-gradient-to-b from-indigo-950/5 via-purple-950/5 to-pink-950/5 dark:text-purple-100 dark:bg-gradient-to-b dark:from-indigo-950/30 dark:via-purple-950/30 dark:to-pink-950/30">
 
         <div
+            x-cloak
             x-data="randomizer"
             class="flex flex-col justify-center items-center h-full gap-6 py-6 px-6 md:px-12 lg:px-24"
         >
+            {{-- Top filter buttons --}}
             <div class="w-full flex flex-col-reverse gap-4 sm:flex-row sm:justify-between">
                 <div class="w-full flex-row h-10 gap-y-2 flex justify-center sm:justify-start sm:w-1/2 flex-wrap">
                     <template
@@ -42,37 +44,48 @@
                     </template>
                 </div>
             </div>
-            <div
-                x-show="noPossibleMaps"
-                class="text-2xl lg:text-4xl font-bold text-center pb-6 mt-auto"
-            >No maps available with the selected filters</div>
-            <div
-                class="text-4xl lg:text-6xl font-bold text-center pb-6 mt-auto"
-                x-text="selected?.name"
-            ></div>
-            <div
-                class="rounded-xl relative h-full sm:h-auto"
-                x-show="!noPossibleMaps"
-            >
-                <img
-                    :src="imageSrc"
-                    class="object-cover z-10 h-full sm:h-80 w-[640px] md:w-screen md:h-[420px] lg:w-screen lg:h-[520px] mx-auto rounded-xl"
-                    alt="Map Image"
-                />
-                <img
-                    :src="imageSrc"
-                    x-ref="bgBlurImage"
-                    x-show="selected?.image"
-                    class="object-cover absolute top-0 -z-10 h-full w-full blur-sm rounded-xl"
-                    alt="Image ambient blur"
-                />
+
+            {{-- Map name/error text --}}
+            <div class="flex flex-1 flex-col justify-center items-center gap-6">
+                <div
+                    x-show="noPossibleMaps"
+                    class="text-2xl lg:text-4xl font-bold text-center pb-6"
+                >No maps available with the selected filters</div>
+                <div
+                    class="text-4xl lg:text-6xl font-bold text-center pb-6"
+                    x-text="selected?.name"
+                ></div>
+
+                {{-- Map image --}}
+                <div
+                    class="rounded-xl relative h-full sm:h-auto"
+                    x-show="!noPossibleMaps"
+                >
+                    <img
+                        :src="imageSrc"
+                        class="object-cover z-10 h-full sm:h-80 w-[640px] md:w-screen md:h-[420px] lg:w-screen lg:h-[520px] mx-auto rounded-xl"
+                        alt="Map Image"
+                    />
+                    <img
+                        :src="imageSrc"
+                        x-ref="bgBlurImage"
+                        x-show="selected?.image"
+                        class="object-cover absolute top-0 -z-10 h-full w-full blur-sm rounded-xl"
+                        alt="Image ambient blur"
+                    />
+                </div>
             </div>
 
-            <div class="flex w-full justify-between">
-                <div class="mt-10 sm:mt-auto flex flex-col justify-center items-center gap-3">
+            {{-- Buttons below map image --}}
+            <div class="flex w-full justify-between relative pb-6">
+
+                {{-- Hide map button --}}
+                <div class="mt-10 sm:mt-auto flex flex-col justify-center items-center gap-3 min-w-36">
                     <button
                         @click="hideMap"
                         class="mt-10 sm:mt-auto rounded-lg font-semibold bg-pink-950/10 text-pink-950 dark:bg-white/10 dark:text-pink-100 text-xl tracking-wide px-4 py-2.5"
+                        :class="{ 'opacity-30 cursor-not-allowed': noPossibleMaps }"
+                        :disabled="noPossibleMaps"
                     >Hide Map</button>
                     <div class="text-gray-500 dark:text-gray-300 text-center relative">
                         <div>
@@ -87,15 +100,20 @@
                 </div>
 
                 {{-- fav button --}}
-                <div class="group mt-10 sm:mt-none flex flex-col justify-center items-center gap-3">
+                <div class="group mt-10 sm:mt-none flex flex-col justify-center items-center gap-3 flex-1">
                     <button
                         @click="fav"
                         x-cloak
                         class="relative mt-10 sm:mt-none rounded-lg font-semibold bg-none text-pink-500/20 dark:bg-none dark:text-pink-100 text-xl tracking-wide px-4 py-2.5"
-                        :class="{ 'text-pink-500 bg-pink-500/10': isFavorite(), 'text-pink-500/20': !isFavorite() }"
+                        :class="{
+                            'text-pink-500 bg-pink-500/10': !noPossibleMaps && isFavorite(),
+                            'text-pink-500/20': !noPossibleMaps && !isFavorite(),
+                            'text-gray-400 opacity-30 cursor-not-allowed': noPossibleMaps,
+                        }"
+                        :disabled="noPossibleMaps"
                     >
                         <span
-                            class="absolute -top-1 right-0 p-0.5"
+                            class="absolute -top-1 -right-0 p-0.5 text-base"
                             x-text="favoriteMaps.length"
                         ></span>
                         <svg
@@ -113,14 +131,15 @@
                             />
                         </svg>
                     </button>
-                    <div class="text-pink-500/35 dark:text-pink-300 text-center text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-[100ms]">
-                        <span x-show="isFavorite()"><span class="flex sm:hidden">Unfav</span><span class="hidden sm:flex">Remove Fav</span></span>
-                        <span x-show="!isFavorite()"><span class="flex sm:hidden">Fav</span><span class="hidden sm:flex">Add Favorite</span></span>
+                    <div class="text-pink-500/35 dark:text-pink-300 text-center text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-[100ms] min-w-24 flex flex-col justify-center items-center">
+                        <span x-show="noPossibleMaps"><span class="flex">&nbsp;</span></span>
+                        <span x-show="isFavorite() && !noPossibleMaps"><span class="flex sm:hidden">Unfav</span><span class="hidden sm:flex">Remove Fav</span></span>
+                        <span x-show="!isFavorite() && !noPossibleMaps"><span class="flex sm:hidden">Fav</span><span class="hidden sm:flex">Add Favorite</span></span>
                     </div>
                 </div>
 
                 {{-- roll button --}}
-                <div class="mt-10 sm:mt-auto flex flex-col justify-center items-center gap-3 w-1/7">
+                <div class="mt-10 sm:mt-auto flex flex-col justify-center items-center gap-3 min-w-36">
                     <button
                         @click="roll"
                         class="mt-10 sm:mt-auto rounded-lg font-semibold bg-purple-950/20 text-purple-950 dark:bg-white/20 dark:text-purple-100 text-xl tracking-wide px-4 py-2.5"

@@ -660,5 +660,26 @@ return [
             'games' => ['bo6'],
             'filters' => ['search', 'prop', 'small'],
         ],
+        [
+            'name' => 'Firing Range',
+            'position' => [17, 1],
+            'image' => 'firing-range.jpg',
+            'games' => ['bo6'],
+            'filters' => ['search', 'prop', 'medium'],
+        ],
+        [
+            'name' => 'Barrage',
+            'position' => [17, 1],
+            'image' => 'barrage.jpg',
+            'games' => ['bo6'],
+            'filters' => ['prop', 'medium'],
+        ],
+        [
+            'name' => 'Nomad',
+            'position' => [17, 1],
+            'image' => 'nomad.jpg',
+            'games' => ['bo6'],
+            'filters' => ['search', 'prop', 'small'],
+        ],
     ],
 ];
