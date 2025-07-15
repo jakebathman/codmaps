@@ -160,7 +160,7 @@
             Alpine.data('randomizer', () => ({
                 allMaps: @js($maps),
                 maps: @js($maps),
-                filters: @js($filters),
+                allFilters: @js($filters),
                 games: @js($games),
                 selected: null,
                 selectedFilters: Alpine.$persist([]).as('selectedFilters'),
@@ -174,7 +174,6 @@
                 favoriteMaps: Alpine.$persist([]).as('favoriteMaps'),
 
                 init() {
-
                     // filter this.maps to only include maps that are in the selected games
                     this.filterMapsForGame(this.selectedGames[0])
 
@@ -182,6 +181,10 @@
 
                     this.filterMaps()
                     this.roll()
+                },
+
+                get filters() {
+                    return this.allFilters[this.selectedGames[0] || this.defaultGame]
                 },
 
                 fav() {

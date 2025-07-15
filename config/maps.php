@@ -2,14 +2,26 @@
 
 return [
     'filters' => [
-        // 'search',
-        // 's03',
-        'prop',
-        'small',
-        'medium',
-        'large',
-        'shipment',
-        '❤️',
+        'mwiii' => [
+            // 'search',
+            // 's03',
+            'gunfight',
+            'small',
+            'medium',
+            'large',
+            'shipment',
+            '❤️',
+        ],
+        'bo6' => [
+            // 'search',
+            // 's03',
+            'prop',
+            'small',
+            'medium',
+            'large',
+            'shipment',
+            '❤️',
+        ],
     ],
     'games' => [
         'mwiii' => [
@@ -49,14 +61,14 @@ return [
             'position' => [1, 4],
             'image' => 'alley.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'yyyyy'],
+            'filters' => ['search', 'small', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Arena Shipment',
             'position' => [2, 1],
             'image' => 'arena-shipment.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'yyyyy', 'shipment'],
+            'filters' => ['search', 'small', 'gunfight', 'yyyyy', 'shipment'],
         ],
         [
             'name' => 'Bait',
@@ -70,7 +82,7 @@ return [
             'position' => [2, 3],
             'image' => 'bit-ment.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'yyyyy', 'shipment'],
+            'filters' => ['search', 'small', 'gunfight', 'yyyyy', 'shipment'],
         ],
         [
             'name' => 'Bitvela',
@@ -84,7 +96,7 @@ return [
             'position' => [3, 1],
             'image' => 'blacksite.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'yyyyy'],
+            'filters' => ['search', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Breenbergh Hotel',
@@ -98,7 +110,7 @@ return [
             'position' => [3, 3],
             'image' => 'celship.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'yyyyy'],
+            'filters' => ['search', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Checkpoint',
@@ -119,14 +131,14 @@ return [
             'position' => [4, 2],
             'image' => 'das-gross.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'yyyyy'],
+            'filters' => ['search', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Das Haus',
             'position' => [4, 3],
             'image' => 'das-haus.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'yyyyy'],
+            'filters' => ['search', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Departures',
@@ -154,14 +166,14 @@ return [
             'position' => [5, 3],
             'image' => 'drive-thru.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'yyyyy'],
+            'filters' => ['search', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Emergency',
             'position' => [5, 4],
             'image' => 'emergency.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'yyyyy'],
+            'filters' => ['search', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Estate',
@@ -175,7 +187,7 @@ return [
             'position' => [6, 2],
             'image' => 'exhibit.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'yyyyy'],
+            'filters' => ['search', 'small', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Farm 18',
@@ -203,7 +215,7 @@ return [
             'position' => [7, 2],
             'image' => 'ghost-ship.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'yyyyy'],
+            'filters' => ['search', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Greece',
@@ -245,14 +257,14 @@ return [
             'position' => [8, 4],
             'image' => 'incline.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'medium', 'yyyyy'],
+            'filters' => ['search', 'medium', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Ink House',
             'position' => [9, 1],
             'image' => 'ink-house.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'yyyyy'],
+            'filters' => ['search', 'small', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Invasion',
@@ -273,14 +285,14 @@ return [
             'position' => [9, 4],
             'image' => 'mad-cow.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'yyyyy'],
+            'filters' => ['search', 'small', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Meat',
             'position' => [10, 1],
             'image' => 'meat.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'yyyyy'],
+            'filters' => ['search', 'small', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Mercado Las Almas',
@@ -322,7 +334,7 @@ return [
             'position' => [11, 3],
             'image' => 'rust.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'yyyyy'],
+            'filters' => ['search', 'small', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => "Satan's Quarry",
@@ -343,14 +355,14 @@ return [
             'position' => [12, 2],
             'image' => 'shipmas.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'shipment'],
+            'filters' => ['search', 'small', 'gunfight', 'shipment'],
         ],
         [
             'name' => 'Shipment',
             'position' => [12, 3],
             'image' => 'shipment.jpg',
             'games' => ['mwiii', 'mwii'],
-            'filters' => ['search', 'small', 'shipment'],
+            'filters' => ['search', 'small', 'gunfight', 'shipment'],
         ],
         [
             'name' => 'Shoot House',
@@ -385,14 +397,14 @@ return [
             'position' => [13, 4],
             'image' => 'stash-house.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'yyyyy'],
+            'filters' => ['search', 'small', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Stay High',
             'position' => [14, 1],
             'image' => 'stay-high.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'shipment'],
+            'filters' => ['search', 'small', 'gunfight', 'shipment'],
         ],
         [
             'name' => 'Sub Base',
@@ -406,7 +418,7 @@ return [
             'position' => [14, 3],
             'image' => 'sunny-shipment.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'shipment'],
+            'filters' => ['search', 'small', 'gunfight', 'shipment'],
         ],
         [
             'name' => 'Tanked',
@@ -427,7 +439,7 @@ return [
             'position' => [15, 2],
             'image' => 'tetanus.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'yyyyy'],
+            'filters' => ['search', 'small', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Tokyo',
@@ -441,14 +453,14 @@ return [
             'position' => [15, 4],
             'image' => 'toonoxide.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'yyyyy'],
+            'filters' => ['search', 'small', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Training Facility',
             'position' => [16, 1],
             'image' => 'training-facility.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'small', 'yyyyy'],
+            'filters' => ['search', 'small', 'gunfight', 'yyyyy'],
         ],
         [
             'name' => 'Underpass',
@@ -476,7 +488,7 @@ return [
             'position' => [17, 1],
             'image' => 'yard.jpg',
             'games' => ['mwiii'],
-            'filters' => ['search', 'medium', 'yyyyy'],
+            'filters' => ['search', 'medium', 'gunfight', 'yyyyy'],
         ],
 
         // BO6
