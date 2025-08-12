@@ -31,8 +31,6 @@ return [
             'name' => 'BO 6',
         ],
     ],
-    // filters:
-    // 'search', 'small', 'medium', 'large', 'shipment'
     'maps' => [
         // MW III
         [
@@ -715,6 +713,34 @@ return [
             'image' => 'haven.jpg',
             'games' => ['bo6'],
             'filters' => ['search', 'prop'],
+        ],
+        [
+            'name' => 'Runway',
+            'position' => [17, 1],
+            'image' => 'runway.jpg',
+            'games' => ['bo6'],
+            'filters' => ['prop', 'medium'],
+        ],
+        [
+            'name' => 'Jackpot',
+            'position' => [17, 1],
+            'image' => 'jackpot.jpg',
+            'games' => ['bo6'],
+            'filters' => ['prop', 'small'],
+        ],
+        [
+            'name' => 'Exchange',
+            'position' => [17, 1],
+            'image' => 'exchange.jpg',
+            'games' => ['bo6'],
+            'filters' => ['prop', 'small'],
+        ],
+        [
+            'name' => 'World Motor Dynasty [W.M.D]',
+            'position' => [17, 1],
+            'image' => 'wmd.jpg',
+            'games' => ['bo6'],
+            'filters' => ['prop', 'medium'],
         ],
     ],
 ];
