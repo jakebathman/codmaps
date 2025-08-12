@@ -9,8 +9,8 @@
             class="flex flex-col justify-center items-center h-full gap-6 py-6 px-6 md:px-12 lg:px-24"
         >
             {{-- Top filter buttons --}}
-            <div class="w-full flex flex-col-reverse gap-4 sm:flex-row sm:justify-between">
-                <div class="w-full flex-row h-10 gap-y-2 flex justify-center sm:justify-start sm:w-1/2 flex-wrap">
+            <div class="w-full flex flex-col-reverse gap-4 sm:flex-row sm:justify-between z-20">
+                <div class="w-full flex-row h-10 gap-y-2 flex justify-center sm:justify-start sm:w-2/3 flex-wrap">
                     <template
                         x-for="filter in filters"
                         class="inline-block"
@@ -23,7 +23,7 @@
                         ></button>
                     </template>
                 </div>
-                <div class="w-full h-10 flex justify-center sm:justify-end flex-wrap sm:w-1/2">
+                <div class="w-full h-10 flex justify-center sm:justify-end flex-wrap sm:w-1/3">
                     <template
                         x-for="(game, gameId) in games"
                         class="inline-block"
@@ -268,6 +268,14 @@
 
                 filterMapsForGame(value) {
                     this.selectedGames = [value]
+
+                    // Check if the current filter is valid for this game
+                    const validFilters = this.filters.filter(filter => {
+                        return this.maps.some(map => map.games.includes(value) && map.filters.includes(filter))
+                    })
+
+                    // Remove any items in selectedFilters that aren't in validFilters
+                    this.selectedFilters = this.selectedFilters.filter(filter => validFilters.includes(filter) || filter === '❤️')
 
                     this.filterMaps()
                     this.roll()

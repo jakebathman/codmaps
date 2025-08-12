@@ -19,7 +19,7 @@ return [
             'small',
             'medium',
             'large',
-            'shipment',
+            // 'shipment',
             '❤️',
         ],
     ],
