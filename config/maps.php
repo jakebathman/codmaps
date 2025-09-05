@@ -751,6 +751,13 @@ return [
             'filters' => ['prop', 'small'],
         ],
         [
+            'name' => 'Nuketown Holiday',
+            'position' => [17, 1],
+            'image' => 'nuketown-holiday.jpg',
+            'games' => ['bo6'],
+            'filters' => [],
+        ],
+        [
             'name' => 'Fringe',
             'position' => [17, 1],
             'image' => 'fringe.jpg',
