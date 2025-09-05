@@ -1,6 +1,50 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --color-bo6-50: #fdf6ed;
+  --color-bo6-100: #f8e4cd;
+  --color-bo6-200: #f1c796;
+  --color-bo6-300: #e9a560;
+  --color-bo6-400: #e38535;
+  --color-bo6-500: #dc6824;
+  --color-bo6-600: #c24a1d;
+  --color-bo6-700: #a2321b;
+  --color-bo6-800: #84281c;
+  --color-bo6-900: #6d221a;
+  --color-bo6-950: #3e0e0a;
+  --color-bo6: #e38535;
+
+  --color-mwiii-50: #fff0f0;
+  --color-mwiii-100: #ffdddd;
+  --color-mwiii-200: #ffc1c1;
+  --color-mwiii-300: #ff9595;
+  --color-mwiii-400: #ff5959;
+  --color-mwiii-500: #ff2626;
+  --color-mwiii-600: #fc0606;
+  --color-mwiii-700: #d70000;
+  --color-mwiii-800: #af0505;
+  --color-mwiii-900: #900c0c;
+  --color-mwiii-950: #500000;
+  --color-mwiii: #d70000;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 @media screen and (min-width: 960px) {
 	html {

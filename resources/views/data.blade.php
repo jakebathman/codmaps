@@ -84,7 +84,7 @@
                             <button
                                 type="button"
                                 :class="{ 'bg-amber-600': shouldDeDuplicate, 'bg-gray-200': !shouldDeDuplicate }"
-                                class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-0 focus:ring-amber-600 focus:ring-offset-2"
+                                class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-0 focus:ring-amber-600 focus:ring-offset-2"
                                 role="switch"
                                 aria-checked="false"
                                 aria-labelledby="availability-label"
@@ -93,7 +93,7 @@
                                 <span
                                     aria-hidden="true"
                                     :class="{ 'translate-x-5': shouldDeDuplicate, 'translate-x-0': !shouldDeDuplicate }"
-                                    class="pointer-events-none inline-block size-5 translate-x-0 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                                    class="pointer-events-none inline-block size-5 translate-x-0 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out"
                                 ></span>
                             </button>
                         </div>
@@ -112,7 +112,7 @@
                             <button
                                 type="button"
                                 :class="{ 'bg-amber-600': includeAllOptions, 'bg-gray-200': !includeAllOptions }"
-                                class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-0 focus:ring-amber-600 focus:ring-offset-2"
+                                class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-0 focus:ring-amber-600 focus:ring-offset-2"
                                 role="switch"
                                 aria-checked="false"
                                 aria-labelledby="availability-label"
@@ -121,7 +121,7 @@
                                 <span
                                     aria-hidden="true"
                                     :class="{ 'translate-x-5': includeAllOptions, 'translate-x-0': !includeAllOptions }"
-                                    class="pointer-events-none inline-block size-5 translate-x-0 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                                    class="pointer-events-none inline-block size-5 translate-x-0 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out"
                                 ></span>
                             </button>
                         </div>
@@ -146,7 +146,7 @@
                                 <button
                                     type="button"
                                     :class="{ 'bg-amber-600': option.value, 'bg-gray-200': !option.value }"
-                                    class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-0 focus:ring-amber-600 focus:ring-offset-2"
+                                    class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-0 focus:ring-amber-600 focus:ring-offset-2"
                                     role="switch"
                                     aria-checked="false"
                                     aria-labelledby="availability-label"
@@ -155,7 +155,7 @@
                                     <span
                                         aria-hidden="true"
                                         :class="{ 'translate-x-5': option.value, 'translate-x-0': !option.value }"
-                                        class="pointer-events-none inline-block size-5 translate-x-0 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+                                        class="pointer-events-none inline-block size-5 translate-x-0 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out"
                                     ></span>
                                 </button>
                             </div>

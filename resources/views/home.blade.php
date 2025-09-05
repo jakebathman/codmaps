@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="h-dvh w-full bg-gradient-to-b from-indigo-950/5 via-purple-950/5 to-pink-950/5 dark:text-purple-100 dark:bg-gradient-to-b dark:from-indigo-950/30 dark:via-purple-950/30 dark:to-pink-950/30">
+    <div class="h-dvh w-full bg-linear-to-b from-indigo-950/5 via-purple-950/5 to-pink-950/5 dark:text-purple-100 dark:bg-linear-to-b dark:from-indigo-950/30 dark:via-purple-950/30 dark:to-pink-950/30">
 
         <div
             x-cloak
@@ -70,8 +70,8 @@
                         :src="imageSrc"
                         x-ref="bgBlurImage"
                         x-show="selected?.image"
-                        class="object-cover absolute top-0 -z-10 h-full w-full blur-sm rounded-xl"
-                        alt="Image ambient blur"
+                        class="object-cover absolute top-0 -z-10 h-full w-full blur-xs rounded-xl"
+                        alt="Image ambient blur-sm"
                     />
                 </div>
             </div>
@@ -131,7 +131,7 @@
                             />
                         </svg>
                     </button>
-                    <div class="text-pink-500/35 dark:text-pink-300 text-center text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-[100ms] min-w-24 flex flex-col justify-center items-center">
+                    <div class="text-pink-500/35 dark:text-pink-300 text-center text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-100 min-w-24 flex flex-col justify-center items-center">
                         <span x-show="noPossibleMaps"><span class="flex">&nbsp;</span></span>
                         <span x-show="isFavorite() && !noPossibleMaps"><span class="flex sm:hidden">Unfav</span><span class="hidden sm:flex">Remove Fav</span></span>
                         <span x-show="!isFavorite() && !noPossibleMaps"><span class="flex sm:hidden">Fav</span><span class="hidden sm:flex">Add Favorite</span></span>
