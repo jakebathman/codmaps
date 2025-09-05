@@ -742,5 +742,27 @@ return [
             'games' => ['bo6'],
             'filters' => ['prop', 'medium'],
         ],
+
+        [
+            'name' => 'Nuketown',
+            'position' => [17, 1],
+            'image' => 'nuketown.jpg',
+            'games' => ['bo6'],
+            'filters' => ['prop', 'small'],
+        ],
+        [
+            'name' => 'Fringe',
+            'position' => [17, 1],
+            'image' => 'fringe.jpg',
+            'games' => ['bo6'],
+            'filters' => ['prop', 'small'],
+        ],
+        [
+            'name' => 'Fugitive',
+            'position' => [17, 1],
+            'image' => 'fugitive.jpg',
+            'games' => ['bo6'],
+            'filters' => ['prop', 'medium'],
+        ],
     ],
 ];
