@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Maps;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -13,6 +14,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::view('maps', 'maps');
+Route::get('maps', Maps::class)->name('maps');
 
 Route::view('data', 'data');

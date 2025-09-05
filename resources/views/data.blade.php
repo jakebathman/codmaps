@@ -1,6 +1,5 @@
-@extends('layouts.app')
+<x-layout>
 
-@section('content')
     <div
         class="p-6 sm:p-10 md:p-16 flex flex-col gap-10 max-w-5xl mx-auto"
         :class="{ 'cursor-wait': processing }"
@@ -29,7 +28,9 @@
                 </div>
 
                 <div x-show="processing || percentage > 0">
-                    <div class="text-amber-900/80 font-bold font-mono text-5xl text-center flex justify-center"><pre x-text="`${percentage}`.padStart(3)">0</pre>%</div>
+                    <div class="text-amber-900/80 font-bold font-mono text-5xl text-center flex justify-center">
+                        <pre x-text="`${percentage}`.padStart(3)">0</pre>%
+                    </div>
                 </div>
 
                 <div>
@@ -185,9 +186,7 @@
             x-text="output"
         ></pre>
     </div>
-@endsection
 
-@section('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('processHtml', () => ({
@@ -830,4 +829,4 @@
             }));
         });
     </script>
-@endsection
+</x-layout>

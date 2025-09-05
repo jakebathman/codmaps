@@ -52,7 +52,7 @@
 </head>
 
 <body class="h-dvh w-full bg-white dark:bg-black">
-    @yield('content')
+    {{ $slot }}
 </body>
 
 @fluxScripts
