@@ -1,4 +1,7 @@
 @import 'tailwindcss';
+@import '../../vendor/livewire/flux/dist/flux.css';
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-bo6-50: #fdf6ed;

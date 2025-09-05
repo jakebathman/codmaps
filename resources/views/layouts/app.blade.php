@@ -46,6 +46,8 @@
     @vite('resources/js/app.js')
     @vite('resources/css/app.css')
 
+    @fluxAppearance
+
     @yield('header')
 </head>
 
@@ -53,6 +55,7 @@
     @yield('content')
 </body>
 
+@fluxScripts
 @yield('scripts')
 
 </html>

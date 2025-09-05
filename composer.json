@@ -8,6 +8,7 @@
         "php": "^8.2",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.9",
+        "livewire/flux": "^2.3",
         "livewire/livewire": "^3.6"
     },
     "require-dev": {
