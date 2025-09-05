@@ -1,4 +1,4 @@
-<div class="px-4 sm:px-6 lg:px-8">
+<div class="px-4 sm:px-6 lg:px-8 py-10">
     <div class="sm:flex sm:items-center">
         <div class="sm:flex-auto">
             <h1 class="text-base font-semibold text-gray-900 dark:text-white">Maps</h1>
@@ -52,6 +52,7 @@
                         <option
                             value=""
                             disabled
+                            selected
                         >Select a game...</option>
                         @foreach ($games as $key => $game)
                             <option value="{{ $key }}">{{ $game['name'] ?? $key }}</option>
@@ -60,6 +61,42 @@
                     @error('form.game')
                         <div class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <!-- Image upload + preview -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-start">
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300">Image</label>
+                        <input
+                            type="file"
+                            accept=".jpg,.jpeg,.png"
+                            wire:model="imageUpload"
+                            class="mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm file:font-medium hover:file:bg-gray-200 dark:text-gray-200 dark:file:bg-white/10 dark:hover:file:bg-white/20"
+                        >
+                        @error('form.image')
+                            <div class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</div>
+                        @enderror
+                        @error('imageUpload')
+                            <div class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</div>
+                        @enderror
+                        <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">Saved as slug of name.</div>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300">Preview</label>
+                        <div class="mt-1 h-20 w-32 overflow-hidden rounded border border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-gray-800 flex items-center justify-center">
+                            @if ($imageUpload)
+                                <img src="{{ $imageUpload->temporaryUrl() }}" alt="Preview" class="h-full w-full object-cover">
+                            @elseif (!empty($form['image']))
+                                @if ($this->imageUrl($form['image']))
+                                    <img src="{{ $this->imageUrl($form['image']) }}" alt="Current image" class="h-full w-full object-cover">
+                                @else
+                                    <span class="text-xs text-gray-400">No image</span>
+                                @endif
+                            @else
+                                <span class="text-xs text-gray-400">No image</span>
+                            @endif
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Filters -->
@@ -181,17 +218,28 @@
                 @foreach ($maps as $map)
                     <tr wire:key="map-{{ md5($map['name']) }}">
                         <td class="w-full max-w-0 py-4 pr-3 pl-4 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0 dark:text-white">
-                            {{ $map['name'] }}
-                            <dl class="font-normal lg:hidden">
-                                <dt class="sr-only">Game</dt>
-                                <dd class="mt-1 truncate text-gray-700 dark:text-gray-300">{{ $map['game'] }}</dd>
-                                <dt class="sr-only sm:hidden">Filters</dt>
-                                <dd class="mt-1 truncate text-gray-500 sm:hidden dark:text-gray-400">
-                                    @foreach ($map['filters'] as $filter)
-                                        <flux:badge color="{{ $filterColors[$filter] ?? 'zinc' }}">{{ $filter }}</flux:badge>
-                                    @endforeach
-                                </dd>
-                            </dl>
+                            <div class="flex items-center gap-3">
+                                @if (!empty($this->imageUrl($map['image'])))
+                                    <img
+                                        src="{{ $this->imageUrl($map['image']) }}"
+                                        alt="{{ $map['name'] }}"
+                                        class="h-10 w-16 rounded object-cover border border-gray-200 dark:border-white/10"
+                                    >
+                                @endif
+                                <div>
+                                    <div>{{ $map['name'] }}</div>
+                                    <dl class="font-normal lg:hidden">
+                                        <dt class="sr-only">Game</dt>
+                                        <dd class="mt-1 truncate text-gray-700 dark:text-gray-300">{{ $map['game'] }}</dd>
+                                        <dt class="sr-only sm:hidden">Filters</dt>
+                                        <dd class="mt-1 truncate text-gray-500 sm:hidden dark:text-gray-400">
+                                            @foreach ($map['filters'] as $filter)
+                                                <flux:badge color="{{ $filterColors[$filter] ?? 'zinc' }}">{{ $filter }}</flux:badge>
+                                            @endforeach
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
                         </td>
                         <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell dark:text-gray-400">{{ $map['game'] }}</td>
                         <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell dark:text-gray-400">

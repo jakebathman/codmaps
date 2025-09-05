@@ -6,9 +6,13 @@ use Livewire\Component;
 use App\Models\Map as MapModel;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class Maps extends Component
 {
+    use WithFileUploads;
     public $filterColors = [
         'search' => 'blue',
         'gunfight' => 'fuchsia',
@@ -25,9 +29,12 @@ class Maps extends Component
         'name' => '',
         'game' => null,
         'filters' => [],
+        'image' => '',
     ];
 
     public $filterInput = '';
+    public $imageUpload;
+    public $defaultGame = 'bo7';
 
     public function edit($mapName)
     {
@@ -38,20 +45,9 @@ class Maps extends Component
             $this->form['name'] = $row->name;
             $this->form['game'] = $row->game;
             $this->form['filters'] = $row->filters ?? [];
+            $this->form['image'] = $row->image ?? '';
             $this->filterInput = '';
             return;
-        }
-
-        // Fallback to config
-        $map = collect(config('maps.maps'))
-            ->first(fn ($m) => ($m['name'] ?? null) === $mapName);
-        if ($map) {
-            $this->editing = $mapName;
-            $this->form['name'] = $map['name'] ?? '';
-            // Pick first game if multiple; UI uses a single-select
-            $this->form['game'] = ($map['games'][0] ?? null);
-            $this->form['filters'] = $map['filters'] ?? [];
-            $this->filterInput = '';
         }
     }
 
@@ -60,19 +56,22 @@ class Maps extends Component
         $this->editing = '(new)';
         $this->form = [
             'name' => '',
-            'game' => null,
+            'game' => $this->defaultGame,
             'filters' => [],
+            'image' => '',
         ];
         $this->filterInput = '';
+        $this->imageUpload = null;
     }
 
     public function cancel()
     {
-        $this->reset('editing', 'form', 'filterInput');
+        $this->reset('editing', 'form', 'filterInput', 'imageUpload');
         $this->form = [
             'name' => '',
             'game' => null,
             'filters' => [],
+            'image' => '',
         ];
     }
 
@@ -83,7 +82,7 @@ class Maps extends Component
             ? MapModel::where('name', $this->editing)->first()
             : null;
 
-        $data = $this->validate([
+        $validated = $this->validate([
             'form.name' => [
                 'required', 'string', 'max:255',
                 Rule::unique('maps', 'name')->ignore($existing?->id),
@@ -91,10 +90,19 @@ class Maps extends Component
             'form.game' => 'required|string|max:255',
             'form.filters' => 'array',
             'form.filters.*' => 'string',
-        ])['form'];
+            'imageUpload' => 'nullable|file|mimes:jpg,jpeg,png',
+        ]);
+        $data = $validated['form'];
+        $upload = $validated['imageUpload'] ?? null;
 
         // Ensure unique list of filters with clean indexes
         $data['filters'] = array_values(array_unique($data['filters'] ?? []));
+
+        // Require an image when creating a new map (unless a filename is already present from config)
+        if (!$existing && !$upload && empty($this->form['image'])) {
+            $this->addError('form.image', 'Image is required.');
+            return;
+        }
 
         // Find by the original name shown in the table (editing)
         $map = $existing;
@@ -106,6 +114,28 @@ class Maps extends Component
         $map->name = $data['name'];
         $map->game = $data['game'];
         $map->filters = $data['filters'];
+
+        // Handle image upload
+        if ($upload) {
+            $slug = Str::slug($data['name']);
+            $ext = strtolower($upload->getClientOriginalExtension() ?: 'jpg');
+            $base = $slug;
+            $filename = $base . '.' . $ext;
+            $i = 1;
+            while (Storage::disk('r2')->exists($filename) && $map->image !== $filename) {
+                $filename = $base . '-' . $i . '.' . $ext;
+                $i++;
+            }
+            $upload->storeAs('/', $filename, [
+                'disk' => 'r2',
+                'visibility' => 'public',
+            ]);
+            $map->image = $filename;
+        } elseif (!$existing && !empty($this->form['image'])) {
+            // When importing/saving a config-backed map without re-uploading
+            $map->image = basename($this->form['image']);
+        }
+
         try {
             $map->save();
         } catch (\Throwable $e) {
@@ -185,6 +215,7 @@ class Maps extends Component
                     'name' => $m['name'] ?? '',
                     'game' => $m['games'][0] ?? null,
                     'filters' => json_encode($m['filters'] ?? []),
+                    'image' => basename($m['image'] ?? ''),
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];
@@ -197,16 +228,52 @@ class Maps extends Component
             return;
         }
 
-        MapModel::query()->upsert($rows, ['name'], ['game', 'filters', 'updated_at']);
+        MapModel::query()->upsert($rows, ['name'], ['game', 'filters', 'image', 'updated_at']);
+
+        // Ensure images exist on R2 by syncing from local if available
+        foreach ($rows as $row) {
+            $filename = $row['image'] ?? '';
+            if ($filename === '') {
+                continue;
+            }
+            $r2Path = $filename;
+            if (!Storage::disk('r2')->exists($r2Path) && Storage::disk('public')->exists($r2Path)) {
+                $stream = Storage::disk('public')->readStream($r2Path);
+                if ($stream) {
+                    Storage::disk('r2')->put($r2Path, $stream, ['visibility' => 'public']);
+                    if (is_resource($stream)) {
+                        fclose($stream);
+                    }
+                }
+            }
+        }
     }
 
     public function render()
     {
-        $maps = MapModel::all()->keyBy('name')->toArray();
+        $maps = MapModel::all()
+            ->map(function ($m) {
+                return [
+                    'name' => $m->name,
+                    'game' => $m->game,
+                    'filters' => $m->filters ?? [],
+                    'image' => $m->image ?? '',
+                    'image_url' => $m->image ? Storage::disk('r2')->url($m->image) : null,
+                ];
+            })
+            ->sortBy('name')
+            ->keyBy('name')
+            ->toArray();
         return view('livewire.maps', [
             'maps' => $maps,
             'filters' => config('maps.filters'),
             'games' => config('maps.games'),
         ]);
+    }
+
+    public function imageUrl(?string $filename): ?string
+    {
+        $filename = basename((string) $filename);
+        return $filename !== '' ? Storage::disk('r2')->url($filename) : null;
     }
 }

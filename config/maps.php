@@ -4,7 +4,6 @@ return [
     'filters' => [
         'mwiii' => [
             // 'search',
-            // 's03',
             'gunfight',
             'small',
             'medium',
@@ -14,12 +13,17 @@ return [
         ],
         'bo6' => [
             // 'search',
-            // 's03',
             'prop',
             'small',
             'medium',
             'large',
             // 'shipment',
+            '❤️',
+        ],
+        'bo7' => [
+            'small',
+            'medium',
+            'large',
             '❤️',
         ],
     ],
@@ -29,6 +33,9 @@ return [
         ],
         'bo6' => [
             'name' => 'BO 6',
+        ],
+        'bo7' => [
+            'name' => 'BO 7',
         ],
     ],
     'maps' => [
