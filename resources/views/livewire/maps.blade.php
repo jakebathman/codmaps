@@ -23,7 +23,11 @@
                 @endif
             </h2>
 
-            <form x-data wire:submit.prevent="save" class="space-y-4">
+            <form
+                x-data
+                wire:submit.prevent="save"
+                class="space-y-4"
+            >
                 <!-- Name -->
                 <div>
                     <label class="block text-xs font-medium text-gray-700 dark:text-gray-300">Name</label>
@@ -45,7 +49,10 @@
                         wire:model="form.game"
                         class="mt-1 block w-full rounded-md border-gray-300 text-sm shadow-xs focus:border-indigo-500 focus:ring-indigo-500 dark:border-white/10 dark:bg-gray-800 dark:text-white"
                     >
-                        <option value="" disabled>Select a game...</option>
+                        <option
+                            value=""
+                            disabled
+                        >Select a game...</option>
                         @foreach ($games as $key => $game)
                             <option value="{{ $key }}">{{ $game['name'] ?? $key }}</option>
                         @endforeach
@@ -62,9 +69,17 @@
                     <!-- Selected tags -->
                     <div class="mt-1 flex flex-wrap gap-2">
                         @forelse ($form['filters'] as $filter)
-                            <span wire:key="selected-filter-{{ md5($filter) }}" class="inline-flex items-center gap-1 rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-900 dark:bg-white/10 dark:text-gray-100">
+                            <span
+                                wire:key="selected-filter-{{ md5($filter) }}"
+                                class="inline-flex items-center gap-1 rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-900 dark:bg-white/10 dark:text-gray-100"
+                            >
                                 {{ $filter }}
-                                <button type="button" wire:click="removeFilter('{{ $filter }}')" class="-mr-1 rounded p-0.5 hover:bg-gray-200 dark:hover:bg-white/20" aria-label="Remove {{ $filter }}">×</button>
+                                <button
+                                    type="button"
+                                    wire:click="removeFilter('{{ $filter }}')"
+                                    class="-mr-1 rounded p-0.5 hover:bg-gray-200 dark:hover:bg-white/20"
+                                    aria-label="Remove {{ $filter }}"
+                                >×</button>
                             </span>
                         @empty
                             <span class="text-xs text-gray-500 dark:text-gray-400">No filters selected</span>
@@ -81,14 +96,18 @@
                             class="block w-60 rounded-md border-gray-300 text-sm shadow-xs focus:border-indigo-500 focus:ring-indigo-500 dark:border-white/10 dark:bg-gray-800 dark:text-white"
                             placeholder="Type filter and press Enter"
                         >
-                        <button type="button" wire:click="addFilter" class="rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500">Add</button>
+                        <button
+                            type="button"
+                            wire:click="addFilter"
+                            class="rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
+                        >Add</button>
                     </div>
 
                     <!-- Suggestions from selected game -->
                     @php
                         $allowed = collect($filters[$form['game']] ?? []);
                         $selected = collect($form['filters'] ?? []);
-                        $suggestions = $allowed->reject(fn ($f) => $selected->contains($f))->values();
+                        $suggestions = $allowed->reject(fn($f) => $selected->contains($f))->values();
                     @endphp
 
                     @if ($form['game'])
@@ -195,4 +214,14 @@
             </tbody>
         </table>
     </div>
+    <div class="fixed bottom-3 right-3 z-50">
+        <button
+            x-data
+            x-on:click="$dispatch('maps:import-from-config')"
+            type="button"
+            title="Import maps from config"
+            class="rounded-md bg-gray-200 px-3 py-2 text-xs font-semibold text-gray-800 shadow-xs hover:bg-gray-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20 dark:focus-visible:outline-white/30"
+        >Import from config</button>
+    </div>
+
 </div>

@@ -43,10 +43,10 @@
 
     <title>CoD Map Randomizer</title>
 
+    @fluxAppearance
     @vite('resources/js/app.js')
     @vite('resources/css/app.css')
 
-    @fluxAppearance
 
     @yield('header')
 </head>

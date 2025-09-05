@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Map as MapModel;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\On;
 
 class Maps extends Component
 {
@@ -172,6 +173,31 @@ class Maps extends Component
         }
 
         $this->cancel();
+    }
+
+    #[On('maps:import-from-config')]
+    public function importFromConfig()
+    {
+        $now = now();
+        $rows = collect(config('maps.maps'))
+            ->map(function ($m) use ($now) {
+                return [
+                    'name' => $m['name'] ?? '',
+                    'game' => $m['games'][0] ?? null,
+                    'filters' => json_encode($m['filters'] ?? []),
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            })
+            ->filter(fn ($r) => $r['name'] !== '')
+            ->values()
+            ->all();
+
+        if (empty($rows)) {
+            return;
+        }
+
+        MapModel::query()->upsert($rows, ['name'], ['game', 'filters', 'updated_at']);
     }
 
     public function render()
