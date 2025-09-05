@@ -726,7 +726,7 @@ return [
             'position' => [17, 1],
             'image' => 'jackpot.jpg',
             'games' => ['bo6'],
-            'filters' => ['prop', 'small'],
+            'filters' => ['prop', 'medium'],
         ],
         [
             'name' => 'Exchange',
