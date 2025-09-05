@@ -37,6 +37,8 @@
                                     gameId == 'bo6',
                                 'bg-mwiii text-white dark:bg-gray-900 dark:text-mwiii': gameIsActive(gameId) &&
                                     gameId == 'mwiii',
+                                'bg-bo7 text-white dark:bg-gray-900 dark:text-bo7': gameIsActive(gameId) &&
+                                    gameId == 'bo7',
                             }"
                         ></button>
                     </template>
@@ -160,7 +162,7 @@
                 games: @js($games),
                 selected: null,
                 selectedFilters: Alpine.$persist([]).as('selectedFilters'),
-                selectedGames: Alpine.$persist(['bo6']).as('selectedGames'),
+                selectedGame: Alpine.$persist('bo6').as('selectedGame'),
                 filteredMaps: [],
                 noPossibleMaps: false,
                 lastSelected: null,
@@ -170,8 +172,9 @@
                 favoriteMaps: Alpine.$persist([]).as('favoriteMaps'),
 
                 init() {
+                    console.log('this.allMaps', this.allMaps)
                     // filter this.maps to only include maps that are in the selected games
-                    this.filterMapsForGame(this.selectedGames[0])
+                    this.filterMapsForGame(this.selectedGame)
 
                     this.filteredMaps = this.maps
 
@@ -180,7 +183,7 @@
                 },
 
                 get filters() {
-                    return this.allFilters[this.selectedGames[0] || this.defaultGame]
+                    return this.allFilters[this.selectedGame || this.defaultGame]
                 },
 
                 fav() {
@@ -196,7 +199,7 @@
                 },
 
                 isFavorite() {
-                    return this.favoriteMaps.includes(this.selected.name)
+                    return this.favoriteMaps.includes(this.selected?.name)
                 },
 
                 roll() {
@@ -259,15 +262,15 @@
                 },
 
                 gameIsActive(value) {
-                    return this.selectedGames.includes(value)
+                    return this.selectedGame === value
                 },
 
                 filterMapsForGame(value) {
-                    this.selectedGames = [value]
+                    this.selectedGame = value
 
                     // Check if the current filter is valid for this game
                     const validFilters = this.filters.filter(filter => {
-                        return this.maps.some(map => map.games.includes(value) && map.filters.includes(filter))
+                        return this.maps.some(map => map.game === value && map.filters.includes(filter))
                     })
 
                     // Remove any items in selectedFilters that aren't in validFilters
@@ -299,9 +302,7 @@
                 filterMaps() {
                     // No filters are selected, so use all maps
                     if (this.selectedFilters.length === 0) {
-                        this.filteredMaps = this.maps.filter(map => map.games.some(g => this
-                                .selectedGames
-                                .includes(g)))
+                        this.filteredMaps = this.maps.filter(map => map.game === this.selectedGame)
                             .filter(map => !this.hiddenMaps.includes(map.name))
                     } else {
                         this.filteredMaps = this.maps.filter(map => {
@@ -313,7 +314,7 @@
                                 let intersection = map.filters.filter(x => this.selectedFilters
                                     .includes(x));
                                 return intersection.length == this.selectedFilters.length && map
-                                    .games.some(g => this.selectedGames.includes(g))
+                                    .game === this.selectedGame
                             })
                             .filter(map => !this.hiddenMaps.includes(map.name))
                     }
@@ -331,7 +332,7 @@
                 },
 
                 imageSrc() {
-                    return '/images/' + this.selected?.image
+                    return 'https://images.randomcod.com/' + this.selected?.image
                 }
             }))
         })

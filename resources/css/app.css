@@ -1,34 +1,47 @@
-@import 'tailwindcss';
-@import '../../vendor/livewire/flux/dist/flux.css';
+@import "tailwindcss";
+@import "../../vendor/livewire/flux/dist/flux.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-bo6-50: #fdf6ed;
-  --color-bo6-100: #f8e4cd;
-  --color-bo6-200: #f1c796;
-  --color-bo6-300: #e9a560;
-  --color-bo6-400: #e38535;
-  --color-bo6-500: #dc6824;
-  --color-bo6-600: #c24a1d;
-  --color-bo6-700: #a2321b;
-  --color-bo6-800: #84281c;
-  --color-bo6-900: #6d221a;
-  --color-bo6-950: #3e0e0a;
-  --color-bo6: #e38535;
+    --color-bo7-50: ##eef8ff;
+    --color-bo7-100: #d8efff;
+    --color-bo7-200: #bae3ff;
+    --color-bo7-300: #8ad4ff;
+    --color-bo7-400: #53bbff;
+    --color-bo7-500: #2b9bff;
+    --color-bo7-600: #147cfc;
+    --color-bo7-700: #0d64e8;
+    --color-bo7-800: #1253c2;
+    --color-bo7-900: #154693;
+    --color-bo7-950: #122c59;
+    --color-bo7: #2b9bff;
 
-  --color-mwiii-50: #fff0f0;
-  --color-mwiii-100: #ffdddd;
-  --color-mwiii-200: #ffc1c1;
-  --color-mwiii-300: #ff9595;
-  --color-mwiii-400: #ff5959;
-  --color-mwiii-500: #ff2626;
-  --color-mwiii-600: #fc0606;
-  --color-mwiii-700: #d70000;
-  --color-mwiii-800: #af0505;
-  --color-mwiii-900: #900c0c;
-  --color-mwiii-950: #500000;
-  --color-mwiii: #d70000;
+    --color-bo6-50: #fdf6ed;
+    --color-bo6-100: #f8e4cd;
+    --color-bo6-200: #f1c796;
+    --color-bo6-300: #e9a560;
+    --color-bo6-400: #e38535;
+    --color-bo6-500: #dc6824;
+    --color-bo6-600: #c24a1d;
+    --color-bo6-700: #a2321b;
+    --color-bo6-800: #84281c;
+    --color-bo6-900: #6d221a;
+    --color-bo6-950: #3e0e0a;
+    --color-bo6: #e38535;
+
+    --color-mwiii-50: #fff0f0;
+    --color-mwiii-100: #ffdddd;
+    --color-mwiii-200: #ffc1c1;
+    --color-mwiii-300: #ff9595;
+    --color-mwiii-400: #ff5959;
+    --color-mwiii-500: #ff2626;
+    --color-mwiii-600: #fc0606;
+    --color-mwiii-700: #d70000;
+    --color-mwiii-800: #af0505;
+    --color-mwiii-900: #900c0c;
+    --color-mwiii-950: #500000;
+    --color-mwiii: #d70000;
 }
 
 /*
@@ -40,20 +53,22 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentcolor);
+    }
 }
 
 @media screen and (min-width: 960px) {
-	html {
-		margin-left: calc(100vw - 100%);
-		margin-right: 0;
-	}
+    html {
+        margin-left: calc(100vw - 100%);
+        margin-right: 0;
+    }
 }
 
-[x-cloak] { display: none !important; }
+[x-cloak] {
+    display: none !important;
+}
