@@ -13,4 +13,14 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('maps', function () {
+    $config = config('maps');
+
+    return response()->json([
+        collect($config['maps'])->sortBy('name')->mapToGroups(function ($map) {
+            return [$map['games'][0] => $map['name']];
+        }),
+    ]);
+});
+
 Route::view('data', 'data');

@@ -764,5 +764,26 @@ return [
             'games' => ['bo6'],
             'filters' => ['prop', 'medium'],
         ],
+        [
+            'name' => 'Blitz',
+            'position' => [17, 1],
+            'image' => 'blitz.jpg',
+            'games' => ['bo6'],
+            'filters' => ['medium'],
+        ],
+        [
+            'name' => 'Eclipse',
+            'position' => [17, 1],
+            'image' => 'eclipse.jpg',
+            'games' => ['bo6'],
+            'filters' => ['small'],
+        ],
+        [
+            'name' => 'Shutdown',
+            'position' => [17, 1],
+            'image' => 'shutdown.jpg',
+            'games' => ['bo6'],
+            'filters' => ['medium'],
+        ],
     ],
 ];
