@@ -100,8 +100,8 @@ class Maps extends Component
 
         // Require an image when creating a new map (unless a filename is already present from config)
         if (!$existing && !$upload && empty($this->form['image'])) {
-            $this->addError('form.image', 'Image is required.');
-            return;
+            // $this->addError('form.image', 'Image is required.');
+            // return;
         }
 
         // Find by the original name shown in the table (editing)
