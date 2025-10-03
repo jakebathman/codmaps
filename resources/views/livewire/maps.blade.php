@@ -190,7 +190,20 @@
     @endif
 
     {{-- Maps table --}}
-    <div class="-mx-4 mt-8 sm:-mx-0">
+    <div class="mt-8">
+        <div class="w-full sm:w-64">
+            <label for="map-search" class="sr-only">Filter maps</label>
+            <input
+                id="map-search"
+                type="search"
+                wire:model.live.debounce.100ms="search"
+                class="block w-full rounded-md border-gray-300 text-sm shadow-xs focus:border-indigo-500 focus:ring-indigo-500 dark:border-white/10 dark:bg-gray-800 dark:text-white"
+                placeholder="Filter by name or game"
+                autocomplete="off"
+            >
+        </div>
+    </div>
+    <div class="-mx-4 mt-4 sm:-mx-0">
         <table class="min-w-full divide-y divide-gray-300 dark:divide-white/15">
             <thead>
                 <tr>
@@ -215,7 +228,7 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-900">
-                @foreach ($maps as $map)
+                @forelse ($maps as $map)
                     <tr wire:key="map-{{ md5($map['name']) }}">
                         <td class="w-full max-w-0 py-4 pr-3 pl-4 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0 dark:text-white">
                             <div class="flex items-center gap-3">
@@ -257,7 +270,13 @@
                             @endif
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td class="py-6 px-4 text-center text-sm text-gray-500 sm:px-6 dark:text-gray-400" colspan="4">
+                            No maps match your filters yet.
+                        </td>
+                    </tr>
+                @endforelse
 
             </tbody>
         </table>

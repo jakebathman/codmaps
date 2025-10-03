@@ -25,6 +25,8 @@ class Maps extends Component
 
     public $editing;
 
+    public $search = '';
+
     public $form = [
         'name' => '',
         'game' => null,
@@ -251,7 +253,17 @@ class Maps extends Component
 
     public function render()
     {
-        $maps = MapModel::all()
+        $search = trim((string) $this->search);
+
+        $maps = MapModel::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $like = '%' . $search . '%';
+                $query->where(function ($inner) use ($like) {
+                    $inner->where('name', 'like', $like)
+                        ->orWhere('game', 'like', $like);
+                });
+            })
+            ->get()
             ->map(function ($m) {
                 return [
                     'name' => $m->name,
