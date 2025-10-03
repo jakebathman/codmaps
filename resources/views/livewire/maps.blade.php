@@ -85,10 +85,18 @@
                         <label class="block text-xs font-medium text-gray-700 dark:text-gray-300">Preview</label>
                         <div class="mt-1 h-20 w-32 overflow-hidden rounded border border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-gray-800 flex items-center justify-center">
                             @if ($imageUpload)
-                                <img src="{{ $imageUpload->temporaryUrl() }}" alt="Preview" class="h-full w-full object-cover">
+                                <img
+                                    src="{{ $imageUpload->temporaryUrl() }}"
+                                    alt="Preview"
+                                    class="h-full w-full object-cover"
+                                >
                             @elseif (!empty($form['image']))
                                 @if ($this->imageUrl($form['image']))
-                                    <img src="{{ $this->imageUrl($form['image']) }}" alt="Current image" class="h-full w-full object-cover">
+                                    <img
+                                        src="{{ $this->imageUrl($form['image']) }}"
+                                        alt="Current image"
+                                        class="h-full w-full object-cover"
+                                    >
                                 @else
                                     <span class="text-xs text-gray-400">No image</span>
                                 @endif
@@ -191,16 +199,34 @@
 
     {{-- Maps table --}}
     <div class="mt-8">
-        <div class="w-full sm:w-64">
-            <label for="map-search" class="sr-only">Filter maps</label>
-            <input
-                id="map-search"
-                type="search"
-                wire:model.live.debounce.100ms="search"
-                class="block w-full rounded-md border-gray-300 text-sm shadow-xs focus:border-indigo-500 focus:ring-indigo-500 dark:border-white/10 dark:bg-gray-800 dark:text-white"
-                placeholder="Filter by name or game"
-                autocomplete="off"
-            >
+        <div class="flex flex-wrap items-center gap-2">
+            <div class="w-full sm:w-64">
+                <label
+                    for="map-search"
+                    class="sr-only"
+                >Filter maps</label>
+                <input
+                    id="map-search"
+                    type="search"
+                    wire:model.live.debounce.100ms="search"
+                    class="block w-full rounded-md border-gray-300 text-sm shadow-xs focus:border-indigo-500 focus:ring-indigo-500 dark:border-white/10 dark:bg-gray-800 dark:text-white"
+                    placeholder="Filter by name or game"
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                @foreach ($games as $key => $game)
+                    @php($isActive = $gameFilter === $key)
+                    <button
+                        type="button"
+                        wire:key="game-filter-{{ $key }}"
+                        wire:click="filterByGame('{{ $key }}')"
+                        class="rounded-md px-3 py-1.5 text-xs font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 {{ $isActive ? 'bg-indigo-600 text-white hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20' }}"
+                        aria-pressed="{{ $isActive ? 'true' : 'false' }}"
+                    >{{ $game['name'] ?? strtoupper($key) }}</button>
+                @endforeach
+            </div>
         </div>
     </div>
     <div class="-mx-4 mt-4 sm:-mx-0">
@@ -229,7 +255,12 @@
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-900">
                 @forelse ($maps as $map)
-                    <tr wire:key="map-{{ md5($map['name']) }}">
+                    @php($rowKey = md5($map['name']))
+                    <tr
+                        wire:key="map-{{ $rowKey }}"
+                        data-map-key="{{ $rowKey }}"
+                        id="map-row-{{ $rowKey }}"
+                    >
                         <td class="w-full max-w-0 py-4 pr-3 pl-4 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0 dark:text-white">
                             <div class="flex items-center gap-3">
                                 @if (!empty($this->imageUrl($map['image'])))
@@ -272,7 +303,10 @@
                     </tr>
                 @empty
                     <tr>
-                        <td class="py-6 px-4 text-center text-sm text-gray-500 sm:px-6 dark:text-gray-400" colspan="4">
+                        <td
+                            class="py-6 px-4 text-center text-sm text-gray-500 sm:px-6 dark:text-gray-400"
+                            colspan="4"
+                        >
                             No maps match your filters yet.
                         </td>
                     </tr>
@@ -292,3 +326,39 @@
     </div>
 
 </div>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('randomizer', () => ({
+            init() {
+
+            },
+        }));
+
+        window.addEventListener('maps:scroll-top', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        window.addEventListener('maps:scroll-to', (event) => {
+            const key = event?.detail?.key;
+            if (!key) {
+                return;
+            }
+
+            const scrollToRow = (attempt = 0) => {
+                const row = document.querySelector(`[data-map-key="${key}"]`);
+                if (!row) {
+                    if (attempt >= 5) {
+                        return;
+                    }
+                    requestAnimationFrame(() => scrollToRow(attempt + 1));
+                    return;
+                }
+
+                row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            };
+
+            scrollToRow();
+        });
+    });
+</script>

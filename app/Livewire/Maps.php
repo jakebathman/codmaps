@@ -2,13 +2,13 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\Map as MapModel;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
+use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 class Maps extends Component
 {
@@ -37,6 +37,7 @@ class Maps extends Component
     public $filterInput = '';
     public $imageUpload;
     public $defaultGame = 'bo7';
+    public $gameFilter = null;
 
     public function edit($mapName)
     {
@@ -49,6 +50,7 @@ class Maps extends Component
             $this->form['filters'] = $row->filters ?? [];
             $this->form['image'] = $row->image ?? '';
             $this->filterInput = '';
+            $this->dispatch('maps:scroll-top');
             return;
         }
     }
@@ -64,10 +66,15 @@ class Maps extends Component
         ];
         $this->filterInput = '';
         $this->imageUpload = null;
+        $this->dispatch('maps:scroll-top');
     }
 
     public function cancel()
     {
+        $map = $this->editing && $this->editing !== '(new)'
+        ? MapModel::where('name', $this->editing)->first()
+        : null;
+
         $this->reset('editing', 'form', 'filterInput', 'imageUpload');
         $this->form = [
             'name' => '',
@@ -75,14 +82,18 @@ class Maps extends Component
             'filters' => [],
             'image' => '',
         ];
+
+        if ($map) {
+            $this->dispatch('maps:scroll-to', key: md5($map->name), name: $map->name);
+        }
     }
 
     public function save()
     {
         // Identify existing row if editing an existing map
         $existing = $this->editing && $this->editing !== '(new)'
-            ? MapModel::where('name', $this->editing)->first()
-            : null;
+        ? MapModel::where('name', $this->editing)->first()
+        : null;
 
         $validated = $this->validate([
             'form.name' => [
@@ -101,7 +112,7 @@ class Maps extends Component
         $data['filters'] = array_values(array_unique($data['filters'] ?? []));
 
         // Require an image when creating a new map (unless a filename is already present from config)
-        if (!$existing && !$upload && empty($this->form['image'])) {
+        if (! $existing && ! $upload && empty($this->form['image'])) {
             // $this->addError('form.image', 'Image is required.');
             // return;
         }
@@ -109,7 +120,7 @@ class Maps extends Component
         // Find by the original name shown in the table (editing)
         $map = $existing;
 
-        if (!$map) {
+        if (! $map) {
             $map = new MapModel();
         }
 
@@ -133,7 +144,7 @@ class Maps extends Component
                 'visibility' => 'public',
             ]);
             $map->image = $filename;
-        } elseif (!$existing && !empty($this->form['image'])) {
+        } elseif (! $existing && ! empty($this->form['image'])) {
             // When importing/saving a config-backed map without re-uploading
             $map->image = basename($this->form['image']);
         }
@@ -145,6 +156,7 @@ class Maps extends Component
             return;
         }
 
+        $this->dispatch('maps:scroll-to', key: md5($map->name), name: $map->name);
         $this->cancel();
     }
 
@@ -157,11 +169,11 @@ class Maps extends Component
 
         // Only allow filters valid for the selected game
         $allowed = collect(config('maps.filters')[$this->form['game']] ?? []);
-        if (!$allowed->contains($value)) {
+        if (! $allowed->contains($value)) {
             return;
         }
 
-        if (!in_array($value, $this->form['filters'], true)) {
+        if (! in_array($value, $this->form['filters'], true)) {
             $this->form['filters'][] = $value;
         }
 
@@ -176,11 +188,11 @@ class Maps extends Component
         }
 
         $allowed = collect(config('maps.filters')[$this->form['game']] ?? []);
-        if (!$allowed->contains($value)) {
+        if (! $allowed->contains($value)) {
             return;
         }
 
-        if (!in_array($value, $this->form['filters'], true)) {
+        if (! in_array($value, $this->form['filters'], true)) {
             $this->form['filters'][] = $value;
         }
     }
@@ -188,14 +200,14 @@ class Maps extends Component
     public function removeFilter($value)
     {
         $this->form['filters'] = collect($this->form['filters'])
-            ->reject(fn ($f) => $f === $value)
+            ->reject(fn($f) => $f === $value)
             ->values()
             ->all();
     }
 
     public function delete()
     {
-        if (!$this->editing || $this->editing === '(new)') {
+        if (! $this->editing || $this->editing === '(new)') {
             return;
         }
 
@@ -222,7 +234,7 @@ class Maps extends Component
                     'updated_at' => $now,
                 ];
             })
-            ->filter(fn ($r) => $r['name'] !== '')
+            ->filter(fn($r) => $r['name'] !== '')
             ->values()
             ->all();
 
@@ -239,7 +251,7 @@ class Maps extends Component
                 continue;
             }
             $r2Path = $filename;
-            if (!Storage::disk('r2')->exists($r2Path) && Storage::disk('public')->exists($r2Path)) {
+            if (! Storage::disk('r2')->exists($r2Path) && Storage::disk('public')->exists($r2Path)) {
                 $stream = Storage::disk('public')->readStream($r2Path);
                 if ($stream) {
                     Storage::disk('r2')->put($r2Path, $stream, ['visibility' => 'public']);
@@ -254,6 +266,7 @@ class Maps extends Component
     public function render()
     {
         $search = trim((string) $this->search);
+        $gameFilter = $this->gameFilter;
 
         $maps = MapModel::query()
             ->when($search !== '', function ($query) use ($search) {
@@ -262,6 +275,9 @@ class Maps extends Component
                     $inner->where('name', 'like', $like)
                         ->orWhere('game', 'like', $like);
                 });
+            })
+            ->when($gameFilter !== null, function ($query) use ($gameFilter) {
+                $query->where('game', $gameFilter);
             })
             ->get()
             ->map(function ($m) {
@@ -281,6 +297,18 @@ class Maps extends Component
             'filters' => config('maps.filters'),
             'games' => config('maps.games'),
         ]);
+    }
+
+    public function filterByGame(?string $game = null): void
+    {
+        $game = $game !== null ? trim($game) : null;
+
+        $validGames = array_keys(config('maps.games') ?? []);
+        if ($game !== null && !in_array($game, $validGames, true)) {
+            return;
+        }
+
+        $this->gameFilter = $this->gameFilter === $game ? null : $game;
     }
 
     public function imageUrl(?string $filename): ?string
