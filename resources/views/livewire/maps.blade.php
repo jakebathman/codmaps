@@ -1,4 +1,12 @@
 <div class="px-4 sm:px-6 lg:px-8 py-10">
+    <div class="fixed top-3 left-3 z-50">
+        <a
+            href="{{ route('home') }}"
+            title="Go back home"
+            class="rounded-md bg-gray-200 px-3 py-2 text-xs font-semibold text-gray-800 shadow-xs hover:bg-gray-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20 dark:focus-visible:outline-white/30"
+        >&lt;</a>
+    </div>
+
     <div class="sm:flex sm:items-center">
         <div class="sm:flex-auto">
             <h1 class="text-base font-semibold text-gray-900 dark:text-white">Maps</h1>
@@ -7,7 +15,7 @@
             <button
                 wire:click="create"
                 type="button"
-                class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
+                class="cursor-pointer block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
             >Add map</button>
         </div>
     </div>
@@ -71,7 +79,7 @@
                             type="file"
                             accept=".jpg,.jpeg,.png"
                             wire:model="imageUpload"
-                            class="mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm file:font-medium hover:file:bg-gray-200 dark:text-gray-200 dark:file:bg-white/10 dark:hover:file:bg-white/20"
+                            class="cursor-pointer mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm file:font-medium hover:file:bg-gray-200 dark:text-gray-200 dark:file:bg-white/10 dark:hover:file:bg-white/20"
                         >
                         @error('form.image')
                             <div class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</div>
@@ -122,7 +130,7 @@
                                 <button
                                     type="button"
                                     wire:click="removeFilter('{{ $filter }}')"
-                                    class="-mr-1 rounded p-0.5 hover:bg-gray-200 dark:hover:bg-white/20"
+                                    class="cursor-pointer -mr-1 rounded p-0.5 hover:bg-gray-200 dark:hover:bg-white/20"
                                     aria-label="Remove {{ $filter }}"
                                 >×</button>
                             </span>
@@ -144,7 +152,7 @@
                         <button
                             type="button"
                             wire:click="addFilter"
-                            class="rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
+                            class="cursor-pointer rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
                         >Add</button>
                     </div>
 
@@ -163,7 +171,7 @@
                                     wire:key="suggestion-{{ md5($s) }}"
                                     type="button"
                                     wire:click="addFilterValue('{{ $s }}')"
-                                    class="rounded-md border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 dark:border-white/10 dark:text-gray-200 dark:hover:bg-white/10"
+                                    class="cursor-pointer rounded-md border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 dark:border-white/10 dark:text-gray-200 dark:hover:bg-white/10"
                                 >{{ $s }}</button>
                             @empty
                                 <span class="text-xs text-gray-500 dark:text-gray-400">No suggestions</span>
@@ -177,18 +185,18 @@
                     <div class="flex items-center gap-2">
                         <button
                             type="submit"
-                            class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
+                            class="cursor-pointer rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
                         >Save</button>
                         <button
                             type="button"
                             wire:click="cancel"
-                            class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 shadow-xs hover:bg-gray-50 dark:border-white/10 dark:bg-transparent dark:text-gray-200 dark:hover:bg-white/10"
+                            class="cursor-pointer rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 shadow-xs hover:bg-gray-50 dark:border-white/10 dark:bg-transparent dark:text-gray-200 dark:hover:bg-white/10"
                         >Cancel</button>
                         @if ($editing !== '(new)')
                             <button
                                 type="button"
                                 x-on:click.prevent="if (confirm('Delete {{ addslashes($editing) }}? This cannot be undone.')) { $wire.delete() }"
-                                class="ml-auto rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:bg-red-500 dark:hover:bg-red-400 dark:focus-visible:outline-red-500"
+                                class="cursor-pointer ml-auto rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:bg-red-500 dark:hover:bg-red-400 dark:focus-visible:outline-red-500"
                             >Delete</button>
                         @endif
                     </div>
@@ -222,7 +230,7 @@
                         type="button"
                         wire:key="game-filter-{{ $key }}"
                         wire:click="filterByGame('{{ $key }}')"
-                        class="rounded-md px-3 py-1.5 text-xs font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 {{ $isActive ? 'bg-indigo-600 text-white hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20' }}"
+                        class="cursor-pointer rounded-md px-3 py-1.5 text-xs font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 {{ $isActive ? 'bg-indigo-600 text-white hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20' }}"
                         aria-pressed="{{ $isActive ? 'true' : 'false' }}"
                     >{{ $game['name'] ?? strtoupper($key) }}</button>
                 @endforeach
@@ -315,16 +323,6 @@
             </tbody>
         </table>
     </div>
-    <div class="fixed bottom-3 right-3 z-50">
-        <button
-            x-data
-            x-on:click="$dispatch('maps:import-from-config')"
-            type="button"
-            title="Import maps from config"
-            class="rounded-md bg-gray-200 px-3 py-2 text-xs font-semibold text-gray-800 shadow-xs hover:bg-gray-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20 dark:focus-visible:outline-white/30"
-        >Import from config</button>
-    </div>
-
 </div>
 
 <script>

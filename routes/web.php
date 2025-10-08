@@ -13,7 +13,8 @@ Route::get('/', function () {
         'games' => $config['games'],
         'commitHash' => $hash,
     ]);
-});
+})
+    ->name('home');
 
 Route::get('maps', Maps::class)->name('maps');
 
