@@ -11,8 +11,10 @@ return [
     | as Mailgun, Postmark, AWS and more. This file provides the de facto
     | location for this type of information, allowing packages to have
     | a conventional file to locate the various service credentials.
-    |
-    */
+|
+*/
+
+    'api_key' => env('API_KEY'),
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),

@@ -308,7 +308,7 @@
                         this.filteredMaps = this.maps.filter(map => {
                                 // If the filter is for fav maps, filter that separately
                                 if (this.selectedFilters.includes('❤️')) {
-                                    return this.favoriteMaps.includes(map.name)
+                                    return this.favoriteMaps.includes(map.name) && map.game === this.selectedGame
                                 }
 
                                 let intersection = map.filters.filter(x => this.selectedFilters
@@ -338,4 +338,3 @@
         })
     </script>
 </x-layout>
-

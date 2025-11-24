@@ -10,7 +10,8 @@ return new class extends Migration
     {
         Schema::table('games', function (Blueprint $table) {
             $table->string('name')->after('id')->unique();
-            $table->boolean('is_active')->default(true)->after('name');
+            $table->string('key')->after('name')->unique();
+            $table->boolean('is_active')->default(true)->after('key');
         });
     }
 
@@ -18,6 +19,7 @@ return new class extends Migration
     {
         Schema::table('games', function (Blueprint $table) {
             $table->dropColumn('name');
+            $table->dropColumn('key');
             $table->dropColumn('is_active');
         });
     }
