@@ -9,6 +9,8 @@ class Map extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     protected $casts = [
         'filters' => 'array',
     ];

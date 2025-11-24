@@ -87,7 +87,7 @@
 
                 <label
                     for="isActive"
-                    class="group relative block h-8 w-14 mt-2 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:transparent] has-checked:bg-indigo-500 cursor-pointer"
+                    class="group relative block h-6 w-10 mt-2 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:transparent] has-checked:bg-indigo-500 dark:bg-gray-600 dark:has-checked:bg-indigo-600 cursor-pointer"
                 >
                     <input
                         wire:model="isActive"
@@ -96,7 +96,7 @@
                         class="peer sr-only"
                     >
 
-                    <span class="absolute inset-y-0 start-0 m-1 grid size-6 place-content-center rounded-full bg-white text-gray-700 transition-[inset-inline-start] peer-checked:start-6 peer-checked:*:first:hidden *:last:hidden peer-checked:*:last:block">
+                    <span class="absolute inset-y-0 start-0 m-1 grid size-4 place-content-center rounded-full bg-white text-gray-700 transition-[inset-inline-start] peer-checked:start-4 peer-checked:*:first:hidden *:last:hidden peer-checked:*:last:block dark:bg-gray-900 dark:text-gray-200">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"

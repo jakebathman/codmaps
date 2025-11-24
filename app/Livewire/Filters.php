@@ -18,6 +18,16 @@ class Filters extends Component
 
     public $showForm = false;
 
+    public $filterColors = [
+        'search' => 'blue',
+        'gunfight' => 'fuchsia',
+        'small' => 'yellow',
+        'medium' => 'orange',
+        'large' => 'red',
+        'prop' => 'teal',
+        'shipment' => 'indigo',
+    ];
+
     public function mount()
     {
         $this->filters = Filter::with('game')->get()->sortBy('game.name');

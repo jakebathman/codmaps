@@ -34,7 +34,7 @@
             >
                 <!-- Name -->
                 <div>
-                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300">Name</label>
+                    <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Name</label>
                     <input
                         type="text"
                         wire:model="form.name"
@@ -48,9 +48,9 @@
 
                 <!-- Game -->
                 <div>
-                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300">Game</label>
+                    <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Game</label>
                     <select
-                        wire:model="form.game"
+                        wire:model.live="form.game"
                         class="mt-1 block w-full rounded-md border-gray-300 text-sm shadow-xs focus:border-indigo-500 focus:ring-indigo-500 dark:border-white/10 dark:bg-gray-800 dark:text-white"
                     >
                         <option
@@ -70,7 +70,7 @@
                 <!-- Image upload + preview -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-start">
                     <div class="sm:col-span-2">
-                        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300">Image</label>
+                        <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Image</label>
                         <input
                             type="file"
                             accept=".jpg,.jpeg,.png"
@@ -86,7 +86,7 @@
                         <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">Saved as slug of name.</div>
                     </div>
                     <div class="sm:col-span-1">
-                        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300">Preview</label>
+                        <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Preview</label>
                         <div class="mt-1 h-20 w-32 overflow-hidden rounded border border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-gray-800 flex items-center justify-center">
                             @if ($imageUpload)
                                 <img
@@ -113,7 +113,7 @@
 
                 <!-- Filters -->
                 <div x-data>
-                    <label class="block text-xs font-medium text-gray-700 dark:text-gray-300">Filters</label>
+                    <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Filters</label>
 
                     <!-- Selected tags -->
                     <div class="mt-1 flex flex-wrap gap-2">
@@ -135,23 +135,6 @@
                         @endforelse
                     </div>
 
-                    <!-- Tag input -->
-                    <div class="mt-2 flex items-center gap-2">
-                        <input
-                            type="text"
-                            wire:model="filterInput"
-                            x-on:keydown.enter.prevent="$wire.addFilter()"
-                            x-on:keydown.",".prevent="$wire.addFilter()"
-                            class="block w-60 rounded-md border-gray-300 text-sm shadow-xs focus:border-indigo-500 focus:ring-indigo-500 dark:border-white/10 dark:bg-gray-800 dark:text-white"
-                            placeholder="Type filter and press Enter"
-                        >
-                        <button
-                            type="button"
-                            wire:click="addFilter"
-                            class="cursor-pointer rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
-                        >Add</button>
-                    </div>
-
                     <!-- Suggestions from selected game -->
                     @php
                         $allowed = collect($filters[$form['game']] ?? []);
@@ -162,7 +145,7 @@
                     @if ($form['game'])
                         <div class="mt-2 text-xs text-gray-600 dark:text-gray-300">Suggestions:</div>
                         <div class="mt-1 flex flex-wrap gap-2">
-                            @forelse($suggestions as $s)
+                            @forelse($this->suggestions() as $s)
                                 <button
                                     wire:key="suggestion-{{ md5($s) }}"
                                     type="button"
@@ -174,6 +157,58 @@
                             @endforelse
                         </div>
                     @endif
+                </div>
+
+                {{-- Is Active toggle --}}
+                <div>
+                    <label
+                        for="isActive"
+                        class="block text-sm/6 font-medium text-gray-900 dark:text-white"
+                    >Is Active</label>
+
+                    <label
+                        for="isActive"
+                        class="group relative block h-6 w-10 mt-2 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:transparent] has-checked:bg-indigo-500 dark:bg-gray-600 dark:has-checked:bg-indigo-600 cursor-pointer"
+                    >
+                        <input
+                            wire:model="isActive"
+                            type="checkbox"
+                            id="isActive"
+                            class="peer sr-only"
+                        >
+
+                        <span class="absolute inset-y-0 start-0 m-1 grid size-4 place-content-center rounded-full bg-white text-gray-700 transition-[inset-inline-start] peer-checked:start-4 peer-checked:*:first:hidden *:last:hidden peer-checked:*:last:block dark:bg-gray-900 dark:text-gray-200">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="size-3"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M6 18 18 6M6 6l12 12"
+                                ></path>
+                            </svg>
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="size-3"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="m4.5 12.75 6 6 9-13.5"
+                                ></path>
+                            </svg>
+                        </span>
+                    </label>
                 </div>
 
                 <!-- Actions -->

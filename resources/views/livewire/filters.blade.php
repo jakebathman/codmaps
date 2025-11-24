@@ -105,7 +105,7 @@
 
                 <label
                     for="isActive"
-                    class="group relative block h-8 w-14 mt-2 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:transparent] has-checked:bg-indigo-500 cursor-pointer"
+                    class="group relative block h-6 w-10 mt-2 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:transparent] has-checked:bg-indigo-500 dark:bg-gray-600 dark:has-checked:bg-indigo-600 cursor-pointer"
                 >
                     <input
                         type="checkbox"
@@ -114,7 +114,7 @@
                         class="peer sr-only"
                     >
 
-                    <span class="absolute inset-y-0 start-0 m-1 grid size-6 place-content-center rounded-full bg-white text-gray-700 transition-[inset-inline-start] peer-checked:start-6 peer-checked:*:first:hidden *:last:hidden peer-checked:*:last:block">
+                    <span class="absolute inset-y-0 start-0 m-1 grid size-4 place-content-center rounded-full bg-white text-gray-700 transition-[inset-inline-start] peer-checked:start-4 peer-checked:*:first:hidden *:last:hidden peer-checked:*:last:block dark:bg-gray-900 dark:text-gray-200">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -202,10 +202,20 @@
                                         wire:key="filter-{{ $filter['id'] }}"
                                         class="{{ $filterId == $filter['id'] ? 'bg-indigo-50' : '' }}"
                                     >
-                                        <td class="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-3 dark:text-white">{{ $filter['id'] }} </td>
-                                        <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $filter['game']['name'] }} </td>
-                                        <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $filter['name'] }} </td>
-                                        <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $filter['is_active'] ? 'Yes' : 'No' }}</td>
+                                        <td class="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-3 dark:text-white">
+                                            {{ $filter['id'] }}
+                                        </td>
+                                        <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
+                                            {{ $filter['game']['name'] }}
+                                        </td>
+                                        <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
+                                            <flux:badge color="{{ $filterColors[$filter['name']] ?? 'zinc' }}">
+                                                {{ $filter['name'] }}
+                                            </flux:badge>
+                                        </td>
+                                        <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
+                                            {{ $filter['is_active'] ? 'Yes' : 'No' }}
+                                        </td>
                                         <td class="py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-3 cursor-pointer">
                                             <button
                                                 wire:click="edit({{ $filter['id'] }})"

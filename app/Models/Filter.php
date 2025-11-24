@@ -34,4 +34,16 @@ class Filter extends Model
     {
         $query->where('is_active', true);
     }
+
+    public static function asArray(): array
+    {
+        $allFilters = self::active()->with('game')->get();
+        return Filter::active()->with('game')->get()->mapWithKeys(function ($filter) use ($allFilters) {
+            return [
+                $filter->game->key => $allFilters->where('game_id', $filter->game->id)->pluck('name'),
+            ];
+        })
+            ->toArray();
+
+    }
 }

@@ -2,10 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Models\Filter;
 use App\Models\Map as MapModel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -23,9 +25,11 @@ class Maps extends Component
         'shipment' => 'indigo',
     ];
 
-    public $editing;
+    public $editing = null;
 
     public $search = '';
+
+    public $selectedGame;
 
     public $form = [
         'name' => '',
@@ -263,6 +267,14 @@ class Maps extends Component
         }
     }
 
+    public function suggestions()
+    {
+        $filters = Filter::asArray();
+        $allowed = collect($filters[$this->form['game']] ?? []);
+        $selected = collect($this->form['filters'] ?? []);
+        return $allowed->reject(fn($f) => $selected->contains($f))->values();
+    }
+
     public function render()
     {
         $search = trim((string) $this->search);
@@ -294,7 +306,7 @@ class Maps extends Component
             ->toArray();
         return view('livewire.maps', [
             'maps' => $maps,
-            'filters' => config('maps.filters'),
+            'filters' => Filter::asArray(),
             'games' => config('maps.games'),
         ]);
     }
@@ -304,7 +316,7 @@ class Maps extends Component
         $game = $game !== null ? trim($game) : null;
 
         $validGames = array_keys(config('maps.games') ?? []);
-        if ($game !== null && !in_array($game, $validGames, true)) {
+        if ($game !== null && ! in_array($game, $validGames, true)) {
             return;
         }
 

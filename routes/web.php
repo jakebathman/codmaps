@@ -12,18 +12,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     $hash = trim(exec('git log --pretty="%h" -n1 HEAD'));
 
-    $allFilters = Filter::active()->with('game')->get();
-
-    $filters = $allFilters->mapWithKeys(function ($filter) use ($allFilters) {
-        return [
-            $filter->game->key => $allFilters->where('game_id', $filter->game->id)->pluck('name'),
-        ];
-    })
-        ->toArray();
-
     return view('home', [
         'maps' => Map::orderBy('name')->get(),
-        'filters' => $filters,
+        'filters' => Filter::asArray(),
         'games' => Game::active()->get()->mapWithKeys(function ($game) {
             return [$game->key => ['name' => $game->name]];
         })->toArray(),
