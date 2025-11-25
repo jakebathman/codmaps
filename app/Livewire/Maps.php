@@ -4,10 +4,10 @@ namespace App\Livewire;
 
 use App\Models\Filter;
 use App\Models\Game;
+use App\Models\Map;
 use App\Models\Map as MapModel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -99,10 +99,20 @@ class Maps extends Component
         ? MapModel::where('name', $this->editing)->first()
         : null;
 
+        $allMapsForGame = MapModel::where('game', $this->form['game'])
+            ->when($existing, fn($q) => $q->whereNot('id', $existing->id))
+            ->pluck('name')
+            ->map(fn($n) => (string) strtolower($n))
+            ->toArray();
+
         $validated = $this->validate([
             'form.name' => [
                 'required', 'string', 'max:255',
-                Rule::unique('maps', 'name')->ignore($existing?->id),
+                function ($attribute, $value, $fail) use ($allMapsForGame) {
+                    if (in_array(strtolower($value), $allMapsForGame, true)) {
+                        $fail("This is a duplicate of another map for this game.");
+                    }
+                },
             ],
             'form.game' => 'required|string|max:255',
             'form.filters' => 'array',
