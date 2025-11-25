@@ -34,4 +34,11 @@ class Game extends Model
     {
         $query->where('is_active', true);
     }
+
+    public static function asArray(): array
+    {
+        return self::active()->get()->mapWithKeys(function ($game) {
+            return [$game->key => ['name' => $game->name]];
+        })->toArray();
+    }
 }

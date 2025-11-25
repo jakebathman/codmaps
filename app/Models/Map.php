@@ -14,4 +14,9 @@ class Map extends Model
     protected $casts = [
         'filters' => 'array',
     ];
+
+    public function scopeActive($query)
+    {
+        $query->where('is_active', true);
+    }
 }

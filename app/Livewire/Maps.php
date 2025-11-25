@@ -3,11 +3,11 @@
 namespace App\Livewire;
 
 use App\Models\Filter;
+use App\Models\Game;
 use App\Models\Map as MapModel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -166,13 +166,14 @@ class Maps extends Component
 
     public function addFilter()
     {
+        dd(__CLASS__ . '@' . __FUNCTION__ . '#' . __LINE__);
         $value = trim((string) $this->filterInput);
         if ($value === '') {
             return;
         }
 
         // Only allow filters valid for the selected game
-        $allowed = collect(config('maps.filters')[$this->form['game']] ?? []);
+        $allowed = collect((Filter::asArray())[$this->form['game']] ?? []);
         if (! $allowed->contains($value)) {
             return;
         }
@@ -191,7 +192,7 @@ class Maps extends Component
             return;
         }
 
-        $allowed = collect(config('maps.filters')[$this->form['game']] ?? []);
+        $allowed = collect(Filter::asArray()[$this->form['game']] ?? []);
         if (! $allowed->contains($value)) {
             return;
         }
@@ -227,7 +228,7 @@ class Maps extends Component
     public function importFromConfig()
     {
         $now = now();
-        $rows = collect(config('maps.maps'))
+        $rows = collect(Game::asArray())
             ->map(function ($m) use ($now) {
                 return [
                     'name' => $m['name'] ?? '',
@@ -299,6 +300,7 @@ class Maps extends Component
                     'filters' => $m->filters ?? [],
                     'image' => $m->image ?? '',
                     'image_url' => $m->image ? Storage::disk('r2')->url($m->image) : null,
+                    'is_active' => $m->is_active,
                 ];
             })
             ->sortBy('name')
@@ -307,7 +309,7 @@ class Maps extends Component
         return view('livewire.maps', [
             'maps' => $maps,
             'filters' => Filter::asArray(),
-            'games' => config('maps.games'),
+            'games' => Game::asArray(),
         ]);
     }
 
@@ -315,7 +317,7 @@ class Maps extends Component
     {
         $game = $game !== null ? trim($game) : null;
 
-        $validGames = array_keys(config('maps.games') ?? []);
+        $validGames = array_keys(Game::asArray() ?? []);
         if ($game !== null && ! in_array($game, $validGames, true)) {
             return;
         }

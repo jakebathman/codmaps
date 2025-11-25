@@ -286,6 +286,10 @@
                     >Filters</th>
                     <th
                         scope="col"
+                        class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell dark:text-white"
+                    >Is Active</th>
+                    <th
+                        scope="col"
                         class="py-3.5 pr-4 pl-3 sm:pr-3"
                     >
                         <span class="sr-only">Edit</span>
@@ -320,6 +324,8 @@
                                                 <flux:badge color="{{ $filterColors[$filter] ?? 'zinc' }}">{{ $filter }}</flux:badge>
                                             @endforeach
                                         </dd>
+                                        <dt class="sr-only">Is Active</dt>
+                                        <dd class="mt-1 truncate text-gray-700 dark:text-gray-300">{{ $map['is_active'] }}</dd>
                                     </dl>
                                 </div>
                             </div>
@@ -330,6 +336,7 @@
                                 <flux:badge color="{{ $filterColors[$filter] ?? 'zinc' }}">{{ $filter }}</flux:badge>
                             @endforeach
                         </td>
+                        <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell dark:text-gray-400">{{ $map['is_active'] ? 'Yes' : 'No' }}</td>
                         <td class="py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-3">
                             @if (!$editing)
                                 <button

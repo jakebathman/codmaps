@@ -13,11 +13,9 @@ Route::get('/', function () {
     $hash = trim(exec('git log --pretty="%h" -n1 HEAD'));
 
     return view('home', [
-        'maps' => Map::orderBy('name')->get(),
+        'maps' => Map::active()->orderBy('name')->get(),
         'filters' => Filter::asArray(),
-        'games' => Game::active()->get()->mapWithKeys(function ($game) {
-            return [$game->key => ['name' => $game->name]];
-        })->toArray(),
+        'games' => Game::asArray(),
         'commitHash' => $hash,
     ]);
 })
