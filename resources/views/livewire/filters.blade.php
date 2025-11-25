@@ -175,7 +175,7 @@
                                     <th
                                         scope="col"
                                         class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-3 dark:text-white"
-                                    >Id</th>
+                                    >Position</th>
                                     <th
                                         scope="col"
                                         class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
@@ -197,13 +197,21 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-white/10">
-                                @foreach ($filters as $filter)
+                                @foreach ($filters as $k => $filter)
+                                    @php
+                                        $oldPosition = $filter['position'] > $k ? $k + 1 : $filter['position'];
+                                        $oldGame = $filter['game']['name'];
+                                    @endphp
                                     <tr
+                                        draggable='true'
+                                        ondragstart='start()'
+                                        ondragover='dragover()'
+                                        x-on:dragend="$wire.sortItem({{ $filter['id'] }}, event.target.rowIndex, {{ $k }})"
                                         wire:key="filter-{{ $filter['id'] }}"
-                                        class="{{ $filterId == $filter['id'] ? 'bg-indigo-50' : '' }}"
+                                        class="{{ $filterId == $filter['id'] ? 'bg-indigo-50' : '' }} {{ $filter['position'] === 1 ? 'border-t-4 ' : '' }}"
                                     >
                                         <td class="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-3 dark:text-white">
-                                            {{ $filter['id'] }}
+                                            {{ $filter['position'] }}
                                         </td>
                                         <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
                                             {{ $filter['game']['name'] }}
@@ -232,4 +240,22 @@
         </div>
 
     </div>
+    <script>
+        var row;
+
+        function start() {
+            row = event.target;
+        }
+
+        function dragover() {
+            var e = event;
+            e.preventDefault();
+
+            let children = Array.from(e.target.parentNode.parentNode.children);
+            if (children.indexOf(e.target.parentNode) > children.indexOf(row))
+                e.target.parentNode.after(row);
+            else
+                e.target.parentNode.before(row);
+        }
+    </script>
 </div>

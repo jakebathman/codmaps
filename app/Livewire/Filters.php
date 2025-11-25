@@ -89,4 +89,25 @@ class Filters extends Component
         $this->reset('filterId', 'gameId', 'name', 'isActive');
         $this->showForm = false;
     }
+
+    public function sortItem($itemId, $position, $k)
+    {
+        $oldPositionItem = Filter::all()->firstWhere('id', $itemId)->toArray();
+        $oldPosition = $oldPositionItem['position'] > $k ? $k : $oldPositionItem['position'] - 1;
+        $newGroupPosition = max(0, $oldPosition - ($k - $position) - 1);
+        $filters = Filter::where('game_id', $oldPositionItem['game_id'])->get();
+
+        $filters = array_filter($filters->toArray(), fn($f) => $f['id'] !== $oldPositionItem['id']);
+        array_splice($filters, $newGroupPosition, 0, [$oldPositionItem]);
+        foreach ($filters as $index => $filter) {
+            Filter::where('game_id', $oldPositionItem['game_id'])->where('filters.id', $filter['id'])->update(['position' => $index + 1]);
+        }
+
+        $this->resetFilters();
+    }
+
+    public function resetFilters()
+    {
+        $this->filters = Filter::with('game')->get()->sortBy('game.name');
+    }
 }

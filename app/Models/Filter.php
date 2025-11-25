@@ -16,7 +16,29 @@ class Filter extends Model
         'game_id',
         'name',
         'is_active',
+        'position',
     ];
+
+    // boot to add default ordering by position
+    protected static function booted(): void
+    {
+        static::addGlobalScope('sortByGameAndPosition', function ($builder) {
+            $table = $builder->getModel()->getTable();
+
+            $builder
+                ->leftJoin('games', 'games.id', '=', "$table.game_id")
+                ->orderBy('games.name')
+                ->orderBy("$table.position")
+                ->select("$table.*"); // avoid column collisions
+        });
+
+        static::saving(function ($filter) {
+            if (is_null($filter->position)) {
+                $maxPosition = self::where('game_id', $filter->game_id)->max('position');
+                $filter->position = is_null($maxPosition) ? 1 : $maxPosition + 1;
+            }
+        });
+    }
 
     protected function casts(): array
     {
@@ -32,7 +54,7 @@ class Filter extends Model
 
     public function scopeActive(Builder $query): void
     {
-        $query->where('is_active', true);
+        $query->where('filters.is_active', true);
     }
 
     public static function asArray(): array
