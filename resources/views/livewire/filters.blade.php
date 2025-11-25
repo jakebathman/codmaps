@@ -208,7 +208,7 @@
                                         ondragover='dragover()'
                                         x-on:dragend="$wire.sortItem({{ $filter['id'] }}, event.target.rowIndex, {{ $k }})"
                                         wire:key="filter-{{ $filter['id'] }}"
-                                        class="{{ $filterId == $filter['id'] ? 'bg-indigo-50' : '' }} {{ $filter['position'] === 1 ? 'border-t-4 ' : '' }}"
+                                        class="{{ $filterId == $filter['id'] ? 'bg-indigo-50 dark:bg-indigo-900' : '' }} {{ $filter['position'] === 1 ? 'border-t-4 bg-white dark:bg-black' : '' }}"
                                     >
                                         <td class="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-3 dark:text-white">
                                             {{ $filter['position'] }}

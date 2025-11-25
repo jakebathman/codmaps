@@ -274,7 +274,7 @@
                 <tr>
                     <th
                         scope="col"
-                        class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0 dark:text-white"
+                        class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-3 dark:text-white"
                     >Name</th>
                     <th
                         scope="col"
@@ -286,7 +286,7 @@
                     >Filters</th>
                     <th
                         scope="col"
-                        class="py-3.5 pr-4 pl-3 sm:pr-0"
+                        class="py-3.5 pr-4 pl-3 sm:pr-3"
                     >
                         <span class="sr-only">Edit</span>
                     </th>
@@ -300,7 +300,7 @@
                         data-map-key="{{ $rowKey }}"
                         id="map-row-{{ $rowKey }}"
                     >
-                        <td class="w-full max-w-0 py-4 pr-3 pl-4 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0 dark:text-white">
+                        <td class="w-full max-w-0 py-4 pr-3 pl-4 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-3 dark:text-white">
                             <div class="flex items-center gap-3">
                                 @if (!empty($this->imageUrl($map['image'])))
                                     <img
@@ -330,7 +330,7 @@
                                 <flux:badge color="{{ $filterColors[$filter] ?? 'zinc' }}">{{ $filter }}</flux:badge>
                             @endforeach
                         </td>
-                        <td class="py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-0">
+                        <td class="py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-3">
                             @if (!$editing)
                                 <button
                                     wire:click="edit('{{ $map['name'] }}')"
