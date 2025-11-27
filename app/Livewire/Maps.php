@@ -119,6 +119,7 @@ class Maps extends Component
             'form.game' => 'required|string|max:255',
             'form.filters' => 'array',
             'form.filters.*' => 'string',
+            'form.is_active' => 'boolean',
             'imageUpload' => 'nullable|file|mimes:jpg,jpeg,png',
         ]);
         $data = $validated['form'];
@@ -144,6 +145,7 @@ class Maps extends Component
         $map->game = $data['game'];
         $map->filters = $data['filters'];
         $map->is_active = $data['is_active'] ?? false;
+        dd($data);
 
         // Handle image upload
         if ($upload) {
