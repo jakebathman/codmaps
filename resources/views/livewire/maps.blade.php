@@ -171,7 +171,7 @@
                         class="group relative block h-6 w-10 mt-2 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:transparent] has-checked:bg-indigo-500 dark:bg-gray-600 dark:has-checked:bg-indigo-600 cursor-pointer"
                     >
                         <input
-                            wire:model="isActive"
+                            wire:model="form.is_active"
                             type="checkbox"
                             id="isActive"
                             class="peer sr-only"
@@ -255,6 +255,7 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
+                {{-- Filter by game --}}
                 @foreach ($games as $key => $game)
                     @php($isActive = $gameFilter === $key)
                     <button
@@ -265,6 +266,22 @@
                         aria-pressed="{{ $isActive ? 'true' : 'false' }}"
                     >{{ $game['name'] ?? strtoupper($key) }}</button>
                 @endforeach
+
+                {{-- Other preset filters --}}
+                <button
+                    type="button"
+                    wire:key="preset-filter-{{ $key }}"
+                    wire:click="setFilterByMissingImage()"
+                    class="cursor-pointer rounded-md px-3 py-1.5 text-xs font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 {{ $filterByMissingImage ? 'bg-indigo-600 text-white hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20' }}"
+                    aria-pressed="{{ $filterByMissingImage ? 'true' : 'false' }}"
+                >🚫🌃</button>
+                <button
+                    type="button"
+                    wire:key="preset-filter-{{ $key }}"
+                    wire:click="setFilterByInactive()"
+                    class="cursor-pointer rounded-md px-3 py-1.5 text-xs font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 {{ $filterByInactive ? 'bg-indigo-600 text-white hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20' }}"
+                    aria-pressed="{{ $filterByInactive ? 'true' : 'false' }}"
+                >Inactive</button>
             </div>
         </div>
     </div>

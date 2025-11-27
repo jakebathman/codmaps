@@ -36,12 +36,15 @@ class Maps extends Component
         'game' => null,
         'filters' => [],
         'image' => '',
+        'is_active' => false,
     ];
 
     public $filterInput = '';
     public $imageUpload;
     public $defaultGame = 'bo7';
     public $gameFilter = null;
+    public $filterByMissingImage = false;
+    public $filterByInactive = false;
 
     public function edit($mapId)
     {
@@ -109,7 +112,7 @@ class Maps extends Component
                 'required', 'string', 'max:255',
                 function ($attribute, $value, $fail) use ($allMapsForGame) {
                     if (in_array(strtolower($value), $allMapsForGame, true)) {
-                        $fail("This is a duplicate of another map for this game.");
+                        $fail('This is a duplicate of another map for this game.');
                     }
                 },
             ],
@@ -140,6 +143,7 @@ class Maps extends Component
         $map->name = $data['name'];
         $map->game = $data['game'];
         $map->filters = $data['filters'];
+        $map->is_active = $data['is_active'] ?? false;
 
         // Handle image upload
         if ($upload) {
@@ -288,7 +292,6 @@ class Maps extends Component
     public function render()
     {
         $search = trim((string) $this->search);
-        $gameFilter = $this->gameFilter;
 
         $maps = MapModel::query()
             ->when($search !== '', function ($query) use ($search) {
@@ -298,8 +301,14 @@ class Maps extends Component
                         ->orWhere('game', 'like', $like);
                 });
             })
-            ->when($gameFilter !== null, function ($query) use ($gameFilter) {
-                $query->where('game', $gameFilter);
+            ->when($this->gameFilter !== null, function ($query) {
+                $query->where('game', $this->gameFilter);
+            })
+            ->when($this->filterByMissingImage, function ($query) {
+                $query->whereNull('image')->orWhere('image', '');
+            })
+            ->when($this->filterByInactive, function ($query) {
+                $query->where('is_active', false);
             })
             ->get()
             ->map(function ($m) {
@@ -334,6 +343,16 @@ class Maps extends Component
         }
 
         $this->gameFilter = $this->gameFilter === $game ? null : $game;
+    }
+
+    public function setFilterByMissingImage(): void
+    {
+        $this->filterByMissingImage = ! $this->filterByMissingImage;
+    }
+
+    public function setFilterByInactive(): void
+    {
+        $this->filterByInactive = ! $this->filterByInactive;
     }
 
     public function imageUrl(?string $filename): ?string
