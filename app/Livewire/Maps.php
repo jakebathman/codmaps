@@ -43,12 +43,11 @@ class Maps extends Component
     public $defaultGame = 'bo7';
     public $gameFilter = null;
 
-    public function edit($mapName)
+    public function edit($mapId)
     {
-        // Prefer DB if present
-        $row = MapModel::where('name', $mapName)->first();
+        $row = MapModel::where('id', $mapId)->first();
         if ($row) {
-            $this->editing = $row->name;
+            $this->editing = $row->id;
             $this->form['name'] = $row->name;
             $this->form['game'] = $row->game;
             $this->form['filters'] = $row->filters ?? [];
@@ -76,7 +75,7 @@ class Maps extends Component
     public function cancel()
     {
         $map = $this->editing && $this->editing !== '(new)'
-        ? MapModel::where('name', $this->editing)->first()
+        ? MapModel::where('id', $this->editing)->first()
         : null;
 
         $this->reset('editing', 'form', 'filterInput', 'imageUpload');
@@ -88,7 +87,7 @@ class Maps extends Component
         ];
 
         if ($map) {
-            $this->dispatch('maps:scroll-to', key: md5($map->name), name: $map->name);
+            $this->dispatch('maps:scroll-to', key: md5($map->id));
         }
     }
 
@@ -96,7 +95,7 @@ class Maps extends Component
     {
         // Identify existing row if editing an existing map
         $existing = $this->editing && $this->editing !== '(new)'
-        ? MapModel::where('name', $this->editing)->first()
+        ? MapModel::where('id', $this->editing)->first()
         : null;
 
         $allMapsForGame = MapModel::where('game', $this->form['game'])
@@ -170,7 +169,7 @@ class Maps extends Component
             return;
         }
 
-        $this->dispatch('maps:scroll-to', key: md5($map->name), name: $map->name);
+        $this->dispatch('maps:scroll-to', key: md5($map->id));
         $this->cancel();
     }
 
@@ -226,7 +225,7 @@ class Maps extends Component
             return;
         }
 
-        $map = MapModel::where('name', $this->editing)->first();
+        $map = MapModel::where('id', $this->editing)->first();
         if ($map) {
             $map->delete();
         }
@@ -305,6 +304,7 @@ class Maps extends Component
             ->get()
             ->map(function ($m) {
                 return [
+                    'id' => $m->id,
                     'name' => $m->name,
                     'game' => $m->game,
                     'filters' => $m->filters ?? [],
@@ -314,8 +314,9 @@ class Maps extends Component
                 ];
             })
             ->sortBy('name')
-            ->keyBy('name')
+            ->keyBy('id')
             ->toArray();
+
         return view('livewire.maps', [
             'maps' => $maps,
             'filters' => Filter::asArray(),

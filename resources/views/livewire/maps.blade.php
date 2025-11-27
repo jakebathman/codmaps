@@ -298,7 +298,7 @@
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-900">
                 @forelse ($maps as $map)
-                    @php($rowKey = md5($map['name']))
+                    @php($rowKey = md5($map['id']))
                     <tr
                         wire:key="map-{{ $rowKey }}"
                         data-map-key="{{ $rowKey }}"
@@ -340,7 +340,7 @@
                         <td class="py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-3">
                             @if (!$editing)
                                 <button
-                                    wire:click="edit('{{ $map['name'] }}')"
+                                    wire:click="edit('{{ $map['id'] }}')"
                                     type="button"
                                     class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 cursor-pointer"
                                 >Edit</button>
