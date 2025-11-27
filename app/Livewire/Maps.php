@@ -145,7 +145,6 @@ class Maps extends Component
         $map->game = $data['game'];
         $map->filters = $data['filters'];
         $map->is_active = $data['is_active'] ?? false;
-        dd($data);
 
         // Handle image upload
         if ($upload) {
