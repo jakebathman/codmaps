@@ -5,7 +5,7 @@
 
     <div class="sm:flex sm:items-center pt-5">
         <div class="sm:flex-auto">
-            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Maps</h1>
+            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Maps ({{ count($maps) }})</h1>
         </div>
         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
             <button
