@@ -1,5 +1,5 @@
 <div class="px-4 sm:px-6 lg:px-8 py-10">
-    <div class="fixed top-3 left-3 z-50">
+    <div class="fixed top-3 left-3 right-3 z-50">
         <x-editor-nav-buttons />
     </div>
 

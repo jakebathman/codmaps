@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiDataController;
+use App\Http\Controllers\GithubAuthController;
 use App\Livewire\Filters;
 use App\Livewire\Games;
 use App\Livewire\Maps;
@@ -21,9 +22,15 @@ Route::get('/', function () {
 })
     ->name('home');
 
-Route::get('maps', Maps::class)->name('maps');
-Route::get('filters', Filters::class)->name('filters');
-Route::get('games', Games::class)->name('games');
+Route::get('auth/github', [GithubAuthController::class, 'redirect'])->name('github.redirect');
+Route::get('auth/github/callback', [GithubAuthController::class, 'callback'])->name('github.callback');
+Route::post('logout', [GithubAuthController::class, 'logout'])->name('logout');
+
+Route::group(['middleware' => ['github.auth']], function () {
+    Route::get('maps', Maps::class)->middleware('github.auth')->name('maps');
+    Route::get('filters', Filters::class)->name('filters');
+    Route::get('games', Games::class)->name('games');
+});
 
 Route::view('data', 'data');
 

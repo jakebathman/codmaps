@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'github_allowed_username' => env('GITHUB_ALLOWED_USERNAME'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

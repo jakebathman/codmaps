@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'api.key' => \App\Http\Middleware\EnsureApiKeyIsValid::class,
+            'github.auth' => \App\Http\Middleware\EnsureGithubAuthenticated::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

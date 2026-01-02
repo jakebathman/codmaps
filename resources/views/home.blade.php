@@ -1,11 +1,38 @@
 <x-layout>
     <div class="h-dvh w-full bg-linear-to-b from-indigo-950/5 via-purple-950/5 to-pink-950/5 dark:text-purple-100 dark:bg-linear-to-b dark:from-indigo-950/30 dark:via-purple-950/30 dark:to-pink-950/30">
+        @if (session()->has('github_user'))
+            <a
+                href="{{ route('maps') }}"
+                title="Admin"
+                aria-label="Admin"
+                class="fixed top-3 right-3 z-50 inline-flex items-center justify-center rounded-full bg-white/70 text-gray-700 shadow-sm backdrop-blur hover:bg-white dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    class="h-9 w-9 p-2"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M11.079 2.25h1.842a.75.75 0 0 1 .746.683l.167 1.998a7.47 7.47 0 0 1 1.9.79l1.64-1.126a.75.75 0 0 1 .983.13l1.302 1.302a.75.75 0 0 1 .13.983l-1.126 1.64c.347.58.607 1.202.79 1.9l1.998.167a.75.75 0 0 1 .683.746v1.842a.75.75 0 0 1-.683.746l-1.998.167a7.47 7.47 0 0 1-.79 1.9l1.126 1.64a.75.75 0 0 1-.13.983l-1.302 1.302a.75.75 0 0 1-.983.13l-1.64-1.126a7.47 7.47 0 0 1-1.9.79l-.167 1.998a.75.75 0 0 1-.746.683h-1.842a.75.75 0 0 1-.746-.683l-.167-1.998a7.47 7.47 0 0 1-1.9-.79l-1.64 1.126a.75.75 0 0 1-.983-.13l-1.302-1.302a.75.75 0 0 1-.13-.983l1.126-1.64a7.47 7.47 0 0 1-.79-1.9l-1.998-.167A.75.75 0 0 1 2.25 12.921v-1.842a.75.75 0 0 1 .683-.746l1.998-.167a7.47 7.47 0 0 1 .79-1.9l-1.126-1.64a.75.75 0 0 1 .13-.983l1.302-1.302a.75.75 0 0 1 .983-.13l1.64 1.126a7.47 7.47 0 0 1 1.9-.79l.167-1.998a.75.75 0 0 1 .746-.683ZM12 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Z"
+                        clip-rule="evenodd"
+                    />
+                </svg>
+            </a>
+        @endif
 
         <div
             x-cloak
             x-data="randomizer"
             class="flex flex-col justify-center items-center h-full gap-6 py-6 px-6 md:px-12 lg:px-24"
         >
+            @if (session('error'))
+                <div class="w-full sm:w-2/3 text-center rounded-lg bg-red-100 text-red-900 px-4 py-2 font-semibold">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             {{-- Top filter buttons --}}
             <div class="w-full flex flex-col-reverse gap-4 sm:flex-row sm:justify-between z-20">
                 <div class="w-full flex-row h-10 gap-y-2 flex justify-center sm:justify-start sm:w-2/3 flex-wrap">
