@@ -55,6 +55,7 @@ class Maps extends Component
             $this->form['game'] = $row->game;
             $this->form['filters'] = $row->filters ?? [];
             $this->form['image'] = $row->image ?? '';
+            $this->form['is_active'] = (bool) $row->is_active;
             $this->filterInput = '';
             $this->dispatch('maps:scroll-top');
             return;
@@ -69,6 +70,7 @@ class Maps extends Component
             'game' => $this->defaultGame,
             'filters' => [],
             'image' => '',
+            'is_active' => false,
         ];
         $this->filterInput = '';
         $this->imageUpload = null;
@@ -87,6 +89,7 @@ class Maps extends Component
             'game' => null,
             'filters' => [],
             'image' => '',
+            'is_active' => false,
         ];
 
         if ($map) {
