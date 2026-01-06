@@ -15,6 +15,7 @@ use Livewire\WithFileUploads;
 class Maps extends Component
 {
     use WithFileUploads;
+
     public $filterColors = [
         'search' => 'blue',
         'gunfight' => 'fuchsia',
@@ -153,17 +154,22 @@ class Maps extends Component
         if ($upload) {
             $slug = Str::slug($data['name']);
             $ext = strtolower($upload->getClientOriginalExtension() ?: 'jpg');
-            $base = $slug;
+            $base = $slug . '-' . $map->game;
             $filename = $base . '.' . $ext;
             $i = 1;
-            while (Storage::disk('r2')->exists($filename) && $map->image !== $filename) {
+
+            while (Storage::disk('r2')->exists($filename) && $map->image === $filename) {
+                // This file already exists, so increment the base and try again
                 $filename = $base . '-' . $i . '.' . $ext;
                 $i++;
             }
+
+            // Move the temporary file to the final destination/name
             $upload->storeAs('/', $filename, [
                 'disk' => 'r2',
                 'visibility' => 'public',
             ]);
+
             $map->image = $filename;
         } elseif (! $existing && ! empty($this->form['image'])) {
             // When importing/saving a config-backed map without re-uploading
