@@ -5,6 +5,7 @@ use App\Http\Controllers\GithubAuthController;
 use App\Livewire\Filters;
 use App\Livewire\Games;
 use App\Livewire\Maps;
+use App\Livewire\Radix;
 use App\Models\Filter;
 use App\Models\Game;
 use App\Models\Map;
@@ -39,3 +40,6 @@ Route::prefix('api')
     ->group(function () {
         Route::get('data', ApiDataController::class);
     });
+
+// Return radix livewire component
+Route::get('radix', Radix::class)->name('radix');
