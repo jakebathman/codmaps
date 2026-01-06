@@ -171,7 +171,7 @@
                         @click="roll"
                         class="mt-10 sm:mt-auto rounded-lg font-semibold bg-purple-950/20 text-purple-950 dark:bg-white/20 dark:text-purple-100 text-xl tracking-wide px-4 py-2.5"
                     >Re-roll</button>
-                    <div class="text-gray-500 dark:text-gray-300"><span x-text="filteredMaps.length"></span> <span x-text="filteredMaps.length == 1 ? 'map' : 'maps'"></span> possible
+                    <div class="text-gray-500 dark:text-gray-300"><span x-text="filteredMaps.length"></span> <span x-text="filteredMaps.length == 1 ? 'map' : 'maps'"></span><span class="hidden sm:block"> possible</span>
                     </div>
                 </div>
             </div>
