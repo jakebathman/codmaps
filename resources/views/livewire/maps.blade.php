@@ -325,7 +325,7 @@
                             <div class="flex items-center gap-3">
                                 @if (!empty($this->imageUrl($map['image'])))
                                     <img
-                                        src="{{ $this->imageUrl($map['image']) }}"
+                                        src="{{ $this->imageUrl($map['image'], $map['updated_at_timestamp'] ?? null) }}"
                                         alt="{{ $map['name'] }}"
                                         class="h-10 w-16 rounded object-cover border border-gray-200 dark:border-white/10"
                                     >

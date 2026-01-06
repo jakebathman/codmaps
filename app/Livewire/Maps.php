@@ -330,6 +330,7 @@ class Maps extends Component
                     'image' => $m->image ?? '',
                     'image_url' => $m->image ? Storage::disk('r2')->url($m->image) : null,
                     'is_active' => $m->is_active,
+                    'updated_at_timestamp' => $m->updated_at ? $m->updated_at->timestamp : null,
                 ];
             })
             ->sortBy('name')
@@ -365,9 +366,10 @@ class Maps extends Component
         $this->filterByInactive = ! $this->filterByInactive;
     }
 
-    public function imageUrl(?string $filename): ?string
+    public function imageUrl(?string $filename, ?int $updatedAt = null): ?string
     {
         $filename = basename((string) $filename);
-        return $filename !== '' ? Storage::disk('r2')->url($filename) : null;
+
+        return $filename !== '' ? Storage::disk('r2')->url($filename . '?t=' . $updatedAt) : null;
     }
 }
