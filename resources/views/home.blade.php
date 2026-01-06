@@ -73,13 +73,13 @@
             </div>
 
             {{-- Map name/error text --}}
-            <div class="flex flex-1 flex-col justify-center items-center gap-6">
+            <div class="flex flex-1 flex-col justify-center items-center gap-2 sm:gap-6">
                 <div
                     x-show="noPossibleMaps"
                     class="text-2xl lg:text-4xl font-bold text-center pb-6"
                 >No maps available with the selected filters</div>
                 <div
-                    class="text-4xl lg:text-6xl font-bold text-center pb-6"
+                    class="text-4xl lg:text-6xl font-bold text-center pt-16 pb-0 sm:pb-6 sm:pt-0"
                     x-text="selected?.name"
                 ></div>
 
@@ -359,7 +359,9 @@
                 },
 
                 imageSrc() {
-                    return 'https://images.randomcod.com/' + this.selected?.image
+                    let updatedAt = this.selected?.updated_at ? '?v=' + new Date(this.selected.updated_at).getTime() : ''
+                    console.log('updatedAt', updatedAt)
+                    return 'https://images.randomcod.com/' + this.selected?.image + '?t=' + updatedAt
                 }
             }))
         })
