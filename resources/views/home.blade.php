@@ -107,7 +107,7 @@
             <div class="flex w-full justify-between relative pb-6">
 
                 {{-- Hide map button --}}
-                <div class="mt-10 sm:mt-auto flex flex-col justify-center items-center gap-3 min-w-36">
+                <div class="mt-10 sm:mt-auto flex flex-col justify-center items-center gap-3 min-w-32 text-sm sm:text-base">
                     <button
                         @click="hideMap"
                         class="mt-10 sm:mt-auto rounded-lg font-semibold bg-pink-950/10 text-pink-950 dark:bg-white/10 dark:text-pink-100 text-xl tracking-wide px-4 py-2.5"
@@ -166,7 +166,7 @@
                 </div>
 
                 {{-- roll button --}}
-                <div class="mt-10 sm:mt-auto flex flex-col justify-center items-center gap-3 min-w-36">
+                <div class="mt-10 sm:mt-auto flex flex-col justify-center items-center gap-3 min-w-32 text-sm sm:text-base">
                     <button
                         @click="roll"
                         class="mt-10 sm:mt-auto rounded-lg font-semibold bg-purple-950/20 text-purple-950 dark:bg-white/20 dark:text-purple-100 text-xl tracking-wide px-4 py-2.5"
