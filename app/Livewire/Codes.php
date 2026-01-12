@@ -45,11 +45,13 @@ class Codes extends Component
             ->groupBy('type')
             ->map(function ($group) {
                 $empty = $group->whereNull('code_base34')->count();
+                $filled = $group->whereNotNull('code_base34')->count();
                 $total = $group->count();
                 return [
                     'empty' => $empty,
+                    'filled' => $filled,
                     'total' => $total,
-                    'percent_complete' => $total > 0 ? round((($total - $empty) / $total) * 100, 2) : 0,
+                    'percent_complete' => $total > 0 ? round(($filled / $total) * 100, 2) : 0,
                 ];
             })
             ->toArray();

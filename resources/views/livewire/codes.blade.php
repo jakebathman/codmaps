@@ -158,7 +158,7 @@
     </div>
 
     <div>
-        <h2 class="text-3xl font-medium text-gray-900 capitalize">{{ $currentType }} Attachments</h2>
+        <h2 class="text-3xl font-medium text-gray-900 capitalize">{{ $currentType }} Attachments ({{ $typesWithCounts[$currentType]['filled'] ?? 0 }}/{{ $typesWithCounts[$currentType]['total'] ?? 0 }})</h2>
 
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="mt-8 flow-root">
