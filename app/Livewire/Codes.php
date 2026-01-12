@@ -81,6 +81,7 @@ class Codes extends Component
         $this->attachmentId = Attachment::whereNull('code_base34')
             ->where('type', $this->currentType)
             ->whereNotIn('id', $this->skippedIds)
+            ->orderBy('weapon_unlock')
             ->first()?->id;
 
         unset($this->attachment);
