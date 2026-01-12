@@ -36,8 +36,6 @@ class BuildCode
                 $map[self::ALPHABET[$i]] = $i;
             }
 
-            dump($map);
-
             $number = 0;
 
             for ($i = 0; $i < strlen($base34); $i++) {
@@ -47,7 +45,7 @@ class BuildCode
                 }
 
                 $value = $map[$ch];
-                dump("{$number} * {$base} + {$value}");
+
                 $number = ($number * $base) + $value;
             }
 
@@ -57,7 +55,6 @@ class BuildCode
 
             return $number;
         } catch (\Throwable $e) {
-            dump($e->getMessage());
             return null;
         }
     }
