@@ -69,61 +69,66 @@
                     </div>
                 </el-menu>
             </el-dropdown>
-
         </div>
+
+        {{-- Attachment info --}}
         <div class="p-6 flex flex-col gap-4 max-w-3xl mx-auto">
-            <div class="flex flex-col gap-2 max-w-lg mx-auto">
-                <div class="flex items-baseline">
-                    <div class="w-32">Type</div>
-                    <div class="font-bold text-xl capitalize">{{ $this->attachment->type }}</div>
+            @if (!$this->attachment)
+                <div class="flex self-center items-center justify-center h-72 text-xl text-gray-600 dark:text-gray-400">All attachments of this type have been entered.</div>
+            @else
+                <div class="flex flex-col gap-2 max-w-lg mx-auto">
+                    <div class="flex items-baseline">
+                        <div class="w-32">Type</div>
+                        <div class="font-bold text-xl capitalize">{{ $this->attachment->type }}</div>
+                    </div>
+                    <div class="flex items-baseline">
+                        <div class="w-32">Name</div>
+                        <div class="font-bold text-xl">{{ $this->attachment->name }}</div>
+                    </div>
+                    <div class="flex items-baseline">
+                        <div class="w-32">Label</div>
+                        <div class="font-bold text-xl">{{ $this->attachment->label }}</div>
+                    </div>
+                    <div class="flex items-baseline">
+                        <div class="w-32">Unlocked On</div>
+                        <div class="font-bold text-xl">{{ $this->attachment->weapon_unlock }}</div>
+                    </div>
                 </div>
-                <div class="flex items-baseline">
-                    <div class="w-32">Name</div>
-                    <div class="font-bold text-xl">{{ $this->attachment->name }}</div>
-                </div>
-                <div class="flex items-baseline">
-                    <div class="w-32">Label</div>
-                    <div class="font-bold text-xl">{{ $this->attachment->label }}</div>
-                </div>
-                <div class="flex items-baseline">
-                    <div class="w-32">Unlocked On</div>
-                    <div class="font-bold text-xl">{{ $this->attachment->weapon_unlock }}</div>
-                </div>
-            </div>
 
-            <div class="mt-4 w-1/3 max-w-lg mx-auto">
-                <label
-                    for="codeInput"
-                    class="block text-sm/6 font-medium text-gray-900 dark:text-white"
-                >Weapon Code</label>
-                <div class="mt-2 w-full max-w-3xs mx-auto">
-                    <input
-                        wire:keydown.enter="saveAndNext"
-                        autofocus
-                        id="codeInput"
-                        type="text"
-                        name="codeInput"
-                        placeholder="A01-ABC12-XYZ89-1"
-                        wire:model.live="codeInput"
-                        class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
-                    />
+                <div class="mt-4 w-1/3 max-w-lg mx-auto">
+                    <label
+                        for="codeInput"
+                        class="block text-sm/6 font-medium text-gray-900 dark:text-white"
+                    >Weapon Code</label>
+                    <div class="mt-2 w-full max-w-3xs mx-auto">
+                        <input
+                            wire:keydown.enter="saveAndNext"
+                            autofocus
+                            id="codeInput"
+                            type="text"
+                            name="codeInput"
+                            placeholder="A01-ABC12-XYZ89-1"
+                            wire:model.live="codeInput"
+                            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                        />
+                    </div>
                 </div>
-            </div>
 
-            <div class="flex justify-around gap-6 w-full max-w-xl mx-auto">
-                <div class="flex flex-col gap-2 text-center">
-                    <div class="font-bold">Input Value</div>
-                    <div>{{ $codeInput }}</div>
+                <div class="flex justify-around gap-6 w-full max-w-xl mx-auto">
+                    <div class="flex flex-col gap-2 text-center">
+                        <div class="font-bold">Input Value</div>
+                        <div>{{ $codeInput }}</div>
+                    </div>
+                    <div class="flex flex-col gap-2 text-center">
+                        <div class="font-bold">Base34 Value</div>
+                        <div>{{ $this->attachmentsCode }}</div>
+                    </div>
+                    <div class="flex flex-col gap-2 text-center">
+                        <div class="font-bold">Decoded</div>
+                        <div>{{ $this->decoded }}</div>
+                    </div>
                 </div>
-                <div class="flex flex-col gap-2 text-center">
-                    <div class="font-bold">Base34 Value</div>
-                    <div>{{ $this->attachmentsCode }}</div>
-                </div>
-                <div class="flex flex-col gap-2 text-center">
-                    <div class="font-bold">Decoded</div>
-                    <div>{{ $this->decoded }}</div>
-                </div>
-            </div>
+            @endif
         </div>
 
         <div class="max-w-3xl mx-auto">
@@ -134,7 +139,6 @@
             @endif
 
         </div>
-
 
         <div class="p-6 flex justify-between border-t border-gray-200 dark:border-gray-700">
             <button
