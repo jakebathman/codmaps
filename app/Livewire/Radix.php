@@ -6,7 +6,7 @@ use Livewire\Component;
 
 class Radix extends Component
 {
-    public const RADIX_ALPHABET = '0123456789ABCDEFGHIJKLMNPQRSTUVWXYZ'; // 35 chars, excludes O
+    public const RADIX_ALPHABET = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ'; // 35 chars, excludes O
 
     public $inputCode = '';
     public $codes = '';
@@ -121,6 +121,10 @@ class Radix extends Component
 
     public function render()
     {
-        return view('livewire.radix');
+        return view('livewire.radix',
+        [
+            'sum' => 1196268651020288+348160+13056,
+            'encodedSum' => $this->encode(1196268651020288+348160+13056, self::RADIX_ALPHABET),
+        ]);
     }
 }

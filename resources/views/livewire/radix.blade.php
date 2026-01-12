@@ -33,6 +33,10 @@
             </div>
         </div>
     </div>
+
+    <div>{{ $sum }}</div>
+    <div>{{ $encodedSum }}</div>
+
     <div class="space-y-4">
         <div>
             <label
