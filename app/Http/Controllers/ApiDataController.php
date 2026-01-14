@@ -9,6 +9,7 @@ use App\Models\Game;
 use App\Models\Map;
 use App\Models\Weapon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ApiDataController extends Controller
 {
