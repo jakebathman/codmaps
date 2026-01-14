@@ -7,4 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class AttachmentID extends Model
 {
     protected $guarded = [];
+
+    protected $table = 'attachment_ids';
 }
