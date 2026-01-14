@@ -2,9 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Attachment;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Weapon extends Model
 {
     protected $guarded = [];
+
+    public function attachments(): BelongsToMany
+    {
+        return $this->belongsToMany(Attachment::class)->withPivot('order')->orderBy('order');
+    }
 }
