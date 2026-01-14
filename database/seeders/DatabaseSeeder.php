@@ -2,10 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\Attachment;
+use App\Models\AttachmentID;
 use App\Models\Filter;
 use App\Models\Game;
 use App\Models\Map;
+use App\Models\Weapon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class DatabaseSeeder extends Seeder
@@ -18,7 +22,7 @@ class DatabaseSeeder extends Seeder
             ->get('https://randomcod.com/api/data');
 
         if (! $response->successful()) {
-            throw new \Exception('Failed to fetch data from production site: ' . $response->body());
+            throw new \Exception('Failed to fetch data from production site: '.$response->body());
         }
 
         $data = $response->json();
@@ -52,6 +56,49 @@ class DatabaseSeeder extends Seeder
                 'game' => $map['game'],
                 'filters' => $map['filters'],
                 'is_active' => $map['is_active'] ?? false,
+            ]);
+        }
+
+        Weapon::truncate();
+        foreach ($data['weapons'] as $weapon) {
+            Weapon::create([
+                'id' => $weapon['id'],
+                'type' => $weapon['type'],
+                'name' => $weapon['name'],
+                'code_prefix' => $weapon['code_prefix'],
+            ]);
+        }
+
+        Attachment::truncate();
+        foreach ($data['attachments'] as $attachment) {
+            Attachment::create([
+                'id' => $attachment['id'],
+                'type' => $attachment['type'],
+                'name' => $attachment['name'],
+                'label' => $attachment['label'],
+                'code_base34' => $attachment['code_base34'],
+                'code_base10' => $attachment['code_base10'],
+                'weapon_unlock' => $attachment['weapon_unlock'],
+            ]);
+        }
+
+        DB::table('attachment_weapon')->truncate();
+        foreach ($data['attachment_weapon'] as $aw) {
+            DB::table('attachment_weapon')->insert([
+                'attachment_id' => $aw['attachment_id'],
+                'weapon_id' => $aw['weapon_id'],
+                'order' => $aw['order'],
+            ]);
+        }
+
+        AttachmentID::truncate();
+        foreach ($data['attachment_ids'] as $id) {
+            AttachmentID::create([
+                'id' => $id['id'],
+                'base_10' => $id['base_10'],
+                'base_34' => $id['base_34'],
+                'k' => $id['k'],
+                'n' => $id['n'],
             ]);
         }
     }
