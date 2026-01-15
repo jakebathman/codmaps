@@ -92,14 +92,20 @@ class DatabaseSeeder extends Seeder
         }
 
         AttachmentID::truncate();
-        foreach ($data['attachment_ids'] as $id) {
-            AttachmentID::create([
-                'id' => $id['id'],
-                'base_10' => $id['base_10'],
-                'base_34' => $id['base_34'],
-                'k' => $id['k'],
-                'n' => $id['n'],
-            ]);
+        if (empty($data['attachment_ids'])) {
+            // Generate from seeder if none exist
+            $this->call(AttachmentIDSeeder::class);
+        } else {
+            foreach ($data['attachment_ids'] as $id) {
+                AttachmentID::create([
+                    'id' => $id['id'],
+                    'base_10' => $id['base_10'],
+                    'base_34' => $id['base_34'],
+                    'binary' => $id['binary'],
+                    'k' => $id['k'],
+                    'n' => $id['n'],
+                ]);
+            }
         }
     }
 }

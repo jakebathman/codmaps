@@ -33,6 +33,8 @@ Route::group(['middleware' => ['github.auth']], function () {
     Route::get('games', Games::class)->name('games');
     Route::view('codes', 'codes')->name('codes');
     Route::view('weapons', 'weapons')->name('weapons');
+Route::view('binary', 'binary')->name('binary');
+
 });
 
 Route::view('data', 'data');
