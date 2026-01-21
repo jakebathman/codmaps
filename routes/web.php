@@ -33,9 +33,10 @@ Route::group(['middleware' => ['github.auth']], function () {
     Route::get('games', Games::class)->name('games');
     Route::view('codes', 'codes')->name('codes');
     Route::view('weapons', 'weapons')->name('weapons');
-Route::view('binary', 'binary')->name('binary');
-
+    Route::view('binary', 'binary')->name('binary');
 });
+
+Route::view('decode', 'decode')->name('decode');
 
 Route::view('data', 'data');
 
@@ -47,4 +48,3 @@ Route::prefix('api')
 
 // Return radix livewire component
 Route::get('radix', Radix::class)->name('radix');
-

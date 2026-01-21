@@ -1,0 +1,16 @@
+watch:
+  directories:
+    - app
+    - tests
+  fileMask: '*.php'
+
+phpunit:
+  binaryPath: vendor/bin/pest
+  arguments: ''
+  timeout: 60
+
+notifications:
+  passingTests: true
+  failingTests: true
+
+hideManual: false
