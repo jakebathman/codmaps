@@ -52,7 +52,7 @@ class BuildCode
 
             foreach (AttachmentID::orderBy('id', 'desc')->get() as $attachment) {
                 // If we've already found an attachment ID for this $n, skip to the next
-                dump($attachment->n . ' -- ' . $lastN);
+
                 if ($attachment->n == $lastN) {
                     continue;
                 }
