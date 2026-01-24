@@ -121,7 +121,10 @@
                     </div>
                     <div class="flex flex-col gap-2 text-center">
                         <div class="font-bold">Base34 Value</div>
-                        <div>{{ $this->attachmentsCode }}</div>
+                        <div class="flex flex gap-1">
+                            <div>{{ $this->attachmentsCodeIdExists === null ? '' : ($this->attachmentsCodeIdExists === true ? '✅' : '🚫') }}</div>
+                            <div>{{ $this->attachmentsCode }}</div>
+                        </div>
                     </div>
                     <div class="flex flex-col gap-2 text-center">
                         <div class="font-bold">Decoded</div>

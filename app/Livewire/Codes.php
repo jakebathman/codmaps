@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Attachment;
+use App\Models\AttachmentID;
 use App\Support\BuildCode;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -149,6 +150,16 @@ class Codes extends Component
         }
 
         return null;
+    }
+
+    #[Computed]
+    public function attachmentsCodeIdExists()
+    {
+        if (! $this->attachmentsCode()) {
+            return null;
+        }
+
+        return AttachmentID::where('base_34', $this->attachmentsCode())->exists();
     }
 
     #[Computed]
