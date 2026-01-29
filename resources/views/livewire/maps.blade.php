@@ -30,206 +30,268 @@
             <form
                 x-data
                 wire:submit.prevent="save"
-                class="space-y-4"
+                class=""
             >
-                <!-- Name -->
-                <div>
-                    <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Name</label>
-                    <input
-                        type="text"
-                        wire:model="form.name"
-                        class="mt-1 block w-full rounded-md border-gray-300 text-sm shadow-xs focus:border-indigo-500 focus:ring-indigo-500 dark:border-white/10 dark:bg-gray-800 dark:text-white"
-                        placeholder="Map name"
-                    >
-                    @error('form.name')
-                        <div class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</div>
-                    @enderror
-                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="col-span-1 sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- Name -->
+                        <div>
+                            <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Name</label>
+                            <input
+                                type="text"
+                                wire:model="form.name"
+                                class="block w-full rounded-md bg-white px-3 py-1.5 mt-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                                placeholder="Map name"
+                            >
+                            @error('form.name')
+                                <div class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</div>
+                            @enderror
+                        </div>
 
-                <!-- Game -->
-                <div>
-                    <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Game</label>
-                    <select
-                        wire:model.live="form.game"
-                        class="mt-1 block w-full rounded-md border-gray-300 text-sm shadow-xs focus:border-indigo-500 focus:ring-indigo-500 dark:border-white/10 dark:bg-gray-800 dark:text-white"
-                    >
-                        <option
-                            value=""
-                            disabled
-                            selected
-                        >Select a game...</option>
-                        @foreach ($games as $key => $game)
-                            <option value="{{ $key }}">{{ $game['name'] ?? $key }}</option>
-                        @endforeach
-                    </select>
-                    @error('form.game')
-                        <div class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <!-- Image upload + preview -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-start">
-                    <div class="sm:col-span-2">
-                        <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Image</label>
-                        <input
-                            type="file"
-                            accept=".jpg,.jpeg,.png"
-                            wire:model="imageUpload"
-                            class="cursor-pointer mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm file:font-medium hover:file:bg-gray-200 dark:text-gray-200 dark:file:bg-white/10 dark:hover:file:bg-white/20"
-                        >
-                        @error('form.image')
-                            <div class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</div>
-                        @enderror
-                        @error('imageUpload')
-                            <div class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</div>
-                        @enderror
-                        <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">Saved as slug of name.</div>
-                    </div>
-                    <div class="sm:col-span-1">
-                        <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Preview</label>
-                        <div class="mt-1 h-20 w-32 overflow-hidden rounded border border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-gray-800 flex items-center justify-center">
-                            @if ($imageUpload)
-                                <img
-                                    src="{{ $imageUpload->temporaryUrl() }}"
-                                    alt="Preview"
-                                    class="h-full w-full object-cover"
+                        <!-- Game -->
+                        <div>
+                            <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Game</label>
+                            <div class="mt-2 grid grid-cols-1">
+                                <select
+                                    wire:model.live="form.game"
+                                    class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus-visible:outline-indigo-500"
                                 >
-                            @elseif (!empty($form['image']))
-                                @if ($this->imageUrl($form['image']))
+                                    <option
+                                        value=""
+                                        disabled
+                                        selected
+                                    >Select a game...</option>
+                                    @foreach ($games as $key => $game)
+                                        <option value="{{ $key }}">{{ $game['name'] ?? $key }}</option>
+                                    @endforeach
+                                </select>
+                                <svg
+                                    viewBox="0 0 16 16"
+                                    fill="currentColor"
+                                    data-slot="icon"
+                                    aria-hidden="true"
+                                    class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400"
+                                >
+                                    <path
+                                        d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+                                        clip-rule="evenodd"
+                                        fill-rule="evenodd"
+                                    />
+                                </svg>
+                            </div>
+
+                            @error('form.game')
+                                <div class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Season -->
+                        <div>
+                            <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Season</label>
+                            <div class="mt-2 grid grid-cols-1">
+                                <select
+                                    wire:model.live="form.season"
+                                    class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus-visible:outline-indigo-500"
+                                >
+                                    <option
+                                        value=""
+                                        disabled
+                                        selected
+                                    >Select season...</option>
+                                    @foreach ($seasonOptions as $key => $season)
+                                        <option value="{{ $key }}">{{ $season }}</option>
+                                    @endforeach
+                                </select>
+                                <svg
+                                    viewBox="0 0 16 16"
+                                    fill="currentColor"
+                                    data-slot="icon"
+                                    aria-hidden="true"
+                                    class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4 dark:text-gray-400"
+                                >
+                                    <path
+                                        d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z"
+                                        clip-rule="evenodd"
+                                        fill-rule="evenodd"
+                                    />
+                                </svg>
+                            </div>
+
+                            @error('form.season')
+                                <div class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- Is Active toggle --}}
+                        <div>
+                            <label
+                                for="isActive"
+                                class="block text-sm/6 font-medium text-gray-900 dark:text-white"
+                            >Is Active</label>
+
+                            <label
+                                for="isActive"
+                                class="group relative block h-6 w-10 mt-2 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:transparent] has-checked:bg-indigo-500 dark:bg-gray-600 dark:has-checked:bg-indigo-600 cursor-pointer"
+                            >
+                                <input
+                                    wire:model="form.is_active"
+                                    type="checkbox"
+                                    id="isActive"
+                                    class="peer sr-only"
+                                >
+
+                                <span class="absolute inset-y-0 start-0 m-1 grid size-4 place-content-center rounded-full bg-white text-gray-700 transition-[inset-inline-start] peer-checked:start-4 peer-checked:*:first:hidden *:last:hidden peer-checked:*:last:block dark:bg-gray-900 dark:text-gray-200">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="currentColor"
+                                        class="size-3"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M6 18 18 6M6 6l12 12"
+                                        ></path>
+                                    </svg>
+
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="currentColor"
+                                        class="size-3"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="m4.5 12.75 6 6 9-13.5"
+                                        ></path>
+                                    </svg>
+                                </span>
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <!-- Image upload + preview -->
+                    <div class="flex flex-col gap-4">
+                        {{-- Input --}}
+                        <div>
+                            <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Image</label>
+                            <input
+                                type="file"
+                                accept=".jpg,.jpeg,.png"
+                                wire:model="imageUpload"
+                                class="cursor-pointer mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm file:font-medium hover:file:bg-gray-200 dark:text-gray-200 dark:file:bg-white/10 dark:hover:file:bg-white/20"
+                            >
+                            @error('form.image')
+                                <div class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</div>
+                            @enderror
+                            @error('imageUpload')
+                                <div class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</div>
+                            @enderror
+                            <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">Saved as slug of name.</div>
+                        </div>
+
+                        {{-- Preview --}}
+                        <div>
+                            <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Preview</label>
+                            <div class="mt-1 h-auto w-full max-w-sm overflow-hidden rounded border border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-gray-800 flex items-center justify-center">
+                                @if ($imageUpload)
                                     <img
-                                        src="{{ $this->imageUrl($form['image']) }}"
-                                        alt="Current image"
+                                        src="{{ $imageUpload->temporaryUrl() }}"
+                                        alt="Preview"
                                         class="h-full w-full object-cover"
                                     >
+                                @elseif (!empty($form['image']))
+                                    @if ($this->imageUrl($form['image']))
+                                        <img
+                                            src="{{ $this->imageUrl($form['image']) }}"
+                                            alt="Current image"
+                                            class="h-full w-full object-cover"
+                                        >
+                                    @else
+                                        <span class="text-xs text-gray-400">No image</span>
+                                    @endif
                                 @else
                                     <span class="text-xs text-gray-400">No image</span>
                                 @endif
-                            @else
-                                <span class="text-xs text-gray-400">No image</span>
-                            @endif
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Filters -->
-                <div x-data>
-                    <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Filters</label>
+                    <!-- Filters -->
+                    <div>
+                        <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Filters</label>
 
-                    <!-- Selected tags -->
-                    <div class="mt-1 flex flex-wrap gap-2">
-                        @forelse ($form['filters'] as $filter)
-                            <span
-                                wire:key="selected-filter-{{ md5($filter) }}"
-                                class="inline-flex items-center gap-1 rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-900 dark:bg-white/10 dark:text-gray-100"
-                            >
-                                {{ $filter }}
-                                <button
-                                    type="button"
-                                    wire:click="removeFilter('{{ $filter }}')"
-                                    class="cursor-pointer -mr-1 rounded p-0.5 hover:bg-gray-200 dark:hover:bg-white/20"
-                                    aria-label="Remove {{ $filter }}"
-                                >×</button>
-                            </span>
-                        @empty
-                            <span class="text-xs text-gray-500 dark:text-gray-400">No filters selected</span>
-                        @endforelse
-                    </div>
-
-                    <!-- Suggestions from selected game -->
-                    @php
-                        $allowed = collect($filters[$form['game']] ?? []);
-                        $selected = collect($form['filters'] ?? []);
-                        $suggestions = $allowed->reject(fn($f) => $selected->contains($f))->values();
-                    @endphp
-
-                    @if ($form['game'])
-                        <div class="mt-2 text-xs text-gray-600 dark:text-gray-300">Suggestions:</div>
+                        <!-- Selected tags -->
                         <div class="mt-1 flex flex-wrap gap-2">
-                            @forelse($this->suggestions() as $s)
-                                <button
-                                    wire:key="suggestion-{{ md5($s) }}"
-                                    type="button"
-                                    wire:click="addFilterValue('{{ $s }}')"
-                                    class="cursor-pointer rounded-md border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 dark:border-white/10 dark:text-gray-200 dark:hover:bg-white/10"
-                                >{{ $s }}</button>
+                            @forelse ($form['filters'] as $filter)
+                                <span
+                                    wire:key="selected-filter-{{ md5($filter) }}"
+                                    class="inline-flex items-center gap-1 rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-900 dark:bg-white/10 dark:text-gray-100"
+                                >
+                                    {{ $filter }}
+                                    <button
+                                        type="button"
+                                        wire:click="removeFilter('{{ $filter }}')"
+                                        class="cursor-pointer -mr-1 rounded p-0.5 hover:bg-gray-200 dark:hover:bg-white/20"
+                                        aria-label="Remove {{ $filter }}"
+                                    >×</button>
+                                </span>
                             @empty
-                                <span class="text-xs text-gray-500 dark:text-gray-400">No suggestions</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">No filters selected</span>
                             @endforelse
                         </div>
-                    @endif
-                </div>
 
-                {{-- Is Active toggle --}}
-                <div>
-                    <label
-                        for="isActive"
-                        class="block text-sm/6 font-medium text-gray-900 dark:text-white"
-                    >Is Active</label>
+                        <!-- Suggestions from selected game -->
+                        @php
+                            $allowed = collect($filters[$form['game']] ?? []);
+                            $selected = collect($form['filters'] ?? []);
+                            $suggestions = $allowed->reject(fn($f) => $selected->contains($f))->values();
+                        @endphp
 
-                    <label
-                        for="isActive"
-                        class="group relative block h-6 w-10 mt-2 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:transparent] has-checked:bg-indigo-500 dark:bg-gray-600 dark:has-checked:bg-indigo-600 cursor-pointer"
-                    >
-                        <input
-                            wire:model="form.is_active"
-                            type="checkbox"
-                            id="isActive"
-                            class="peer sr-only"
-                        >
+                        @if ($form['game'])
+                            <div class="mt-2 text-xs text-gray-600 dark:text-gray-300">Suggestions:</div>
+                            <div class="mt-1 flex flex-wrap gap-2">
+                                @forelse($this->suggestions() as $s)
+                                    <button
+                                        wire:key="suggestion-{{ md5($s) }}"
+                                        type="button"
+                                        wire:click="addFilterValue('{{ $s }}')"
+                                        class="cursor-pointer rounded-md border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 dark:border-white/10 dark:text-gray-200 dark:hover:bg-white/10"
+                                    >{{ $s }}</button>
+                                @empty
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">No suggestions</span>
+                                @endforelse
+                            </div>
+                        @endif
+                    </div>
 
-                        <span class="absolute inset-y-0 start-0 m-1 grid size-4 place-content-center rounded-full bg-white text-gray-700 transition-[inset-inline-start] peer-checked:start-4 peer-checked:*:first:hidden *:last:hidden peer-checked:*:last:block dark:bg-gray-900 dark:text-gray-200">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="size-3"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="M6 18 18 6M6 6l12 12"
-                                ></path>
-                            </svg>
-
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="size-3"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="m4.5 12.75 6 6 9-13.5"
-                                ></path>
-                            </svg>
-                        </span>
-                    </label>
                 </div>
 
                 <!-- Actions -->
-                <div class="pt-2">
+                <div class="pt-8">
                     <div class="flex items-center gap-2">
-                        <button
-                            type="submit"
-                            class="cursor-pointer rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
-                        >Save</button>
+                        @if ($editing !== '(new)')
+                            <button
+                                type="button"
+                                x-on:click.prevent="if (confirm('Delete {{ addslashes($editing) }}? This cannot be undone.')) { $wire.delete() }"
+                                class="cursor-pointer mr-auto rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:bg-red-500 dark:hover:bg-red-400 dark:focus-visible:outline-red-500"
+                            >Delete</button>
+                        @endif
                         <button
                             type="button"
                             wire:click="cancel"
                             class="cursor-pointer rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 shadow-xs hover:bg-gray-50 dark:border-white/10 dark:bg-transparent dark:text-gray-200 dark:hover:bg-white/10"
                         >Cancel</button>
-                        @if ($editing !== '(new)')
-                            <button
-                                type="button"
-                                x-on:click.prevent="if (confirm('Delete {{ addslashes($editing) }}? This cannot be undone.')) { $wire.delete() }"
-                                class="cursor-pointer ml-auto rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:bg-red-500 dark:hover:bg-red-400 dark:focus-visible:outline-red-500"
-                            >Delete</button>
-                        @endif
+                        <button
+                            type="submit"
+                            class="cursor-pointer rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
+                        >Save</button>
                     </div>
                 </div>
             </form>
@@ -299,6 +361,10 @@
                     >Game</th>
                     <th
                         scope="col"
+                        class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell dark:text-white"
+                    >Season</th>
+                    <th
+                        scope="col"
                         class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell dark:text-white"
                     >Filters</th>
                     <th
@@ -335,6 +401,8 @@
                                     <dl class="font-normal lg:hidden">
                                         <dt class="sr-only">Game</dt>
                                         <dd class="mt-1 truncate text-gray-700 dark:text-gray-300">{{ $map['game'] }}</dd>
+                                        <dt class="sr-only">Season</dt>
+                                        <dd class="mt-1 truncate text-gray-700 dark:text-gray-300">{{ $map['season'] }}</dd>
                                         <dt class="sr-only sm:hidden">Filters</dt>
                                         <dd class="mt-1 truncate text-gray-500 sm:hidden dark:text-gray-400">
                                             @foreach ($map['filters'] as $filter)
@@ -348,6 +416,7 @@
                             </div>
                         </td>
                         <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell dark:text-gray-400">{{ $map['game'] }}</td>
+                        <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell dark:text-gray-400">{{ $map['season'] }}</td>
                         <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell dark:text-gray-400">
                             @foreach ($map['filters'] as $filter)
                                 <flux:badge color="{{ $filterColors[$filter] ?? 'zinc' }}">{{ $filter }}</flux:badge>
@@ -391,7 +460,7 @@
         window.addEventListener('maps:scroll-top', () => {
             window.scrollTo({
                 top: 0,
-                behavior: 'smooth'
+                behavior: 'instant'
             });
         });
 
@@ -412,7 +481,7 @@
                 }
 
                 row.scrollIntoView({
-                    behavior: 'smooth',
+                    behavior: 'instant',
                     block: 'center'
                 });
             };

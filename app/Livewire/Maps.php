@@ -35,9 +35,32 @@ class Maps extends Component
     public $form = [
         'name' => '',
         'game' => null,
+        'season' => null,
         'filters' => [],
         'image' => '',
         'is_active' => false,
+    ];
+
+    public $seasonOptions = [
+        null => '(none)',
+        'S0' => 'Season 0',
+        'S0R' => 'Season 0 Reloaded',
+        'S1' => 'Season 1',
+        'S1R' => 'Season 1 Reloaded',
+        'S2' => 'Season 2',
+        'S2R' => 'Season 2 Reloaded',
+        'S3' => 'Season 3',
+        'S3R' => 'Season 3 Reloaded',
+        'S4' => 'Season 4',
+        'S4R' => 'Season 4 Reloaded',
+        'S5' => 'Season 5',
+        'S5R' => 'Season 5 Reloaded',
+        'S6' => 'Season 6',
+        'S6R' => 'Season 6 Reloaded',
+        'S7' => 'Season 7',
+        'S7R' => 'Season 7 Reloaded',
+        'S8' => 'Season 8',
+        'S8R' => 'Season 8 Reloaded',
     ];
 
     public $filterInput = '';
@@ -54,6 +77,7 @@ class Maps extends Component
             $this->editing = $row->id;
             $this->form['name'] = $row->name;
             $this->form['game'] = $row->game;
+            $this->form['season'] = $row->season;
             $this->form['filters'] = $row->filters ?? [];
             $this->form['image'] = $row->image ?? '';
             $this->form['is_active'] = (bool) $row->is_active;
@@ -69,6 +93,7 @@ class Maps extends Component
         $this->form = [
             'name' => '',
             'game' => $this->defaultGame,
+            'season' => null,
             'filters' => [],
             'image' => '',
             'is_active' => false,
@@ -88,6 +113,7 @@ class Maps extends Component
         $this->form = [
             'name' => '',
             'game' => null,
+            'season' => null,
             'filters' => [],
             'image' => '',
             'is_active' => false,
@@ -121,6 +147,7 @@ class Maps extends Component
                 },
             ],
             'form.game' => 'required|string|max:255',
+            'form.season' => 'nullable|string|max:255',
             'form.filters' => 'array',
             'form.filters.*' => 'string',
             'form.is_active' => 'boolean',
@@ -140,13 +167,16 @@ class Maps extends Component
 
         // Find by the original name shown in the table (editing)
         $map = $existing;
+        $isNewMap = false;
 
         if (! $map) {
             $map = new MapModel();
+            $isNewMap = true;
         }
 
         $map->name = $data['name'];
         $map->game = $data['game'];
+        $map->season = $data['season'];
         $map->filters = $data['filters'];
         $map->is_active = $data['is_active'] ?? false;
 
@@ -183,13 +213,15 @@ class Maps extends Component
             return;
         }
 
-        $this->dispatch('maps:scroll-to', key: md5($map->id));
+        if (! $isNewMap) {
+            $this->dispatch('maps:scroll-to', key: md5($map->id));
+        }
+
         $this->cancel();
     }
 
     public function addFilter()
     {
-        dd(__CLASS__ . '@' . __FUNCTION__ . '#' . __LINE__);
         $value = trim((string) $this->filterInput);
         if ($value === '') {
             return;
@@ -326,6 +358,7 @@ class Maps extends Component
                     'id' => $m->id,
                     'name' => $m->name,
                     'game' => $m->game,
+                    'season' => $m->season,
                     'filters' => $m->filters ?? [],
                     'image' => $m->image ?? '',
                     'image_url' => $m->image ? Storage::disk('r2')->url($m->image) : null,
