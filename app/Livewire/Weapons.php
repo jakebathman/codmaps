@@ -23,6 +23,8 @@ class Weapons extends Component
 
     public string $activeTab = 'optic';
 
+    public bool $shouldDD = false;
+
     public array $types = [
         'Assault Rifle',
         'Launcher',
@@ -69,6 +71,14 @@ class Weapons extends Component
         return Weapon::where('id', $this->weaponId)
             ->with('attachments')
             ->first();
+    }
+
+    #[Computed]
+    public function weaponsInType()
+    {
+        return Weapon::where('type', $this->currentType)
+            ->with('attachments')
+            ->get();
     }
 
     #[Computed]
@@ -198,18 +208,41 @@ class Weapons extends Component
         $this->activeTab = $tab;
     }
 
-    public function nextWeapon()
+    public function setType($type)
     {
-        $this->weaponId = Weapon::where('type', $this->currentType)
-            ->whereNotIn('id', $this->skippedIds)
-            ->first()?->id;
+        $this->currentType = $type;
+        $this->nextWeapon();
+    }
 
+    public function setWeapon($weaponId)
+    {
+        $this->weaponId = $weaponId;
         unset($this->weapon);
 
         $this->expectedAttachmentCounts = $this->weapon?->expected_attachment_counts?->toArray() ?? [];
         unset($this->needsExpectedCounts);
 
         $this->activeTab = 'optic';
+    }
+
+    public function nextWeapon()
+    {
+        $weaponId = Weapon::where('type', $this->currentType)
+            ->whereNotIn('id', $this->skippedIds)
+            ->first()?->id;
+
+        if (! $weaponId) {
+            // Next type in the array, after the current one
+            $currentTypeIndex = array_search($this->currentType, $this->types);
+            if ($currentTypeIndex !== false && isset($this->types[$currentTypeIndex + 1])) {
+                $this->currentType = $this->types[$currentTypeIndex + 1];
+                $weaponId = Weapon::where('type', $this->currentType)
+                    ->whereNotIn('id', $this->skippedIds)
+                    ->first()?->id;
+            }
+        }
+
+        $this->setWeapon($weaponId);
     }
 
     public function skip()
