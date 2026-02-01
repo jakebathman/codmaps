@@ -52,6 +52,7 @@ class DatabaseSeeder extends Seeder
             Map::create([
                 'id' => $map['id'],
                 'name' => $map['name'],
+                'season' => $map['season'],
                 'image' => $map['image'],
                 'game' => $map['game'],
                 'filters' => $map['filters'],
@@ -64,6 +65,7 @@ class DatabaseSeeder extends Seeder
             Weapon::create([
                 'id' => $weapon['id'],
                 'type' => $weapon['type'],
+                'expected_attachment_counts' => $weapon['expected_attachment_counts'] ?? [],
                 'name' => $weapon['name'],
                 'code_prefix' => $weapon['code_prefix'],
             ]);

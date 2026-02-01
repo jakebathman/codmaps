@@ -23,8 +23,6 @@ class Weapons extends Component
 
     public string $activeTab = 'optic';
 
-    public bool $shouldDD = false;
-
     public array $types = [
         'Assault Rifle',
         'Launcher',
@@ -168,7 +166,11 @@ class Weapons extends Component
 
     public function countMatchesExpected($type): int
     {
-        if (! $this->weapon || ! isset($this->weapon->expected_attachment_counts[$type]) || $this->weapon->expected_attachment_counts[$type] === 0) {
+        if (! $this->weapon) {
+            return 0;
+        }
+
+        if (! isset($this->weapon->expected_attachment_counts[$type]) || $this->weapon->expected_attachment_counts[$type] === 0) {
             return -1;
         }
 
@@ -176,7 +178,7 @@ class Weapons extends Component
             return 2;
         }
 
-        if ($this->attachmentCountDisplay($type) === $this->weapon->expected_attachment_counts[$type]) {
+        if ($this->attachmentCountDisplay($type) == $this->weapon->expected_attachment_counts[$type]) {
             return 1;
         }
 

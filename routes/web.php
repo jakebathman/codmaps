@@ -28,6 +28,8 @@ Route::get('auth/github/callback', [GithubAuthController::class, 'callback'])->n
 Route::post('logout', [GithubAuthController::class, 'logout'])->name('logout');
 
 Route::group(['middleware' => ['github.auth']], function () {
+    Route::view('overview', 'overview')->name('overview');
+
     Route::get('maps', Maps::class)->middleware('github.auth')->name('maps');
     Route::get('filters', Filters::class)->name('filters');
     Route::get('games', Games::class)->name('games');

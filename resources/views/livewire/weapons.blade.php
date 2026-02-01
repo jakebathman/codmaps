@@ -134,7 +134,7 @@
                                     id="countInput_{{ Str::slug($t) }}"
                                     type="text"
                                     name="countInput_{{ Str::slug($t) }}"
-                                    wire:model.live="expectedAttachmentCounts.{{ Str::slug($t) }}"
+                                    wire:model.live="expectedAttachmentCounts.{{ $t }}"
                                     class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
                                 />
                             </div>
@@ -176,9 +176,9 @@
                                 <div class="mt-2 w-full max-w-3xs mx-auto">
                                     <div
                                         wire:key="key_countReadOnly_{{ Str::slug($t) }}"
-                                        class="text-lg font-semibold text-center {{ $this->countMatchesExpected($t) === 1 ? 'text-green-600 dark:text-green-400' : ($this->countMatchesExpected($t) === -1 ? 'text-pink-300 dark:text-pink-300' : ($this->countMatchesExpected($t) === 2 ? 'text-red-600 dark:text-red-400 font-bold border-b border-b-red-600 dark:border-b-red-400' : 'text-gray-500')) }}"
+                                        class="text-lg font-semibold text-center whitespace-nowrap {{ $this->countMatchesExpected($t) === 1 ? 'text-green-600 dark:text-green-400' : ($this->countMatchesExpected($t) === -1 ? 'text-pink-300 dark:text-pink-300' : ($this->countMatchesExpected($t) === 2 ? 'text-red-600 dark:text-red-400 font-bold border-b border-b-red-600 dark:border-b-red-400' : 'text-gray-500')) }}"
                                     >
-                                        {{ $this->attachmentCountDisplay($t) }} / {{ $this->weapon->expected_attachment_counts[Str::slug($t)] ?? 0 }}
+                                        {{ $this->attachmentCountDisplay($t) }} / {{ $this->weapon->expected_attachment_counts[$t] ?? 0 }}
                                     </div>
                                 </div>
                             </div>

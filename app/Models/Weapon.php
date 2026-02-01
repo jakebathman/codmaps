@@ -15,6 +15,35 @@ class Weapon extends Model
         'expected_attachment_counts' => AsArrayObject::class,
     ];
 
+    public function expectedAttachmentTotal(): int
+    {
+        return array_sum(
+            array_filter(
+                $this->expected_attachment_counts->toArray(),
+                fn ($key) => $key !== 'total' && $key !== 'complete',
+                ARRAY_FILTER_USE_KEY
+            )
+        );
+    }
+
+    public function attachmentProgress(): float
+    {
+        if (! isset($this->expected_attachment_counts['total']) || $this->expected_attachment_counts['total'] == 0) {
+            return 0.0;
+        }
+        if ($this->id == 1) {
+            dump(
+                $this->name,
+                $this->attachments->count(),
+                $this->expectedAttachmentTotal()
+                );
+        }
+
+
+
+        return ($this->attachments->count() / ($this->expectedAttachmentTotal() ?? 0)) * 100.0;
+    }
+
     public function attachments(): BelongsToMany
     {
         return $this->belongsToMany(Attachment::class)->withPivot('order')->orderBy('order');
