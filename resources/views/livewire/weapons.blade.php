@@ -194,11 +194,15 @@
                             for="attachment"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                         >Add Attachment</label>
-                        <div class="mt-1">
+                        <div
+                            class="mt-1"
+                            x-data
+                        >
                             <input
                                 type="text"
                                 placeholder="Search attachments..."
                                 wire:model.live="attachmentSearch"
+                                x-ref="attachmentSearch"
                                 class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
                             />
 
@@ -207,8 +211,8 @@
                                 @foreach ($this->attachmentResults as $result)
                                     <div
                                         class="mt-2 p-2 border border-gray-200 rounded-md cursor-pointer hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
-                                        wire:click="addAttachment({{ $result->id }})"
-                                        @keydown.enter="$wire.addAttachment({{ $result->id }})"
+                                        @click="$wire.addAttachment({{ $result->id }}).then(() => { $refs.attachmentSearch.focus(); $refs.attachmentSearch.select(); })"
+                                        @keydown.enter="$wire.addAttachment({{ $result->id }}).then(() => { $refs.attachmentSearch.focus(); $refs.attachmentSearch.select(); })"
                                         tabindex="0"
                                     >
                                         {{ $result->name }} ({{ $result->label }})
