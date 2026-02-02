@@ -56,6 +56,32 @@ class AttachmentIDSeeder extends Seeder
         return implode('', array_reverse($chars));
     }
 
+    public function base34ToBase10($encoded): string
+    {
+        // Cast to string first, before any operations
+        $encoded = (string) $encoded;
+
+        $alphabet = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
+        $base = '34';
+
+        $result = '0';
+        $length = strlen($encoded);
+
+        for ($i = 0; $i < $length; $i++) {
+            $char = $encoded[$i];
+            $value = strpos($alphabet, $char);
+
+            if ($value === false) {
+                throw new InvalidArgumentException("Invalid character in base34 string: {$char}");
+            }
+
+            // result = result * base + value
+            $result = bcadd(bcmul($result, $base, 0), (string) $value, 0);
+        }
+
+        return $result;
+    }
+
     public function largeDecToBin(int | string $number): string
     {
         $number = (string) $number;

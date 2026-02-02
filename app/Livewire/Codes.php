@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Models\Attachment;
 use App\Models\AttachmentID;
-use App\Support\BuildCode;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -119,8 +118,9 @@ class Codes extends Component
 
         if ($attachment) {
             $attachment->code_base34 = $this->attachmentsCode();
-            $attachment->code_base10 = $this->decode($this->attachmentsCode(), self::ALPHABET);
+            $attachment->code_base10 = $this->base34ToBase10($this->attachmentsCode, self::ALPHABET);
             $attachment->save();
+
         }
 
         // Reset input
@@ -133,7 +133,7 @@ class Codes extends Component
     #[Computed]
     public function decoded()
     {
-        return $this->decode($this->codeInput, self::ALPHABET);
+        return $this->base34ToBase10($this->attachmentsCode, self::ALPHABET);
     }
 
     public function render()
@@ -175,33 +175,36 @@ class Codes extends Component
     #[Computed]
     public function isDuplicate(): bool
     {
-        if (trim($this->attachmentsCode()) == '') {
+        if (trim($this->attachmentsCode() ?? '') == '') {
             return false;
         }
         return Attachment::where('code_base34', $this->attachmentsCode())
             ->exists();
     }
 
-    /**
-     * Decode a custom-base string back into an integer.
-     *
-     * @param string $code
-     * @param string $alphabet
-     * @return int|string  (string if the number grows large)
-     */
-    public function decode(string $code, string $alphabet = self::ALPHABET): ?int
+    public function base34ToBase10($encoded): string
     {
-        try {
-            $buildCode = new BuildCode($this->attachmentsCode);
-            $base10 = $buildCode->base10;
+        // Cast to string first, before any operations
+        $encoded = (string) trim(strtoupper($encoded));
 
-            if ($base10 !== null) {
-                return $base10;
+        $alphabet = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
+        $base = '34';
+
+        $result = '0';
+        $length = strlen($encoded);
+
+        for ($i = 0; $i < $length; $i++) {
+            $char = $encoded[$i];
+            $value = strpos($alphabet, $char);
+
+            if ($value === false) {
+                throw new InvalidArgumentException("Invalid character in base34 string: {$char}");
             }
-            return null;
-        } catch (\Throwable $e) {
-            return null;
-        }
-    }
 
+            // result = result * base + value
+            $result = bcadd(bcmul($result, $base, 0), (string) $value, 0);
+        }
+
+        return $result;
+    }
 }

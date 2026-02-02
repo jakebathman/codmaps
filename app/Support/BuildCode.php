@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Models\Attachment;
 use App\Models\AttachmentID;
 use App\Models\Weapon;
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
 class BuildCode
@@ -14,7 +15,7 @@ class BuildCode
     public const ALPHABET = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
 
     public ?Weapon $weapon = null;
-    public ?array $attachments = null;
+    public ?Collection $attachments = null;
     public string $weaponCode = '';
     public string $versionCode = '';
     public string $attachmentsCode = '';
@@ -35,7 +36,6 @@ class BuildCode
             $this->versionCode = $matches['version'] ?? '';
 
             $this->weapon = Weapon::where('code_prefix', $this->weaponCode)->first();
-            $this->attachments = Attachment::whereIn('code_base10', str_split($this->attachmentsCode, 3))->get()->all();
 
             $this->parseAttachmentIds();
         }
@@ -47,10 +47,10 @@ class BuildCode
         $base10 = $this->convertBase34ToBase10($this->attachmentsCode);
         if ($base10 !== null) {
             $this->base10 = $base10;
-            $runningId = (string) $base10;
+            $carry = (string) $base10;
             $lastN = null;
 
-            foreach (AttachmentID::orderBy('id', 'desc')->get() as $attachment) {
+            foreach (AttachmentID::orderByRaw('CHAR_LENGTH(base_10) DESC, base_10 DESC')->get() as $attachment) {
                 // If we've already found an attachment ID for this $n, skip to the next
 
                 if ($attachment->n == $lastN) {
@@ -60,23 +60,30 @@ class BuildCode
                 //   -1 if a < b
                 //    0 if a == b
                 //    1 if a > b
-                if (bccomp($attachment->base_10, $runningId) === 0) {
+                if (bccomp($attachment->base_10, $carry) === 0) {
                     // This is the final attachment ID, so store it and we're done
                     $this->attachmentIds[] = $attachment->base_10;
+                    $carry = 0;
                     break;
                 }
 
-                if (bccomp($attachment->base_10, $runningId) === -1) {
+                if (bccomp($attachment->base_10, $carry) === -1) {
                     // This attachment ID is lower than the running ID, so subtract and store it
                     $this->attachmentIds[] = $attachment->base_10;
-                    $runningId = bcsub($runningId, $attachment->base_10);
+                    $carry = bcsub($carry, $attachment->base_10);
                     $lastN = $attachment->n;
 
                     // We don't want any more attachment IDs from this $n loop iteration
                 }
             }
+            $this->attachments = Attachment::whereIn('code_base10', $this->attachmentIds)->whereHas('weapons', function ($query) {
+                $query->where('weapons.id', $this->weapon?->id);
+            })->get();
 
-            $this->isValid = true;
+            if ($carry == 0 && $this->attachments?->count() > 0) {
+                $this->isValid = true;
+            }
+
         }
     }
 

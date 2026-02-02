@@ -40,6 +40,17 @@
             </div>
         </div>
 
+        <div class="flex justify-around gap-6 w-full max-w-xl mx-auto">
+            <div class="flex flex-col gap-2 text-center">
+                <div class="font-bold">Base 10</div>
+                <div>{{ $this->buildCode?->base10 }}</div>
+            </div>
+            <div class="flex flex-col gap-2 text-center">
+                <div class="font-bold">Valid?</div>
+                <div>{{ $this->buildCode?->isValid ? 'Yes' : 'No' }}</div>
+            </div>
+        </div>
+
         <div class="flex flex-col gap-2 max-w-lg mx-auto">
             <div class="flex items-baseline">
                 <div class="w-32">Weapon</div>
@@ -47,7 +58,6 @@
             </div>
             <div class="flex items-baseline">
                 <div class="w-32">Attachments</div>
-                @json($this->buildCode?->attachmentIds)
                 <div class="flex flex-col gap-1">
                     @foreach ($this->attachments as $attachment)
                         <div class="font-bold text-xl">{{ $attachment->name }}</div>
@@ -55,6 +65,10 @@
                 </div>
             </div>
 
+            <div>
+                @json($this->buildCode?->attachmentIds)
+                @json($this->attachments())
+            </div>
         </div>
 
     </div>

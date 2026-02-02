@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Weapon;
 use App\Support\BuildCode;
+use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -14,7 +15,7 @@ class Decode extends Component
     #[Computed]
     public function buildCode(): ?BuildCode
     {
-        return new BuildCode(trim(strtoupper($this->codeInput)));
+        return new BuildCode(trim(strtoupper($this->codeInput ?? '')));
     }
 
     #[Computed]
@@ -24,9 +25,9 @@ class Decode extends Component
     }
 
     #[Computed]
-    public function attachments(): ?array
+    public function attachments(): ?Collection
     {
-        return $this->buildCode?->attachments ?? [];
+        return $this->buildCode?->attachments ?? collect();
     }
 
     public function render()
