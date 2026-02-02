@@ -22,12 +22,12 @@
                             <td class="pr-4 align-top">{{ $weapon->name }}</td>
                             <td>{{ number_format($weapon->attachmentProgress(),0) }}%</td>
                             @foreach ($attachmentTypes as $at)
-                                <td class="pr-4 align-top w-16 text-center">
+                                <td class="pr-4 align-top w-20 text-center">
                                     @php
                                         $count = $weapon->attachments->where('type', $at)->count();
                                         $expected = $weapon->expected_attachment_counts[$at] ?? 0;
                                     @endphp
-                                    <span class="{{ $expected === 0 ? 'text-gray-500 dark:text-gray-400' : ($count < $expected ? 'text-pink-300 dark:text-pink-300' : ($count > $expected ? 'text-red-600 dark:text-red-500 font-semibold' : 'text-green-600 dark:text-green-400 font-bold')) }}">
+                                    <span class="whitespace-nowrap {{ $expected === 0 ? 'text-gray-500 dark:text-gray-400' : ($count < $expected ? 'text-pink-300 dark:text-pink-300' : ($count > $expected ? 'text-red-600 dark:text-red-500 font-semibold' : 'text-green-600 dark:text-green-400 font-bold')) }}">
                                         {{ $count }} / {{ $expected }}
                                     </span>
                                 </td>

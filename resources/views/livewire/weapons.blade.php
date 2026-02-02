@@ -266,7 +266,7 @@
                                     @foreach ($attachmentTypes as $t)
                                         <a
                                             href="#"
-                                            wire:click.prevent="setActiveTab('{{ $t }}')"
+                                            @click.prevent="$wire.setActiveTab('{{ $t }}').then(() => { let el = document.querySelector('[x-ref=attachmentSearch]'); if(el) { el.value = ''; el.focus(); el.dispatchEvent(new Event('input')); } })"
                                             class="flex border-b-2 border-transparent px-1 py-4 text-sm font-medium whitespace-nowrap  {{ $activeTab === $t ? 'border-indigo-500 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-200 dark:hover:border-white/20 hover:text-gray-700 dark:hover:text-white' }}"
                                         >
                                             {{ ucfirst($t) }}
