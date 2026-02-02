@@ -1,6 +1,6 @@
 <div class="bg-white dark:bg-gray-900 p-6 sm:p-10">
 
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-6xl mx-auto">
         <div class="p-8 border-b border-gray-200 flex justify-between">
             <div>
                 <h2 class="text-3xl font-medium text-gray-900">Weapons</h2>
@@ -252,7 +252,7 @@
                             <div class="border-b border-gray-200 dark:border-white/10">
                                 <nav
                                     aria-label="Tabs"
-                                    class="-mb-px flex space-x-1"
+                                    class="-mb-px flex space-x-3"
                                 >
                                     @foreach ($attachmentTypes as $t)
                                         <a
