@@ -82,10 +82,14 @@ class Weapons extends Component
     #[Computed]
     public function attachmentResults()
     {
+        $search = trim($this->attachmentSearch ?? '');
+
         return Attachment::where('type', $this->activeTab)
-            ->when($this->attachmentSearch, function ($query) {
-                $query->where('name', 'like', '%' . $this->attachmentSearch . '%')
-                    ->orWhere('label', 'like', '%' . $this->attachmentSearch . '%');
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('label', 'like', '%' . $search . '%');
+                });
             })
             ->whereNotIn('id', $this->weapon?->attachments->pluck('id')->toArray() ?? [])
             ->orderBy('name')
