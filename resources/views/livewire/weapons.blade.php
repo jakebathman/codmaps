@@ -208,6 +208,8 @@
                                     <div
                                         class="mt-2 p-2 border border-gray-200 rounded-md cursor-pointer hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
                                         wire:click="addAttachment({{ $result->id }})"
+                                        @keydown.enter="$wire.addAttachment({{ $result->id }})"
+                                        tabindex="0"
                                     >
                                         {{ $result->name }} ({{ $result->label }})
                                     </div>
