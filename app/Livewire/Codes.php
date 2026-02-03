@@ -15,11 +15,13 @@ class Codes extends Component
 
     public $codeInput = '';
 
-    public string $currentType = 'barrel';
+    public ?string $currentType = null;
 
     public array $typesWithCounts = [];
 
     public array $skippedIds = [];
+
+    public string $attachmentSearchInput = '';
 
     public array $types = [
         'barrel',
@@ -75,9 +77,32 @@ class Codes extends Component
         $this->nextAttachment();
     }
 
+    public function setAttachment($attachmentId)
+    {
+        $this->attachmentId = $attachmentId;
+
+        $this->codeInput = '';
+        unset($this->attachment);
+        unset($this->decoded);
+        unset($this->attachmentsCode);
+    }
+
+    #[Computed]
+    public function allAttachments()
+    {
+        return Attachment::where('type', $this->currentType)
+            ->where(function ($query) {
+                $query->where('label', 'like', '%' . $this->attachmentSearchInput . '%')
+                    ->orWhere('name', 'like', '%' . $this->attachmentSearchInput . '%');
+            })
+            ->orderBy('name')->orderBy('label')->get();
+    }
+
     private function nextAttachment()
     {
         $this->calculateTypesWithCounts();
+
+        dump('Getting next attachment for type ' . $this->currentType);
 
         // Get an attachment from the database that has no code
         $this->attachmentId = Attachment::whereNull('code_base34')
@@ -90,9 +115,7 @@ class Codes extends Component
             ->first()
         ?->id;
 
-        unset($this->attachment);
-        unset($this->decoded);
-        unset($this->attachmentsCode);
+        $this->setAttachment($this->attachmentId);
     }
 
     #[Computed]
@@ -103,7 +126,6 @@ class Codes extends Component
 
     public function skip()
     {
-        $this->codeInput = '';
         $this->skippedIds[] = $this->attachmentId;
         $this->nextAttachment();
     }
@@ -185,7 +207,7 @@ class Codes extends Component
     public function base34ToBase10($encoded): string
     {
         // Cast to string first, before any operations
-        $encoded = (string) trim(strtoupper($encoded));
+        $encoded = (string) trim(strtoupper($encoded ?? ''));
 
         $alphabet = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
         $base = '34';

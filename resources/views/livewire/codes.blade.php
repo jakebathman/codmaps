@@ -1,4 +1,8 @@
-<div class="bg-white dark:bg-gray-900 p-6 sm:p-10">
+<div
+    class="bg-white dark:bg-gray-900 p-6 sm:p-10"
+    x-data="{ isOpen: false }"
+    x-init="$watch('isOpen', () => { $nextTick(() => { isOpen ? $refs.attachmentSearchInput.focus() : null }) })"
+>
 
     <div class="max-w-3xl mx-auto">
         <div class="p-8 border-b border-gray-200 flex justify-between">
@@ -9,29 +13,88 @@
                 </p>
             </div>
 
-            {{-- Type dropdown --}}
-            <el-dropdown class="inline-block">
-                <button class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20 capitalize">
-                    <div class="flex items-center">
-                        <div class="flex items-center w-full pr-2">
-                            <div class="flex items-center">
-                                <div
-                                    aria-hidden="true"
-                                    class="inline-block size-2 shrink-0 rounded-full border border-transparent {{ $typesWithCounts[$currentType]['percent_complete'] == 100 ? 'bg-green-400' : ($typesWithCounts[$currentType]['percent_complete'] > 60 ? 'bg-blue-400' : ($typesWithCounts[$currentType]['percent_complete'] > 40 ? 'bg-yellow-400' : ($typesWithCounts[$currentType]['percent_complete'] > 0 ? 'bg-orange-400' : 'bg-red-400'))) }} forced-colors:bg-[Highlight]"
-                                ></div>
-                                <div class="ml-1">{{ $typesWithCounts[$currentType]['percent_complete'] }}%</div>
+            <div class="flex flex-col gap-4">
+                {{-- Type dropdown --}}
+                <el-dropdown class="w-full flex justify-end">
+                    <button class="inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20 capitalize">
+                        <div class="flex items-center">
+                            <div class="flex items-center w-full pr-2">
+                                <div class="flex items-center">
+                                    <div
+                                        aria-hidden="true"
+                                        class="inline-block size-2 shrink-0 rounded-full border border-transparent {{ $typesWithCounts[$currentType]['percent_complete'] == 100 ? 'bg-green-400' : ($typesWithCounts[$currentType]['percent_complete'] > 60 ? 'bg-blue-400' : ($typesWithCounts[$currentType]['percent_complete'] > 40 ? 'bg-yellow-400' : ($typesWithCounts[$currentType]['percent_complete'] > 0 ? 'bg-orange-400' : 'bg-red-400'))) }} forced-colors:bg-[Highlight]"
+                                    ></div>
+                                    <div class="ml-1">{{ $typesWithCounts[$currentType]['percent_complete'] }}%</div>
+                                </div>
+                                <div class="ml-3 block truncate font-normal group-aria-selected/option:font-semibold capitalize">
+                                    {{ $currentType }}
+                                </div>
                             </div>
-                            <div class="ml-3 block truncate font-normal group-aria-selected/option:font-semibold capitalize">
-                                {{ $currentType }}
-                            </div>
-                        </div>
 
+                            <svg
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                data-slot="icon"
+                                aria-hidden="true"
+                                class="-mr-1 size-5 text-gray-400"
+                            >
+                                <path
+                                    d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                                    clip-rule="evenodd"
+                                    fill-rule="evenodd"
+                                />
+                            </svg>
+                    </button>
+
+                    <el-menu
+                        anchor="bottom end"
+                        popover="auto"
+                        class="w-56 origin-top-right rounded-md bg-white shadow-lg outline-1 outline-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10"
+                    >
+                        <div class="py-1">
+                            @foreach ($typesWithCounts as $type => $counts)
+                                <button
+                                    wire:click="setType('{{ $type }}')"
+                                    class="group/item w-full flex items-center px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:text-gray-900 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5 dark:focus:text-white"
+                                >
+                                    <div class="flex items-center w-full">
+                                        <div class="flex items-center w-14">
+                                            <div
+                                                aria-hidden="true"
+                                                class="inline-block size-2 shrink-0 rounded-full border border-transparent {{ $counts['percent_complete'] == 100 ? 'bg-green-400' : ($counts['percent_complete'] > 60 ? 'bg-blue-400' : ($counts['percent_complete'] > 40 ? 'bg-yellow-400' : ($counts['percent_complete'] > 0 ? 'bg-orange-400' : 'bg-red-400'))) }} forced-colors:bg-[Highlight]"
+                                            ></div>
+                                            <div class="ml-1">{{ $counts['percent_complete'] }}%</div>
+                                        </div>
+                                        <div class="ml-3 block truncate font-normal group-aria-selected/option:font-semibold capitalize">
+                                            {{ $type }}
+                                        </div>
+                                    </div>
+                                </button>
+                            @endforeach
+                        </div>
+                    </el-menu>
+                </el-dropdown>
+
+                {{-- Attachment dropdown --}}
+                <div
+                    class="relative"
+                    @click.outside="isOpen = false"
+                >
+                    <button
+                        class="inline-flex items-center justify-between w-full gap-x-1 text-sm/6 font-semibold text-gray-900 dark:text-white cursor-pointer"
+                        @click="isOpen = !isOpen"
+                        x-ref="attachmentButton"
+                    >
+                        <div class="flex flex-col text-left">
+                            <div class="text-sm text-gray-400 dark:text-gray-500">{{ $this->attachment?->name ?? '—' }}</div>
+                            <div class="font-semibold">{{ $this->attachment?->label ?? 'Select Attachment' }}</div>
+                        </div>
                         <svg
                             viewBox="0 0 20 20"
                             fill="currentColor"
                             data-slot="icon"
                             aria-hidden="true"
-                            class="-mr-1 size-5 text-gray-400"
+                            class="size-5"
                         >
                             <path
                                 d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
@@ -39,36 +102,50 @@
                                 fill-rule="evenodd"
                             />
                         </svg>
-                </button>
+                    </button>
 
-                <el-menu
-                    anchor="bottom end"
-                    popover="auto"
-                    class="w-56 origin-top-right rounded-md bg-white shadow-lg outline-1 outline-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10"
-                >
-                    <div class="py-1">
-                        @foreach ($typesWithCounts as $type => $counts)
-                            <button
-                                wire:click="setType('{{ $type }}')"
-                                class="group/item w-full flex items-center px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:text-gray-900 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5 dark:focus:text-white"
-                            >
-                                <div class="flex items-center w-full">
-                                    <div class="flex items-center w-14">
-                                        <div
-                                            aria-hidden="true"
-                                            class="inline-block size-2 shrink-0 rounded-full border border-transparent {{ $counts['percent_complete'] == 100 ? 'bg-green-400' : ($counts['percent_complete'] > 60 ? 'bg-blue-400' : ($counts['percent_complete'] > 40 ? 'bg-yellow-400' : ($counts['percent_complete'] > 0 ? 'bg-orange-400' : 'bg-red-400'))) }} forced-colors:bg-[Highlight]"
-                                        ></div>
-                                        <div class="ml-1">{{ $counts['percent_complete'] }}%</div>
+                    <div
+                        id="attachment-menu"
+                        x-cloak
+                        :class="{ 'hidden': !isOpen }"
+                        x-anchor="$refs.attachmentButton"
+                        class="z-50 w-screen max-w-max bg-transparent px-4 transition rounded-lg [--anchor-gap:--spacing(5)] backdrop:bg-transparent open:flex data-closed:translate-y-1 data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-150 data-leave:ease-in"
+                    >
+                        <div class="h-96 overflow-y-scroll bg-white text-sm/6 shadow-lg outline-1 rounded-lg outline-gray-900/5 lg:max-w-5xl dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
+                            <input
+                                wire:model.live="attachmentSearchInput"
+                                type="text"
+                                placeholder="Search attachments..."
+                                x-ref="attachmentSearchInput"
+                                class="block w-1/2 mx-auto rounded-md bg-white px-3 py-1.5 mt-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500 mb-2"
+                            />
+
+                            <div class="grid grid-cols-2 gap-x-6 gap-y-1 p-4 md:grid-cols-3">
+
+                                @foreach ($this->allAttachments as $attachment)
+                                    <div
+                                        class="group relative flex gap-x-4 rounded-lg px-2 py-1 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer"
+                                        @click="$wire.setAttachment({{ $attachment->id }}).then(() => { isOpen = false;$refs.codeInput.focus() })"
+                                    >
+                                        <div>
+                                            <a
+                                                href="#"
+                                                class="font-semibold text-gray-900 dark:text-white"
+                                            >
+                                                {{ $attachment->label }}
+                                                <span class="absolute inset-0"></span>
+                                            </a>
+                                            <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $attachment->name }}</p>
+                                        </div>
                                     </div>
-                                    <div class="ml-3 block truncate font-normal group-aria-selected/option:font-semibold capitalize">
-                                        {{ $type }}
-                                    </div>
-                                </div>
-                            </button>
-                        @endforeach
+                                @endforeach
+
+                            </div>
+                        </div>
                     </div>
-                </el-menu>
-            </el-dropdown>
+                </div>
+
+            </div>
         </div>
 
         {{-- Attachment info --}}
@@ -105,32 +182,53 @@
                             wire:keydown.enter="saveAndNext"
                             autofocus
                             id="codeInput"
+                            x-ref="codeInput"
                             type="text"
                             name="codeInput"
                             placeholder="A01-ABC12-XYZ89-1"
                             wire:model.live="codeInput"
-                            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                            class="block w-full rounded-md bg-white px-3 py-1.5 text-base uppercase text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
                         />
                     </div>
                 </div>
 
-                <div class="flex justify-around gap-6 w-full max-w-xl mx-auto">
+                <div class="grid grid-cols-3 gap-6 w-full max-w-xl mx-auto">
                     <div class="flex flex-col gap-2 text-center">
                         <div class="font-bold">Input Value</div>
                         <div>{{ $codeInput }}</div>
                     </div>
                     <div class="flex flex-col gap-2 text-center">
                         <div class="font-bold">Base34 Value</div>
-                        <div class="flex flex gap-1">
+                        <div class="flex gap-1 justify-center items-center">
                             <div>{{ $this->attachmentsCodeIdExists === null ? '' : ($this->attachmentsCodeIdExists === true ? '✅' : '🚫') }}</div>
                             <div>{{ $this->attachmentsCode }}</div>
                         </div>
                     </div>
                     <div class="flex flex-col gap-2 text-center">
-                        <div class="font-bold">Decoded</div>
+                        <div class="font-bold">Base10 Value</div>
                         <div>{{ $this->decoded }}</div>
                     </div>
                 </div>
+
+                @if ($this->attachment?->code_base34)
+                    <div>
+                        <div class="mb-2 text-gray-400 dark:text-gray-400 text-center">Current values for this attachment:</div>
+                        <div class="grid grid-cols-3 gap-6 w-full max-w-xl mx-auto">
+                            <div class="flex flex-col gap-2 text-center">
+                                <div class="font-bold">Has Weapon(s)?</div>
+                                <div>{{ $this->attachment?->weapons->count() > 0 ? '✅' : '🚫' }}</div>
+                            </div>
+                            <div class="flex flex-col gap-2 text-center">
+                                <div class="font-bold">Base34 Value</div>
+                                <div>{{ $this->attachment->code_base34 }}</div>
+                            </div>
+                            <div class="flex flex-col gap-2 text-center">
+                                <div class="font-bold">Base10 Value</div>
+                                <div>{{ $this->attachment->code_base10 }}</div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             @endif
         </div>
 

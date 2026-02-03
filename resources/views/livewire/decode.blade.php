@@ -60,7 +60,7 @@
                 <div class="w-32">Attachments</div>
                 <div class="flex flex-col gap-1">
                     @foreach ($this->attachments as $attachment)
-                        <div class="font-bold text-xl">{{ $attachment->name }}</div>
+                        <div class="font-bold text-xl">{{ $attachment->name ?? 'Unknown' }}</div>
                     @endforeach
                 </div>
             </div>
