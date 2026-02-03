@@ -102,8 +102,6 @@ class Codes extends Component
     {
         $this->calculateTypesWithCounts();
 
-        dump('Getting next attachment for type ' . $this->currentType);
-
         // Get an attachment from the database that has no code
         $this->attachmentId = Attachment::whereNull('code_base34')
             ->where('type', $this->currentType)
