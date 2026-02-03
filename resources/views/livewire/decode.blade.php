@@ -65,9 +65,11 @@
                 </div>
             </div>
 
-            <div>
-                @json($this->buildCode?->attachmentIds)
-                @json($this->attachments())
+            <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-sm text-gray-700 dark:text-gray-300">
+                <pre><code>@json($this->buildCode?->attachmentIds, JSON_PRETTY_PRINT)</code></pre>
+            </div>
+            <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-sm text-gray-700 dark:text-gray-300">
+                <pre><code>@json($this->attachments(), JSON_PRETTY_PRINT)</code></pre>
             </div>
         </div>
 

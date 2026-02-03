@@ -18,7 +18,7 @@ class FixBase10AttachmentsTable extends Command
                 $base34 = $attachment->code_base34;
                 if ($base34) {
                     $base10 = $this->convertBase34ToBase10($base34);
-                    if ($attachment->code_base10 !== $base10) {
+                    if ($attachment->code_base10 != $base10) {
                         $this->info("Updating attachment ID {$attachment->id}: base34={$base34}, old_base10={$attachment->code_base10}, new_base10={$base10}");
                         $attachment->code_base10 = $base10;
                         $attachment->save();
