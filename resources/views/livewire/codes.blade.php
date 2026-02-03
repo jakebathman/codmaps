@@ -279,6 +279,10 @@
                                     <th
                                         scope="col"
                                         class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900 dark:text-white"
+                                    ></th>
+                                    <th
+                                        scope="col"
+                                        class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900 dark:text-white"
                                     >Base 10</th>
                                     <th
                                         scope="col"
@@ -300,9 +304,10 @@
                                             <div>{{ $attachment->label }}</div>
                                         </td>
                                         <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400 uppercase">{{ $attachment->code_base34 }}</td>
+                                        <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $attachment->validBase34() === false ? '⚠️' : '' }}</td>
                                         <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $attachment->code_base10 }}</td>
                                         <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $attachment->weapon_unlock }}</td>
-                                        <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $attachment->updated_at }}</td>
+                                        <td class="px-2 py-2 text-sm text-center whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $attachment->updated_at }}</td>
 
                                     </tr>
                                 @endforeach
