@@ -36,6 +36,7 @@ Route::group(['middleware' => ['github.auth']], function () {
     Route::view('codes', 'codes')->name('codes');
     Route::view('weapons', 'weapons')->name('weapons');
     Route::view('binary', 'binary')->name('binary');
+    Route::view('tools', 'tools')->name('tools');
 
     Route::view('decode', 'decode')->name('decode');
 });
