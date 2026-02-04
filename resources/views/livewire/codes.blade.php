@@ -1,7 +1,14 @@
 <div
     class="bg-white dark:bg-gray-900 p-6 sm:p-10"
     x-data="{ isOpen: false }"
-    x-init="$watch('isOpen', () => { $nextTick(() => { isOpen ? $refs.attachmentSearchInput.focus() : null }) })"
+    x-init="$watch('isOpen', () => {
+        $nextTick(() => {
+            if (isOpen) {
+                $refs.attachmentSearchInput.focus();
+                $refs.attachmentSearchInput.select();
+            }
+        })
+    })"
 >
 
     <div class="max-w-3xl mx-auto">
@@ -299,7 +306,10 @@
                             <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-900">
                                 @foreach ($attachments as $attachment)
                                     <tr>
-                                        <td class="py-2 pr-3 pl-4 text-sm whitespace-nowrap text-gray-500 sm:pl-0 dark:text-gray-400">
+                                        <td
+                                            class="py-2 pr-3 pl-4 text-sm whitespace-nowrap text-gray-500 sm:pl-0 dark:text-gray-400"
+                                            @click="$wire.setAttachment({{ $attachment->id }}).then(() => { isOpen = false;$refs.codeInput.focus() })"
+                                        >
                                             <div class="text-sm text-gray-400">{{ $attachment->name }}</div>
                                             <div>{{ $attachment->label }}</div>
                                         </td>

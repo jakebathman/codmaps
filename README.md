@@ -18,3 +18,12 @@ CLOUDFLARE_R2_USE_PATH_STYLE_ENDPOINT
 When a user selects an image to upload, Livewire automatically uploads it to R2 and gets a temporary URL for preview purposes. When the form is submitted, the temporary file is moved to a permanent location in R2 (the root of the bucket).
 
 Images are stored as `{slug}-{game}.{ext}` where `{slug}` is a URL-friendly version of the map name, `{game}` is the game short name (e.g. `mwiii`). If a file with that name already exists, a number is appended to the filename (e.g. `-{i}`) until a unique name is found.
+
+## Misc
+
+Removing this attachment from the database, I think it's Warzone-only:
+
+```sql
+INSERT INTO `attachments` (`id`, `type`, `name`, `label`, `code_base34`, `code_base10`, `weapon_unlock`, `created_at`, `updated_at`) VALUES
+(147, 'barrel', 'Control Barrel', '25\" EAM Heavy Barrel', NULL, NULL, 'MK.78', NULL, NULL);
+```
