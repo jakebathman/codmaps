@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout-auth>
 
     <div
         class="p-6 sm:p-10 md:p-16 flex flex-col gap-10 max-w-5xl mx-auto"
@@ -829,4 +829,4 @@
             }));
         });
     </script>
-</x-layout>
+</x-layout-auth>

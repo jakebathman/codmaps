@@ -2,9 +2,6 @@
 
 use App\Http\Controllers\ApiDataController;
 use App\Http\Controllers\GithubAuthController;
-use App\Livewire\Filters;
-use App\Livewire\Games;
-use App\Livewire\Maps;
 use App\Livewire\Radix;
 use App\Models\Filter;
 use App\Models\Game;
@@ -28,15 +25,16 @@ Route::get('auth/github/callback', [GithubAuthController::class, 'callback'])->n
 Route::post('logout', [GithubAuthController::class, 'logout'])->name('logout');
 
 Route::group(['middleware' => ['github.auth']], function () {
-    Route::view('overview', 'overview')->name('overview');
+    Route::view('overview', 'overview')->name('overview')->defaults('nav', 'Overview');
 
-    Route::get('maps', Maps::class)->middleware('github.auth')->name('maps');
-    Route::get('filters', Filters::class)->name('filters');
-    Route::get('games', Games::class)->name('games');
-    Route::view('codes', 'codes')->name('codes');
-    Route::view('weapons', 'weapons')->name('weapons');
-    Route::view('binary', 'binary')->name('binary');
-    Route::view('tools', 'tools')->name('tools');
+    Route::view('maps', 'maps')->name('maps')->defaults('nav', 'Maps');
+    Route::view('filters', 'filters')->name('filters')->defaults('nav', 'Filters');
+    Route::view('games', 'games')->name('games')->defaults('nav', 'Games');
+
+    Route::view('codes', 'codes')->name('codes')->defaults('nav', 'Codes');
+    Route::view('weapons', 'weapons')->name('weapons')->defaults('nav', 'Weapons');
+    Route::view('binary', 'binary')->name('binary')->defaults('nav', 'Binary');
+    Route::view('tools', 'tools')->name('tools')->defaults('nav', 'Tools');
 
     Route::view('decode', 'decode')->name('decode');
 });

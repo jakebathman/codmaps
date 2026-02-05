@@ -1,3 +1,3 @@
-<x-layout>
+<x-layout-auth>
     <livewire:tools />
-</x-layout>
+</x-layout-auth>

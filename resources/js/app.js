@@ -3,6 +3,7 @@ import * as cheerio from "cheerio";
 // import Alpine from "alpinejs";
 import persist from "@alpinejs/persist";
 import anchor from "@alpinejs/anchor";
+import '@tailwindplus/elements';
 
 // window.Alpine = Alpine;
 window.cheerio = cheerio;

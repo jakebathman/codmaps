@@ -1,3 +1,3 @@
 <x-layout-auth>
-    <livewire:decode />
+    <livewire:filters />
 </x-layout-auth>

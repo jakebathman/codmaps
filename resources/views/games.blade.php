@@ -1,3 +1,3 @@
 <x-layout-auth>
-    <livewire:decode />
+    <livewire:games />
 </x-layout-auth>

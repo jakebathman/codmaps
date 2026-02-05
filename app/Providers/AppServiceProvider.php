@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,6 +24,20 @@ class AppServiceProvider extends ServiceProvider
             }
 
             return request()->route()->getName();
+        });
+
+        View::composer('components.nav', function ($view) {
+            $navItems = collect(Route::getRoutes())
+                ->filter(fn ($route) => isset($route->defaults['nav']))
+                ->map(fn ($route) => [
+                    'name' => $route->getName(),
+                    'label' => $route->defaults['nav'],
+                    'url' => route($route->getName()),
+                    'current' => request()->routeIs($route->getName()),
+                ])
+                ->values();
+
+            $view->with('navItems', $navItems);
         });
     }
 }
