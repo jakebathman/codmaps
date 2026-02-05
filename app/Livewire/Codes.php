@@ -15,6 +15,8 @@ class Codes extends Component
 
     public $codeInput = '';
 
+    public $notesInput = null;
+
     public ?string $currentType = null;
 
     public array $typesWithCounts = [];
@@ -81,8 +83,11 @@ class Codes extends Component
     {
         $this->attachmentId = $attachmentId;
 
-        $this->codeInput = '';
         unset($this->attachment);
+
+        $this->codeInput = $this->attachment?->code_base34 ?? '';
+        $this->notesInput = $this->attachment?->notes;
+
         unset($this->decoded);
         unset($this->attachmentsCode);
     }
@@ -139,12 +144,10 @@ class Codes extends Component
         if ($attachment) {
             $attachment->code_base34 = $this->attachmentsCode();
             $attachment->code_base10 = $this->base34ToBase10($this->attachmentsCode, self::ALPHABET);
+            $attachment->notes = $this->notesInput;
             $attachment->save();
 
         }
-
-        // Reset input
-        $this->codeInput = '';
 
         // Get next attachment
         $this->nextAttachment();
@@ -200,6 +203,20 @@ class Codes extends Component
         }
         return Attachment::where('code_base34', $this->attachmentsCode())
             ->exists();
+    }
+
+    public function cloneAttachment(){
+        if (!$this->attachment()) {
+            return;
+        }
+
+        $cloned = $this->attachment()->replicate();
+        $cloned->code_base34 = null;
+        $cloned->code_base10 = null;
+        $cloned->notes = null;
+        $cloned->save();
+
+        $this->setAttachment($cloned->id);
     }
 
     public function base34ToBase10($encoded): string

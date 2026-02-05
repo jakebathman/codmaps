@@ -286,6 +286,7 @@
                             </div>
                             <button
                                 wire:click="removeAttachment({{ $attachment->id }})"
+                                wire:confirm="Are you sure you want to remove this attachment?"
                                 class="ml-4 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline  focus-visible:outline-offset-2 focus-visible:outline-red-600"
                             >Remove</button>
                         </div>

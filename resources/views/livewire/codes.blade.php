@@ -199,6 +199,23 @@
                     </div>
                 </div>
 
+                <div class="w-1/2 max-w-lg mx-auto">
+                    <label
+                        for="notesInput"
+                        class="block text-sm/6 font-medium text-gray-900 dark:text-white"
+                    >Notes</label>
+                    <div class="mt-2 w-full mx-auto">
+                        <textarea
+                            id="notesInput"
+                            x-ref="notesInput"
+                            name="notesInput"
+                            placeholder="Any notes about this attachment (e.g. which weapon it's for, if it's a duplicate, etc.)"
+                            wire:model.live="notesInput"
+                            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                        ></textarea>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-3 gap-6 w-full max-w-xl mx-auto">
                     <div class="flex flex-col gap-2 text-center">
                         <div class="font-bold">Input Value</div>
@@ -257,6 +274,13 @@
             >Skip</button>
 
             <button
+                wire:click="cloneAttachment"
+                tabindex="-1"
+                type="button"
+                class="cursor-pointer rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20"
+            >Clone</button>
+
+            <button
                 wire:click="saveAndNext"
                 type="button"
                 class="cursor-pointer rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 shadow-xs hover:bg-indigo-100 dark:bg-indigo-500/20 dark:text-indigo-400 dark:shadow-none dark:hover:bg-indigo-500/30 disabled:dark:bg-indigo-500/10 disabled:bg-gray-100 disabled:text-gray-400 disabled:dark:text-gray-500 disabled:cursor-not-allowed"
@@ -282,6 +306,10 @@
                                     <th
                                         scope="col"
                                         class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900 dark:text-white"
+                                    >Weapons</th>
+                                    <th
+                                        scope="col"
+                                        class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900 dark:text-white"
                                     >Base 34</th>
                                     <th
                                         scope="col"
@@ -295,6 +323,10 @@
                                         scope="col"
                                         class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900 dark:text-white"
                                     >Weapon Unlock</th>
+                                    <th
+                                        scope="col"
+                                        class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900 dark:text-white"
+                                    >Notes</th>
                                     <th
                                         scope="col"
                                         class="py-3.5 pr-4 pl-3 whitespace-nowrap sm:pr-0"
@@ -313,10 +345,12 @@
                                             <div class="text-sm text-gray-400">{{ $attachment->name }}</div>
                                             <div>{{ $attachment->label }}</div>
                                         </td>
+                                        <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400 uppercase">{{ $attachment->weapons?->count() }}</td>
                                         <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400 uppercase">{{ $attachment->code_base34 }}</td>
                                         <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $attachment->validBase34() === false ? '⚠️' : '' }}</td>
                                         <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $attachment->code_base10 }}</td>
                                         <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $attachment->weapon_unlock }}</td>
+                                        <td class="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 ">{{ $attachment->notes }}</td>
                                         <td class="px-2 py-2 text-sm text-center whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $attachment->updated_at }}</td>
 
                                     </tr>

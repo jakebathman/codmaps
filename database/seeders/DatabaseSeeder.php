@@ -81,6 +81,8 @@ class DatabaseSeeder extends Seeder
                 'code_base34' => $attachment['code_base34'],
                 'code_base10' => $attachment['code_base10'],
                 'weapon_unlock' => $attachment['weapon_unlock'],
+                'prestige' => $attachment['prestige'],
+                'notes' => $attachment['notes'] ?? null,
             ]);
         }
 

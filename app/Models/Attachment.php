@@ -12,6 +12,13 @@ class Attachment extends Model
 {
     protected $guarded = [];
 
+    protected function casts(): array
+    {
+        return [
+            'prestige' => 'boolean',
+        ];
+    }
+
     public function validBase34(): ?bool
     {
         if (is_null($this->code_base34)) {
