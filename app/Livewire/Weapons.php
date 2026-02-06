@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Attachment;
 use App\Models\Weapon;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Weapons extends Component
@@ -255,6 +256,17 @@ class Weapons extends Component
     {
         $this->skippedIds[] = $this->weaponId;
         $this->nextWeapon();
+    }
+
+    #[On('weapon-created')]
+    public function weaponCreated($weaponId)
+    {
+        // Optionally switch to the newly created weapon
+        $weapon = Weapon::find($weaponId);
+        if ($weapon) {
+            $this->currentType = $weapon->type;
+            $this->setWeapon($weaponId);
+        }
     }
 
     public function render()
