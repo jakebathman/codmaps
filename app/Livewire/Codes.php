@@ -117,7 +117,7 @@ class Codes extends Component
     #[Computed]
     public function attachedWeapons()
     {
-        return $this->attachment?->weapons;
+        return Weapon::whereIn('id', $this->attachedWeaponIds)->orderBy('type')->orderBy('name')->get();
     }
 
     private function nextAttachment()

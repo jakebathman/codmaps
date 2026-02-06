@@ -201,9 +201,13 @@
                                     @click="isOpenWeapons = !isOpenWeapons"
                                     x-ref="attachedWeaponsDropdownButton"
                                 >
-                                    <div class="flex flex-col text-left">
-                                        <div class="text-sm text-gray-400 dark:text-gray-500">{{ $this->attachment?->name ?? '—' }}</div>
-                                        <div class="font-semibold">{{ $this->attachment?->label ?? 'Select Attachment' }}</div>
+                                    <div class="flex flex-col gap-2">
+                                        @foreach ($this->attachedWeapons?->groupBy('type') as $type => $weapons)
+                                            <div class="flex gap-3 items-center">
+                                                <div class="text-sm text-gray-400 dark:text-gray-500 w-12">{{ $weapons?->count() ?? '—' }} / {{ $this->allWeapons->where('type', $type)->count() ?? '—' }}</div>
+                                                <div class="font-semibold">{{ $type }}</div>
+                                            </div>
+                                        @endforeach
                                     </div>
                                     <svg
                                         viewBox="0 0 20 20"
@@ -224,7 +228,7 @@
                                     id="attached-weapons-menu"
                                     x-cloak
                                     :class="{ 'hidden': !isOpenWeapons }"
-                                    x-anchor="$refs.attachedWeaponsDropdownButton"
+                                    x-anchor.right-start="$refs.attachedWeaponsDropdownButton"
                                     class="z-50 w-screen max-w-max bg-transparent px-4 transition rounded-lg [--anchor-gap:--spacing(5)] backdrop:bg-transparent open:flex data-closed:translate-y-1 data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-150 data-leave:ease-in"
                                 >
                                     <div class="h-96 overflow-y-scroll bg-white text-sm/6 shadow-lg outline-1 rounded-lg outline-gray-900/5 lg:max-w-5xl dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
@@ -239,6 +243,7 @@
                                                         <div class="flex h-6 shrink-0 items-center">
                                                             <div class="group grid size-4 grid-cols-1">
                                                                 <input
+                                                                    id="weapon-{{ $weapon->id }}"
                                                                     wire:key="weapon-{{ $weapon->id }}"
                                                                     type="checkbox"
                                                                     name="weapon-{{ $weapon->id }}"
