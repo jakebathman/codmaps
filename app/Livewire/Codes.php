@@ -6,6 +6,7 @@ use App\Models\Attachment;
 use App\Models\AttachmentID;
 use App\Models\Weapon;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Codes extends Component
@@ -44,6 +45,23 @@ class Codes extends Component
     public function mount()
     {
         $this->nextAttachment();
+    }
+
+    #[On('attachment-created')]
+    public function handleAttachmentCreated($attachmentId)
+    {
+        $attachment = Attachment::find($attachmentId);
+
+        if ($attachment) {
+            // Switch to the attachment's type
+            $this->currentType = $attachment->type;
+
+            // Set the new attachment as the current one
+            $this->setAttachment($attachmentId);
+
+            // Recalculate types with counts
+            $this->calculateTypesWithCounts();
+        }
     }
 
     public function calculateTypesWithCounts()
@@ -130,7 +148,7 @@ class Codes extends Component
             ->whereNotIn('id', $this->skippedIds)
             ->get()
             ->sortBy(function ($attachment) {
-                return $attachment->weaponUnlock->type . $attachment->weaponUnlock->name;
+                return $attachment->weaponUnlock?->type . $attachment->weaponUnlock?->name;
             })
             ->first()
         ?->id;

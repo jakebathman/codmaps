@@ -14,7 +14,13 @@
     <div class="max-w-3xl mx-auto">
         <div class="p-8 border-b border-gray-200 flex justify-between">
             <div>
-                <h2 class="text-3xl font-medium text-gray-900">Weapon Attachments</h2>
+                <div class="flex items-center gap-4">
+                    <h2 class="text-3xl font-medium text-gray-900">Weapon Attachments</h2>
+                    <button
+                        wire:click="$dispatch('open-new-attachment-modal')"
+                        class="cursor-pointer rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    >+ New</button>
+                </div>
                 <p class="mt-2 text-sm text-gray-600">
                     Enter the weapon attachment code found in-game for this attachment.
                 </p>
@@ -156,11 +162,11 @@
         </div>
 
         {{-- Attachment info --}}
-        <div class="p-6 flex flex-col gap-4 max-w-3xl mx-auto">
+        <div class="p-6 flex flex-col gap-4 max-w-4xl mx-auto">
             @if (!$this->attachment)
                 <div class="flex self-center items-center justify-center h-72 text-xl text-gray-600 dark:text-gray-400">All attachments of this type have been entered.</div>
             @else
-                <div class="flex flex-col gap-2 max-w-lg mx-auto">
+                <div class="flex flex-col gap-2 max-w-xl mx-auto">
                     <div class="flex items-baseline">
                         <div class="w-32">ID</div>
                         <div class="font-bold text-xl capitalize">{{ $this->attachment->id }}</div>
@@ -202,12 +208,16 @@
                                     x-ref="attachedWeaponsDropdownButton"
                                 >
                                     <div class="flex flex-col gap-2">
-                                        @foreach ($this->attachedWeapons?->groupBy('type') as $type => $weapons)
-                                            <div class="flex gap-3 items-center">
-                                                <div class="text-sm text-gray-400 dark:text-gray-500 w-12">{{ $weapons?->count() ?? '—' }} / {{ $this->allWeapons->where('type', $type)->count() ?? '—' }}</div>
-                                                <div class="font-semibold">{{ $type }}</div>
-                                            </div>
-                                        @endforeach
+                                        @if ($this->attachedWeapons?->count() === 0)
+                                            <div class="text-sm text-gray-400 dark:text-gray-500">No weapons</div>
+                                        @else
+                                            @foreach ($this->attachedWeapons?->groupBy('type') as $type => $weapons)
+                                                <div class="flex gap-3 items-center">
+                                                    <div class="text-sm text-gray-400 dark:text-gray-500 w-12">{{ $weapons?->count() ?? '—' }} / {{ $this->allWeapons->where('type', $type)->count() ?? '—' }}</div>
+                                                    <div class="font-semibold">{{ $type }}</div>
+                                                </div>
+                                            @endforeach
+                                        @endif
                                     </div>
                                     <svg
                                         viewBox="0 0 20 20"
@@ -481,4 +491,7 @@
         </div>
 
     </div>
+
+    {{-- New Attachment Modal --}}
+    <livewire:new-attachment-modal />
 </div>
