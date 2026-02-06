@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Attachment;
 use App\Models\AttachmentID;
+use App\Models\Weapon;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -24,6 +25,8 @@ class Codes extends Component
     public array $skippedIds = [];
 
     public string $attachmentSearchInput = '';
+
+    public array $attachedWeaponIds = [];
 
     public array $types = [
         'barrel',
@@ -90,6 +93,8 @@ class Codes extends Component
 
         unset($this->decoded);
         unset($this->attachmentsCode);
+
+        $this->attachedWeaponIds = $this->attachment?->weapons->pluck('id')->toArray() ?? [];
     }
 
     #[Computed]
@@ -101,6 +106,18 @@ class Codes extends Component
                     ->orWhere('name', 'like', '%' . $this->attachmentSearchInput . '%');
             })
             ->orderBy('name')->orderBy('label')->get();
+    }
+
+    #[Computed]
+    public function allWeapons()
+    {
+        return Weapon::with('attachments')->orderBy('type')->orderBy('name')->get();
+    }
+
+    #[Computed]
+    public function attachedWeapons()
+    {
+        return $this->attachment?->weapons;
     }
 
     private function nextAttachment()
@@ -137,16 +154,27 @@ class Codes extends Component
     {
         $attachment = $this->attachment;
 
-        if (! $attachment || empty($this->attachmentsCode()) || empty($this->decoded)) {
+        if (! $attachment) {
             return;
         }
 
-        if ($attachment) {
+        if (empty($this->attachmentsCode()) || empty($this->decoded)) {
+            // Sync attached weapons and notes all the time
+            $attachment->update([
+                'notes' => $this->notesInput,
+            ]);
+            $attachment->weapons()->sync($this->attachedWeaponIds);
+
+            // If we don't mark this as skipped, it'll just keep showing up as the next attachment since it has no code
+            $this->skippedIds[] = $attachment->id;
+        } else {
             $attachment->code_base34 = $this->attachmentsCode();
             $attachment->code_base10 = $this->base34ToBase10($this->attachmentsCode, self::ALPHABET);
             $attachment->notes = $this->notesInput;
             $attachment->save();
 
+            // Sync attached weapons
+            $attachment->weapons()->sync($this->attachedWeaponIds);
         }
 
         // Get next attachment
@@ -163,7 +191,7 @@ class Codes extends Component
     {
         return view('livewire.codes',
             [
-                'attachments' => Attachment::where('type', $this->currentType)->orderBy('updated_at', 'desc')->orderBy('label')->get(),
+                'attachments' => $this->allAttachments,
             ]);
     }
 
@@ -205,8 +233,9 @@ class Codes extends Component
             ->exists();
     }
 
-    public function cloneAttachment(){
-        if (!$this->attachment()) {
+    public function cloneAttachment()
+    {
+        if (! $this->attachment()) {
             return;
         }
 

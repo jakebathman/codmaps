@@ -1,6 +1,6 @@
 <div
     class="bg-white dark:bg-gray-900 p-6 sm:p-10"
-    x-data="{ isOpen: false }"
+    x-data="{ isOpen: false, isOpenWeapons: false }"
     x-init="$watch('isOpen', () => {
         $nextTick(() => {
             if (isOpen) {
@@ -162,6 +162,10 @@
             @else
                 <div class="flex flex-col gap-2 max-w-lg mx-auto">
                     <div class="flex items-baseline">
+                        <div class="w-32">ID</div>
+                        <div class="font-bold text-xl capitalize">{{ $this->attachment->id }}</div>
+                    </div>
+                    <div class="flex items-baseline">
                         <div class="w-32">Type</div>
                         <div class="font-bold text-xl capitalize">{{ $this->attachment->type }}</div>
                     </div>
@@ -179,44 +183,153 @@
                     </div>
                 </div>
 
-                <div class="mt-4 w-1/3 max-w-lg mx-auto">
-                    <label
-                        for="codeInput"
-                        class="block text-sm/6 font-medium text-gray-900 dark:text-white"
-                    >Weapon Code</label>
-                    <div class="mt-2 w-full max-w-3xs mx-auto">
-                        <input
-                            wire:keydown.enter="saveAndNext"
-                            autofocus
-                            id="codeInput"
-                            x-ref="codeInput"
-                            type="text"
-                            name="codeInput"
-                            placeholder="A01-ABC12-XYZ89-1"
-                            wire:model.live="codeInput"
-                            class="block w-full rounded-md bg-white px-3 py-1.5 text-base uppercase text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
-                        />
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-xl mx-auto">
+                    <div class="w-full mx-auto">
+                        <label
+                            for="attachedWeaponsInput"
+                            class="block text-sm/6 font-medium text-gray-900 dark:text-white"
+                        >Attached Weapons</label>
+                        <div class="mt-2 w-full mx-auto">
+
+                            {{-- Attached weapons dropdown --}}
+                            <div
+                                class="relative"
+                                @click.outside="isOpenWeapons = false"
+                            >
+                                <button
+                                    class="inline-flex items-center justify-between w-full gap-x-1 text-sm/6 font-semibold text-gray-900 dark:text-white cursor-pointer"
+                                    @click="isOpenWeapons = !isOpenWeapons"
+                                    x-ref="attachedWeaponsDropdownButton"
+                                >
+                                    <div class="flex flex-col text-left">
+                                        <div class="text-sm text-gray-400 dark:text-gray-500">{{ $this->attachment?->name ?? '—' }}</div>
+                                        <div class="font-semibold">{{ $this->attachment?->label ?? 'Select Attachment' }}</div>
+                                    </div>
+                                    <svg
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                        data-slot="icon"
+                                        aria-hidden="true"
+                                        class="size-5"
+                                    >
+                                        <path
+                                            d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                                            clip-rule="evenodd"
+                                            fill-rule="evenodd"
+                                        />
+                                    </svg>
+                                </button>
+
+                                <div
+                                    id="attached-weapons-menu"
+                                    x-cloak
+                                    :class="{ 'hidden': !isOpenWeapons }"
+                                    x-anchor="$refs.attachedWeaponsDropdownButton"
+                                    class="z-50 w-screen max-w-max bg-transparent px-4 transition rounded-lg [--anchor-gap:--spacing(5)] backdrop:bg-transparent open:flex data-closed:translate-y-1 data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-150 data-leave:ease-in"
+                                >
+                                    <div class="h-96 overflow-y-scroll bg-white text-sm/6 shadow-lg outline-1 rounded-lg outline-gray-900/5 lg:max-w-5xl dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
+
+                                        @foreach ($this->allWeapons->groupBy('type') as $type => $weapons)
+                                            <div class="px-4 py-2 text-gray-500 dark:text-gray-400 uppercase">{{ $type }}</div>
+
+                                            <div class="grid grid-cols-2 gap-x-6 gap-y-1 p-4 md:grid-cols-3">
+
+                                                @foreach ($weapons as $weapon)
+                                                    <div class="flex gap-3">
+                                                        <div class="flex h-6 shrink-0 items-center">
+                                                            <div class="group grid size-4 grid-cols-1">
+                                                                <input
+                                                                    wire:key="weapon-{{ $weapon->id }}"
+                                                                    type="checkbox"
+                                                                    name="weapon-{{ $weapon->id }}"
+                                                                    wire:model.live="attachedWeaponIds"
+                                                                    value="{{ $weapon->id }}"
+                                                                    checked
+                                                                    class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto"
+                                                                />
+                                                                <svg
+                                                                    viewBox="0 0 14 14"
+                                                                    fill="none"
+                                                                    class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25"
+                                                                >
+                                                                    <path
+                                                                        d="M3 8L6 11L11 3.5"
+                                                                        stroke-width="2"
+                                                                        stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        class="opacity-0 group-has-checked:opacity-100"
+                                                                    />
+                                                                    <path
+                                                                        d="M3 7H11"
+                                                                        stroke-width="2"
+                                                                        stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        class="opacity-0 group-has-indeterminate:opacity-100"
+                                                                    />
+                                                                </svg>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-sm/6">
+                                                            <label
+                                                                for="weapon-{{ $weapon->id }}"
+                                                                class="font-medium text-gray-900 dark:text-white"
+                                                            >{{ $weapon->name }}</label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
+
+                    <div class="flex flex-col gap-4">
+                        <div class="mt-4 w-full  mx-auto">
+                            <label
+                                for="codeInput"
+                                class="block text-sm/6 font-medium text-gray-900 dark:text-white"
+                            >Weapon Code</label>
+                            <div class="mt-2 w-full mx-auto">
+                                <input
+                                    wire:keydown.enter="saveAndNext"
+                                    autofocus
+                                    id="codeInput"
+                                    x-ref="codeInput"
+                                    type="text"
+                                    name="codeInput"
+                                    placeholder="A01-ABC12-XYZ89-1"
+                                    wire:model.live="codeInput"
+                                    class="block w-full rounded-md bg-white px-3 py-1.5 text-base uppercase text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="w-full  mx-auto">
+                            <label
+                                for="notesInput"
+                                class="block text-sm/6 font-medium text-gray-900 dark:text-white"
+                            >Notes</label>
+                            <div class="mt-2 w-full mx-auto">
+                                <textarea
+                                    id="notesInput"
+                                    x-ref="notesInput"
+                                    name="notesInput"
+                                    rows="3"
+                                    placeholder=""
+                                    wire:model.live="notesInput"
+                                    class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                                ></textarea>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="w-1/2 max-w-lg mx-auto">
-                    <label
-                        for="notesInput"
-                        class="block text-sm/6 font-medium text-gray-900 dark:text-white"
-                    >Notes</label>
-                    <div class="mt-2 w-full mx-auto">
-                        <textarea
-                            id="notesInput"
-                            x-ref="notesInput"
-                            name="notesInput"
-                            placeholder="Any notes about this attachment (e.g. which weapon it's for, if it's a duplicate, etc.)"
-                            wire:model.live="notesInput"
-                            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
-                        ></textarea>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-6 w-full max-w-xl mx-auto">
+                <div class="grid grid-cols-3 gap-6 w-full max-w-xl mx-auto mt-4">
                     <div class="flex flex-col gap-2 text-center">
                         <div class="font-bold">Input Value</div>
                         <div>{{ $codeInput }}</div>
@@ -237,7 +350,7 @@
                 @if ($this->attachment?->code_base34)
                     <div>
                         <div class="mb-2 text-gray-400 dark:text-gray-400 text-center">Current values for this attachment:</div>
-                        <div class="grid grid-cols-3 gap-6 w-full max-w-xl mx-auto">
+                        <div class="grid grid-cols-3 gap-6 w-full max-w-xl mx-auto mt-4">
                             <div class="flex flex-col gap-2 text-center">
                                 <div class="font-bold">Has Weapon(s)?</div>
                                 <div>{{ $this->attachment?->weapons->count() > 0 ? '✅' : '🚫' }}</div>
@@ -284,7 +397,6 @@
                 wire:click="saveAndNext"
                 type="button"
                 class="cursor-pointer rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 shadow-xs hover:bg-indigo-100 dark:bg-indigo-500/20 dark:text-indigo-400 dark:shadow-none dark:hover:bg-indigo-500/30 disabled:dark:bg-indigo-500/10 disabled:bg-gray-100 disabled:text-gray-400 disabled:dark:text-gray-500 disabled:cursor-not-allowed"
-                :disabled="{{ !$this->isValid }}"
             >Save & Next</button>
         </div>
     </div>
