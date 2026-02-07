@@ -50,7 +50,8 @@ class BuildCode
             $carry = (string) $base10;
             $lastN = null;
 
-            foreach (AttachmentID::orderByRaw('CHAR_LENGTH(base_10) DESC, base_10 DESC')->get() as $attachment) {
+            $lengthFunc = \DB::connection()->getDriverName() === 'sqlite' ? 'LENGTH' : 'CHAR_LENGTH';
+            foreach (AttachmentID::orderByRaw("{$lengthFunc}(base_10) DESC, base_10 DESC")->get() as $attachment) {
                 // If we've already found an attachment ID for this $n, skip to the next
 
                 if ($attachment->n == $lastN) {

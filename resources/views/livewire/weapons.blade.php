@@ -199,7 +199,7 @@
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                         >Add Attachment</label>
                         <div
-                            class="mt-1"
+                            class="mt-1 max-w-3xl"
                             x-data
                         >
                             <input
@@ -212,29 +212,34 @@
                             />
 
                             {{-- Results --}}
-                            <div class="max-h-60 overflow-y-auto mt-2 border border-gray-200 rounded-md dark:border-gray-700">
-                                @foreach ($this->attachmentResults as $result)
+                            <div class="h-60 overflow-y-auto mt-2 border border-gray-200 rounded-md dark:border-gray-700">
+                                @forelse ($this->attachmentResults as $result)
                                     <div
-                                        class="mt-2 p-2 border border-gray-200 rounded-md cursor-pointer hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
+                                        class="p-2 border border-gray-200 cursor-pointer hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
                                         @click="let el = $refs.attachmentSearch; $wire.addAttachment({{ $result->id }}).then(() => { el.focus(); el.select(); })"
                                         @keydown.enter="let el = $refs.attachmentSearch; $wire.addAttachment({{ $result->id }}).then(() => { el.focus(); el.select(); })"
                                         @keydown.down.prevent="$el.nextElementSibling?.focus()"
                                         @keydown.up.prevent="$el.previousElementSibling ? $el.previousElementSibling.focus() : $refs.attachmentSearch.focus()"
                                         tabindex="0"
                                     >
-                                        {{ $result->name }} ({{ $result->label }})
+                                        <div class="flex justify-between">
+                                            <div>{{ $result->name }} ({{ $result->label }})</div>
+                                            <div class="text-sm text-gray-400 dark:text-gray-500">{{ $result->formatCode() }}</div>
+                                        </div>
                                     </div>
-                                @endforeach
+
+                                @empty
+                                    <div class="p-2 text-sm text-gray-500">No attachments found.</div>
+                                @endforelse
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {{-- Added attachments --}}
-                <div>
+                <div class="mt-6">
                     <div>
                         <div class="grid grid-cols-1 md:hidden">
-                            <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
                             <select
                                 aria-label="Select a tab"
                                 wire:model.live="activeTab"
@@ -265,7 +270,7 @@
                             <div class="border-b border-gray-200 dark:border-white/10">
                                 <nav
                                     aria-label="Tabs"
-                                    class="-mb-px flex space-x-3"
+                                    class="-mb-px flex space-x-3 max-w-3xl overflow-x-auto no-scrollbar"
                                 >
                                     @foreach ($attachmentTypes as $t)
                                         <a
@@ -282,19 +287,23 @@
                         </div>
                     </div>
 
-                    @foreach ($this->weapon->attachments->where('type', $activeTab) as $attachment)
-                        <div class="mt-4 p-4 border border-gray-200 rounded-md flex justify-between items-center dark:border-gray-700">
-                            <div>
-                                <div class="font-medium text-gray-900 dark:text-white">{{ $attachment->name }}</div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ $attachment->label }}</div>
+                    <div class="mt-4 max-w-3xl">
+                        @foreach ($this->weapon->attachments->where('type', $activeTab) as $attachment)
+                            <div class="mt-2 p-3 border border-gray-200 rounded-md grid grid-cols-4 gap-x-10 items-start dark:border-gray-700">
+                                <div>
+                                    <div class="font-medium text-gray-900 dark:text-white">{{ $attachment->name }}</div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ $attachment->label }}</div>
+                                </div>
+                                <div class="col-span-2 text-gray-500 dark:text-gray-400 pl-10">{{ $attachment->formatCode() }}</div>
+
+                                <button
+                                    wire:click="removeAttachment({{ $attachment->id }})"
+                                    wire:confirm="Are you sure you want to remove this attachment?"
+                                    class="ml-4 rounded-md bg-gray-400 cursor-pointer px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline  focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                                >Remove</button>
                             </div>
-                            <button
-                                wire:click="removeAttachment({{ $attachment->id }})"
-                                wire:confirm="Are you sure you want to remove this attachment?"
-                                class="ml-4 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline  focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                            >Remove</button>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
             </div>
         @endif
