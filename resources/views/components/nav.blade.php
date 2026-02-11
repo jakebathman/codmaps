@@ -16,6 +16,11 @@
                             >{{ $item['label'] }}</a>
                         @endif
                     @endforeach
+                    <a
+                        href="/"
+                        class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:border-white/20 dark:hover:text-white"
+                    >Home</a>
+
                 </div>
             </div>
 
@@ -85,6 +90,10 @@
                     >{{ $item['label'] }}</a>
                 @endif
             @endforeach
+            <a
+                href="/"
+                class="block border-l-4 border-transparent py-2 pr-4 pl-3 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-300 dark:hover:border-white/20 dark:hover:bg-white/5 dark:hover:text-white"
+            >Home</a>
 
         </div>
     </el-disclosure>

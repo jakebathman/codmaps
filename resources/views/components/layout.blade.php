@@ -47,11 +47,10 @@
     @vite('resources/js/app.js')
     @vite('resources/css/app.css')
 
-
     @yield('header')
 </head>
 
-<body class="h-dvh w-full bg-white dark:bg-black">
+<body class="h-dvh w-full bg-linear-to-b from-indigo-950/5 via-purple-950/5 to-pink-950/5 dark:text-purple-100 dark:bg-linear-to-b dark:from-indigo-950/30 dark:via-purple-950/30 dark:to-pink-950/30">
     {{ $slot }}
 </body>
 
