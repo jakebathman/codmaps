@@ -134,7 +134,7 @@
                         <div class="rounded-xl relative h-full sm:h-auto">
                             <img
                                 :src="imageSrc"
-                                class="object-cover z-10 h-full aspect-video sm:h-80 md:h-[360px] lg:h-[420px] mx-auto rounded-xl"
+                                class="object-cover z-10 h-full w-full aspect-video sm:h-80 md:h-[360px] lg:h-[420px] mx-auto rounded-xl"
                                 alt="Map Image"
                             />
                             <img
