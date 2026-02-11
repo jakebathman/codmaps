@@ -35,7 +35,7 @@
 
             {{-- Top filter buttons --}}
             <div class="w-full flex flex-col-reverse gap-4 sm:flex-row sm:justify-between z-20">
-                <div class="w-full flex-row h-10 gap-y-2 flex justify-center sm:justify-start sm:w-2/3 flex-wrap">
+                <div class="w-full flex-row h-10 gap-y-2 flex justify-center sm:justify-start flex-wrap">
                     <template
                         x-for="filter in filters"
                         class="inline-block"
@@ -71,7 +71,7 @@
                         </button>
                     </template>
                 </div>
-                <div class="w-full h-10 flex justify-center sm:justify-end flex-wrap sm:w-1/3">
+                <div class="w-full h-10 flex justify-center sm:justify-end flex-wrap">
                     <template
                         x-for="(game, gameId) in games"
                         class="inline-block"
@@ -95,7 +95,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-4 w-full justify-center items-start z-10">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-start z-10">
                 {{-- Map name/error text --}}
                 <div class="flex flex-1 flex-col justify-center items-center gap-2 sm:gap-6 w-full">
                     <div
@@ -148,21 +148,18 @@
                 </div>
 
                 {{-- Buttons below map image --}}
-                <div class="flex gap-2 sm:gap-6 w-full h-full mt-auto sm:w-auto sm:flex-col justify-between relative self-end">
-                    {{-- Add the same top padding as the image gets with its title, to center the buttons correctly on the image --}}
-                    <div class="hidden sm:block text-4xl lg:text-6xl font-bold text-center">&nbsp;</div>
-
+                <div class="flex gap-2 sm:gap-6 w-full h-full mt-auto sm:w-auto sm:flex-col-reverse justify-between relative self-end">
                     {{-- Hide map button --}}
                     <div class="flex flex-col justify-center items-center gap-3 min-w-24 sm:min-w-32 text-sm sm:text-base">
                         <button
                             @click="hideMap"
-                            class="rounded-lg font-semibold bg-pink-950/10 text-pink-950 dark:bg-white/10 dark:text-pink-100 sm:text-lg tracking-wide px-4 py-2.5 cursor-pointer"
+                            class="rounded-lg font-semibold bg-purple-100 text-gray-600 dark:bg-white/5 dark:text-purple-300/50 sm:text-lg tracking-wide px-4 py-2.5 cursor-pointer"
                             :class="{ 'opacity-30 cursor-not-allowed': noPossibleMaps }"
                             :disabled="noPossibleMaps"
                         >Hide Map</button>
                         <div class="text-gray-500 dark:text-gray-300 text-center relative">
                             <div>
-                                <span x-text="hiddenMaps.length"></span> <span class="hidden sm:inline">maps</span> hidden
+                                <span x-text="hiddenMaps.length"></span> hidden
                             </div>
                             <div
                                 x-show="hiddenMaps.length > 0"
@@ -217,11 +214,20 @@
                     <div class="flex flex-col justify-center items-center gap-3 min-w-24 sm:min-w-32 text-sm sm:text-base">
                         <button
                             @click="roll"
-                            class="rounded-lg font-semibold bg-purple-950/20 text-purple-950 dark:bg-white/20 dark:text-purple-100 sm:text-lg tracking-wide px-4 py-2.5 cursor-pointer"
+                            class="rounded-lg font-semibold  sm:text-lg tracking-wide px-4 py-2.5 cursor-pointer"
+                            :class="{
+                                'bg-bo6 text-gray-900 dark:bg-bo6/10 dark:text-bo6 dark:border dark:border-bo6': gameIsActive('bo6'),
+                                'bg-mwiii text-white dark:bg-mwiii-800/50 dark:text-white/90 dark:border dark:border-mwiii-700': gameIsActive('mwiii'),
+                                'bg-bo7 text-white dark:bg-bo7/10 dark:text-bo7 dark:border dark:border-bo7': gameIsActive('bo7'),
+                            }"
                         >Re-roll</button>
-                        <div class="text-gray-500 dark:text-gray-300"><span x-text="filteredMaps.length"></span> <span x-text="filteredMaps.length == 1 ? 'map' : 'maps'"></span><span class="hidden sm:block"> possible</span>
+                        <div class="text-gray-500 dark:text-gray-300 text-center"><span x-text="filteredMaps.length"></span> <span x-text="filteredMaps.length == 1 ? 'map' : 'maps'"></span><span class="hidden sm:block"> possible</span>
                         </div>
                     </div>
+
+                    {{-- Add the same top padding (flex-col-reverse, so at the end) as the image gets with its title, to center the buttons correctly on the image --}}
+                    <div class="hidden sm:block text-4xl lg:text-6xl font-bold text-center">&nbsp;</div>
+
                 </div>
                 <div class="absolute right-0 bottom-0 p-1.5 text-xs text-gray-100 dark:text-gray-200/5">{{ $commitHash }}
                 </div>
