@@ -101,6 +101,7 @@
                     <div
                         x-show="noPossibleMaps"
                         class="text-4xl lg:text-6xl font-bold text-center rotate-90"
+                        :style="`color: ${activeGameColor()}`"
                     >:(</div>
                     <div
                         x-show="!noPossibleMaps"
