@@ -319,10 +319,10 @@
                 games: @js($games),
                 selected: null,
                 selectedFilters: Alpine.$persist([]).as('selectedFilters'),
-                selectedGame: Alpine.$persist('bo6').as('selectedGame'),
+                selectedGame: Alpine.$persist('bo7').as('selectedGame'),
                 lastSelected: null,
                 filtersAreExclusive: true,
-                defaultGame: 'bo6',
+                defaultGame: 'bo7',
                 hiddenMaps: Alpine.$persist({}).as('hiddenMaps'),
                 favoriteMaps: Alpine.$persist([]).as('favoriteMaps'),
 
