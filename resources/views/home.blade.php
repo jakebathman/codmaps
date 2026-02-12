@@ -151,7 +151,7 @@
                 {{-- Buttons below map image --}}
                 <div class="flex gap-2 sm:gap-6 w-full h-full mt-auto sm:w-auto sm:flex-col-reverse justify-between relative self-end">
                     {{-- Hide map button --}}
-                    <div class="flex flex-col justify-center items-center gap-3 min-w-24 sm:min-w-32 text-sm sm:text-base">
+                    <div class="flex flex-col justify-center items-center gap-1 min-w-24 sm:min-w-32 text-sm sm:text-base">
                         <button
                             @click="hideMap"
                             class="rounded-lg font-semibold bg-purple-100 text-gray-600 dark:bg-white/5 dark:text-purple-300/50 sm:text-lg tracking-wide px-4 py-2.5 cursor-pointer"
@@ -212,7 +212,7 @@
                     </div>
 
                     {{-- roll button --}}
-                    <div class="flex flex-col justify-center items-center gap-3 min-w-24 sm:min-w-32 text-sm sm:text-base">
+                    <div class="flex flex-col justify-center items-center gap-1 min-w-24 sm:min-w-32 text-sm sm:text-base">
                         <button
                             @click="roll"
                             class="rounded-lg font-semibold  sm:text-lg tracking-wide px-4 py-2.5 cursor-pointer"
@@ -237,7 +237,8 @@
             {{-- Footer --}}
             <div class="p-0 flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-7 text-sm text-gray-500 dark:text-gray-400">
                 <div class="flex flex-col items-center gap-0.5">
-                    <div>Made with 💜 (and no AI) by <a
+                    <div class="text-sm">
+                        Made with 💜 (and no AI) by <a
                             href="https://twitter.com/JakeBathman"
                             target="_blank"
                             class="text-purple-500 dark:text-purple-400"

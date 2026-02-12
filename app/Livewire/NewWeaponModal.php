@@ -47,13 +47,13 @@ class NewWeaponModal extends Component
     {
         $this->validate([
             'name' => 'required|string|max:255',
-            'codePrefix' => ['required', 'string', 'regex:/^[A-Z]\d{2}$/', 'unique:weapons,code_prefix'],
+            'codePrefix' => ['nullable', 'string', 'regex:/^[A-Z]\d{2}$/', 'unique:weapons,code_prefix'],
             'type' => 'required|in:' . implode(',', $this->types),
         ]);
 
         $weapon = Weapon::create([
             'name' => $this->name,
-            'code_prefix' => $this->codePrefix,
+            'code_prefix' => empty($this->codePrefix) ? null : $this->codePrefix,
             'type' => $this->type,
         ]);
 
