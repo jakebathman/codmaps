@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Attachment;
+use App\Models\AttachmentID;
 use App\Models\Weapon;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -23,6 +24,10 @@ class Weapons extends Component
     public bool $showCounts = false;
 
     public string $activeTab = 'optic';
+
+    public string $cloneCodeInput = '';
+
+    public ?string $cloneError = null;
 
     public array $types = [
         'Assault Rifle',
@@ -89,7 +94,8 @@ class Weapons extends Component
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', '%' . $search . '%')
-                        ->orWhere('label', 'like', '%' . $search . '%');
+                        ->orWhere('label', 'like', '%' . $search . '%')
+                        ->orWhere('code_base34', 'like', '%' . str_replace('-', '', $search) . '%');
                 });
             })
             ->whereNotIn('id', $this->weapon?->attachments->pluck('id')->toArray() ?? [])
@@ -269,8 +275,97 @@ class Weapons extends Component
         }
     }
 
+    #[On('attachment-cloned')]
+    public function attachmentCloned()
+    {
+        // Close the clone dropdown by re-rendering the component (since the dropdown is controlled by Livewire state)
+        $this->cloneCodeInput = '';
+        $this->cloneError = null;
+    }
+
+    public function cloneAttachment($attachmentId, $newCode)
+    {
+        $this->cloneError = null;
+        $code = $this->attachmentsCode();
+        $oldAttachment = Attachment::find($attachmentId);
+        if (! $this->weapon || ! $oldAttachment || ! $code) {
+            return;
+        }
+
+        // Make sure this weapon doesn't have an attachment with the same code already
+        if ($this->weapon->attachments()->where('code_base34', $code)->exists()) {
+            // flash message an error
+            $this->cloneError = 'This weapon already has an attachment with the same code.';
+            return;
+        }
+
+        $clone = $oldAttachment->replicate();
+        $clone->code_base34 = $code;
+        $clone->code_base10 = $this->base34ToBase10($code);
+        $clone->notes = null;
+        $clone->save();
+
+        // Unlink the old attachment from the weapon and link the new one
+        $this->weapon->attachments()->detach($oldAttachment);
+        $this->weapon->attachments()->attach($clone);
+
+        unset($this->weapon);
+
+        // Event to close the clone dropdown
+        $this->dispatch('attachment-cloned');
+    }
+
     public function render()
     {
         return view('livewire.weapons');
     }
+
+    #[Computed]
+    public function attachmentsCode()
+    {
+        // Code without weapon prefix and hyphens, and removing the final 1
+        $code = strtoupper($this->cloneCodeInput);
+        if (preg_match('/^(?:(\w\d\d)-)?([\-1-9A-NP-Z]+)1$/', $code, $matches)) {
+            return trim(str_replace('-', '', $matches[2]));
+        }
+
+        return null;
+    }
+
+    #[Computed]
+    public function attachmentsCodeIdExists()
+    {
+        if (! $this->attachmentsCode()) {
+            return null;
+        }
+
+        return AttachmentID::where('base_34', $this->attachmentsCode())->exists();
+    }
+
+    public function base34ToBase10($encoded): string
+    {
+        // Cast to string first, before any operations
+        $encoded = (string) trim(strtoupper($encoded ?? ''));
+
+        $alphabet = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
+        $base = '34';
+
+        $result = '0';
+        $length = strlen($encoded);
+
+        for ($i = 0; $i < $length; $i++) {
+            $char = $encoded[$i];
+            $value = strpos($alphabet, $char);
+
+            if ($value === false) {
+                throw new InvalidArgumentException("Invalid character in base34 string: {$char}");
+            }
+
+            // result = result * base + value
+            $result = bcadd(bcmul($result, $base, 0), (string) $value, 0);
+        }
+
+        return $result;
+    }
+
 }
