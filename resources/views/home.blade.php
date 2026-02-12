@@ -99,18 +99,20 @@
                 {{-- Map name/error text --}}
                 <div class="flex w-full flex-1 flex-col items-center justify-center gap-2 sm:gap-6">
                     <div
-                        x-show="noPossibleMaps"
                         class="rotate-90 text-center text-4xl font-bold lg:text-6xl"
+                        :class="{
+                            'hidden': noPossibleMaps === false,
+                        }"
                         :style="`color: ${activeGameColor()}`"
                     >:(</div>
                     <div
-                        x-show="!noPossibleMaps"
+                        x-show="noPossibleMaps === false"
                         class="text-center text-4xl font-bold lg:text-6xl"
                         x-text="selected?.name"
                     ></div>
 
                     {{-- Map image --}}
-                    <template x-if="noPossibleMaps">
+                    <template x-if="noPossibleMaps === true">
                         <div class="relative w-full rounded-xl sm:h-auto">
                             <!-- Invisible image for sizing purposes -->
                             <img
@@ -129,7 +131,7 @@
                         </div>
 
                     </template>
-                    <template x-if="!noPossibleMaps">
+                    <template x-if="noPossibleMaps === false">
 
                         <div class="relative h-full rounded-xl sm:h-auto">
                             <img
@@ -155,15 +157,15 @@
                         <button
                             @click="hideMap"
                             class="cursor-pointer rounded-lg bg-purple-100 px-4 py-2.5 font-semibold tracking-wide text-gray-600 sm:text-lg dark:bg-white/5 dark:text-purple-300/50"
-                            :class="{ 'opacity-30 cursor-not-allowed': noPossibleMaps }"
-                            :disabled="noPossibleMaps"
+                            :class="{ 'opacity-30 cursor-not-allowed': noPossibleMaps === true }"
+                            :disabled="noPossibleMaps === true"
                         >Hide Map</button>
                         <div class="relative text-center text-gray-500 dark:text-gray-300">
                             <div>
-                                <span x-text="hiddenMaps.length"></span> hidden
+                                <span x-text="hiddenMaps[selectedGame]?.length || 0"></span> hidden
                             </div>
                             <div
-                                x-show="hiddenMaps.length > 0"
+                                x-show="hiddenMaps[selectedGame]?.length > 0"
                                 class="absolute -bottom-4 left-0 w-full cursor-pointer text-xs text-gray-500 sm:relative sm:bottom-0 dark:text-gray-300"
                                 @click="unhideAllMaps"
                             >Unhide all</div>
@@ -177,11 +179,11 @@
                             x-cloak
                             class="relative cursor-pointer rounded-lg bg-none px-4 py-2.5 font-semibold tracking-wide text-pink-500/20 sm:text-lg dark:bg-none dark:text-pink-100"
                             :class="{
-                                'text-pink-500 bg-pink-500/10': !noPossibleMaps && isFavorite(),
-                                'text-pink-500/20': !noPossibleMaps && !isFavorite(),
-                                'text-gray-400 opacity-30 cursor-not-allowed': noPossibleMaps,
+                                'text-pink-500 bg-pink-500/10': noPossibleMaps === false && isFavorite(),
+                                'text-pink-500/20': noPossibleMaps === false && !isFavorite(),
+                                'text-gray-400 opacity-30 cursor-not-allowed': noPossibleMaps === true,
                             }"
-                            :disabled="noPossibleMaps"
+                            :disabled="noPossibleMaps === true"
                         >
                             <span
                                 class="absolute -top-1 right-0 p-0.5 text-base"
@@ -205,9 +207,9 @@
                             </svg>
                         </button>
                         <div class="flex min-w-24 flex-col items-center justify-center text-center text-sm text-pink-500/35 opacity-0 transition-opacity duration-100 group-hover:opacity-100 dark:text-pink-300">
-                            <span x-show="noPossibleMaps"><span class="flex">&nbsp;</span></span>
-                            <span x-show="isFavorite() && !noPossibleMaps"><span class="flex sm:hidden">Unfav</span><span class="hidden sm:flex">Remove Fav</span></span>
-                            <span x-show="!isFavorite() && !noPossibleMaps"><span class="flex sm:hidden">Fav</span><span class="hidden sm:flex">Add Favorite</span></span>
+                            <span x-show="noPossibleMaps === true"><span class="flex">&nbsp;</span></span>
+                            <span x-show="isFavorite() && noPossibleMaps === false"><span class="flex sm:hidden">Unfav</span><span class="hidden sm:flex">Remove Fav</span></span>
+                            <span x-show="!isFavorite() && noPossibleMaps === false"><span class="flex sm:hidden">Fav</span><span class="hidden sm:flex">Add Favorite</span></span>
                         </div>
                     </div>
 
@@ -318,21 +320,15 @@
                 selected: null,
                 selectedFilters: Alpine.$persist([]).as('selectedFilters'),
                 selectedGame: Alpine.$persist('bo6').as('selectedGame'),
-                filteredMaps: [],
-                noPossibleMaps: false,
                 lastSelected: null,
                 filtersAreExclusive: true,
                 defaultGame: 'bo6',
-                hiddenMaps: Alpine.$persist([]).as('hiddenMaps'),
+                hiddenMaps: Alpine.$persist({}).as('hiddenMaps'),
                 favoriteMaps: Alpine.$persist([]).as('favoriteMaps'),
 
                 init() {
                     // filter this.maps to only include maps that are in the selected games
                     this.filterMapsForGame(this.selectedGame)
-
-                    this.filteredMaps = this.maps
-
-                    this.filterMaps()
                     this.roll()
                 },
 
@@ -348,8 +344,6 @@
                             this.favoriteMaps.push(this.selected.name)
                         }
                     }
-
-                    this.filterMaps()
                 },
 
                 isFavorite() {
@@ -362,13 +356,15 @@
                     })
                 },
 
+                get noPossibleMaps() {
+                    return this.filteredMaps.length === 0
+                },
+
                 roll() {
-                    if (this.filteredMaps.length === 0) {
+                    if (this.noPossibleMaps) {
                         this.selected = null
-                        this.noPossibleMaps = true
                         return
                     }
-                    this.noPossibleMaps = false
 
                     // Try 5 times to get a different map than last time
                     let randomIndex;
@@ -390,16 +386,17 @@
 
                 hideMap() {
                     if (this.selected) {
-                        this.hiddenMaps.push(this.selected.name)
+                        if (!this.hiddenMaps[this.selectedGame]) {
+                            this.hiddenMaps[this.selectedGame] = []
+                        }
+                        this.hiddenMaps[this.selectedGame].push(this.selected.name)
 
-                        this.filterMaps()
                         this.roll()
                     }
                 },
 
                 unhideAllMaps() {
-                    this.hiddenMaps = []
-                    this.filterMaps()
+                    this.hiddenMaps[this.selectedGame] = []
                     this.roll()
                 },
 
@@ -461,7 +458,6 @@
                     // Remove any items in selectedFilters that aren't in validFilters
                     this.selectedFilters = this.selectedFilters.filter(filter => validFilters.includes(filter) || filter === 'favs')
 
-                    this.filterMaps()
                     this.roll()
                 },
 
@@ -479,18 +475,18 @@
                         }
                     }
 
-                    this.filterMaps()
-
                     this.roll()
                 },
 
-                filterMaps() {
+                get filteredMaps() {
+                    let maps;
+
                     // No filters are selected, so use all maps
                     if (this.selectedFilters.length === 0) {
-                        this.filteredMaps = this.maps.filter(map => map.game === this.selectedGame)
-                            .filter(map => !this.hiddenMaps.includes(map.name))
+                        maps = this.maps.filter(map => map.game === this.selectedGame)
+                            .filter(map => !this.hiddenMaps[this.selectedGame]?.includes(map.name))
                     } else {
-                        this.filteredMaps = this.maps.filter(map => {
+                        maps = this.maps.filter(map => {
                                 // If the filter is for fav maps, filter that separately
                                 if (this.selectedFilters.includes('favs')) {
                                     return this.favoriteMaps.includes(map.name) && map.game === this.selectedGame
@@ -501,17 +497,15 @@
                                 return intersection.length == this.selectedFilters.length && map
                                     .game === this.selectedGame
                             })
-                            .filter(map => !this.hiddenMaps.includes(map.name))
+                            .filter(map => !this.hiddenMaps[this.selectedGame]?.includes(map.name))
                     }
 
                     // If no maps are available, set selected to null
-                    if (this.filteredMaps.length === 0) {
+                    if (maps.length === 0) {
                         this.selected = null
-                        this.noPossibleMaps = true
-                    } else {
-                        this.noPossibleMaps = false
                     }
 
+                    return maps;
                 },
 
                 imageSrc() {
