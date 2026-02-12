@@ -1,34 +1,34 @@
 <x-layout-auth>
 
     <div
-        class="p-6 sm:p-10 md:p-16 flex flex-col gap-10 max-w-5xl mx-auto"
+        class="mx-auto flex max-w-5xl flex-col gap-10 p-6 sm:p-10 md:p-16"
         :class="{ 'cursor-wait': processing }"
         x-data="processHtml"
         x-cloak
     >
         <div class="flex flex-col gap-2">
-            <h1 class="text-3xl text-amber-950 font-bold font-mono">Process Your Call of Duty HTML File</h1>
+            <h1 class="font-mono text-3xl font-bold text-amber-950">Process Your Call of Duty HTML File</h1>
             <div class="text-amber-800">
                 This will merge your data from your file into one big CSV, with unified headers. All
                 processing is done in your browser, and no data is stored. You can provide <strong>multiple HTML files</strong>
                 at one time and they'll be combined and deduplicated (if you have that setting selected below).
             </div>
         </div>
-        <div class="flex flex-col md:flex-row justify-between gap-10">
-            <div class="w-full flex flex-col justify-between gap-10 ">
+        <div class="flex flex-col justify-between gap-10 md:flex-row">
+            <div class="flex w-full flex-col justify-between gap-10">
                 <div>
                     <input
                         type="file"
                         id="fileInput"
                         multiple
                         accept=".html"
-                        class="w-full file:cursor-pointer flex-1 file:text-amber-900 file:font-semibold file:bg-amber-100 file:border-none file:py-2.5 file:px-5 file:rounded-full file:mr-5"
+                        class="w-full flex-1 file:mr-5 file:cursor-pointer file:rounded-full file:border-none file:bg-amber-100 file:px-5 file:py-2.5 file:font-semibold file:text-amber-900"
                         @change="processFile"
                     >
                 </div>
 
                 <div x-show="processing || percentage > 0">
-                    <div class="text-amber-900/80 font-bold font-mono text-5xl text-center flex justify-center">
+                    <div class="flex justify-center text-center font-mono text-5xl font-bold text-amber-900/80">
                         <pre x-text="`${percentage}`.padStart(3)">0</pre>%
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                     <button
                         id="downloadBtn"
                         :disabled="downloadButtonDisabled"
-                        class="text-amber-900 font-semibold bg-amber-100 border-none rounded-full py-2.5 px-5"
+                        class="rounded-full border-none bg-amber-100 px-5 py-2.5 font-semibold text-amber-900"
                         :class="{ 'opacity-30 cursor-not-allowed': downloadButtonDisabled }"
                         @click="downloadCsv"
                     >
@@ -49,31 +49,31 @@
             {{-- Options --}}
             <div class="flex flex-col gap-7">
                 <div class="flex flex-col gap-2">
-                    <div class="flex justify-between items-baseline py-1">
-                        <div class="text-xl text-amber-950 font-bold font-mono">Options</div>
+                    <div class="flex items-baseline justify-between py-1">
+                        <div class="font-mono text-xl font-bold text-amber-950">Options</div>
                         <div
                             x-show="optionsAreAtDefaults() == false"
                             x-transition.duration.300ms
-                            class="text-sm text-amber-950/50 hover:bg-amber-50/50 hover:text-amber-950/70 px-2 py-1 -mr-2 -mb-1 transition cursor-pointer"
+                            class="-mb-1 -mr-2 cursor-pointer px-2 py-1 text-sm text-amber-950/50 transition hover:bg-amber-50/50 hover:text-amber-950/70"
                             @click="restoreDefaultOptions"
                         >restore defaults</div>
                     </div>
-                    <div class="text-amber-800 text-justify">
+                    <div class="text-justify text-amber-800">
                         There's a few sections that are omitted by default,
                         but feel free to change what's included in the output:
                     </div>
                 </div>
 
                 <div class="flex justify-start">
-                    <div class="flex flex-col gap-2 w-full">
+                    <div class="flex w-full flex-col gap-2">
 
                         <div
-                            class="flex items-center justify-center gap-14 mb-5"
+                            class="mb-5 flex items-center justify-center gap-14"
                             @click="shouldDeDuplicate = !shouldDeDuplicate"
                         >
-                            <span class="flex grow flex-col ">
+                            <span class="flex grow flex-col">
                                 <span
-                                    class="text-sm/6 text-gray-900 font-bold"
+                                    class="text-sm/6 font-bold text-gray-900"
                                     id="availability-label"
                                 >Try to de-duplicate</span>
                                 <span
@@ -85,7 +85,7 @@
                             <button
                                 type="button"
                                 :class="{ 'bg-amber-600': shouldDeDuplicate, 'bg-gray-200': !shouldDeDuplicate }"
-                                class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-0 focus:ring-amber-600 focus:ring-offset-2"
+                                class="focus:outline-hidden relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:ring-0 focus:ring-amber-600 focus:ring-offset-2"
                                 role="switch"
                                 aria-checked="false"
                                 aria-labelledby="availability-label"
@@ -103,9 +103,9 @@
                             class="flex items-center justify-center gap-14"
                             @click="toggleAllOptions"
                         >
-                            <span class="flex grow flex-col ">
+                            <span class="flex grow flex-col">
                                 <span
-                                    class="text-sm/6 text-gray-900 font-bold"
+                                    class="text-sm/6 font-bold text-gray-900"
                                     id="availability-label"
                                 >Include All</span>
                             </span>
@@ -113,7 +113,7 @@
                             <button
                                 type="button"
                                 :class="{ 'bg-amber-600': includeAllOptions, 'bg-gray-200': !includeAllOptions }"
-                                class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-0 focus:ring-amber-600 focus:ring-offset-2"
+                                class="focus:outline-hidden relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:ring-0 focus:ring-amber-600 focus:ring-offset-2"
                                 role="switch"
                                 aria-checked="false"
                                 aria-labelledby="availability-label"
@@ -147,7 +147,7 @@
                                 <button
                                     type="button"
                                     :class="{ 'bg-amber-600': option.value, 'bg-gray-200': !option.value }"
-                                    class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-0 focus:ring-amber-600 focus:ring-offset-2"
+                                    class="focus:outline-hidden relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:ring-0 focus:ring-amber-600 focus:ring-offset-2"
                                     role="switch"
                                     aria-checked="false"
                                     aria-labelledby="availability-label"
@@ -171,7 +171,7 @@
             class="flex flex-col gap-5"
             x-show="showDebug"
         >
-            <div class="text-amber-950 font-bold font-mono text-2xl">Row Counts</div>
+            <div class="font-mono text-2xl font-bold text-amber-950">Row Counts</div>
             <template x-for="section in rowCounts">
                 <div
                     class="text-amber-800"

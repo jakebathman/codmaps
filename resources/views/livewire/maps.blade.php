@@ -1,14 +1,14 @@
-<div class="px-4 sm:px-6 lg:px-8 py-10">
+<div class="px-4 py-10 sm:px-6 lg:px-8">
 
-    <div class="sm:flex sm:items-center pt-5">
+    <div class="pt-5 sm:flex sm:items-center">
         <div class="sm:flex-auto">
             <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Maps ({{ count($maps) }})</h1>
         </div>
-        <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
             <button
                 wire:click="create"
                 type="button"
-                class="cursor-pointer block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
+                class="shadow-xs block cursor-pointer rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
             >Add map</button>
         </div>
     </div>
@@ -29,15 +29,15 @@
                 wire:submit.prevent="save"
                 class=""
             >
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="col-span-1 sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div class="col-span-1 grid grid-cols-1 gap-4 sm:col-span-2 sm:grid-cols-2 md:grid-cols-4">
                         <!-- Name -->
                         <div>
                             <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Name</label>
                             <input
                                 type="text"
                                 wire:model="form.name"
-                                class="block w-full rounded-md bg-white px-3 py-1.5 mt-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                                class="mt-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
                                 placeholder="Map name"
                             >
                             @error('form.name')
@@ -51,7 +51,7 @@
                             <div class="mt-2 grid grid-cols-1">
                                 <select
                                     wire:model.live="form.game"
-                                    class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus-visible:outline-indigo-500"
+                                    class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus-visible:outline-indigo-500"
                                 >
                                     <option
                                         value=""
@@ -88,7 +88,7 @@
                             <div class="mt-2 grid grid-cols-1">
                                 <select
                                     wire:model.live="form.season"
-                                    class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus-visible:outline-indigo-500"
+                                    class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus-visible:outline-indigo-500"
                                 >
                                     <option
                                         value=""
@@ -128,7 +128,7 @@
 
                             <label
                                 for="isActive"
-                                class="group relative block h-6 w-10 mt-2 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:transparent] has-checked:bg-indigo-500 dark:bg-gray-600 dark:has-checked:bg-indigo-600 cursor-pointer"
+                                class="has-checked:bg-indigo-500 dark:has-checked:bg-indigo-600 group relative mt-2 block h-6 w-10 cursor-pointer rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:transparent] dark:bg-gray-600"
                             >
                                 <input
                                     wire:model="form.is_active"
@@ -137,7 +137,7 @@
                                     class="peer sr-only"
                                 >
 
-                                <span class="absolute inset-y-0 start-0 m-1 grid size-4 place-content-center rounded-full bg-white text-gray-700 transition-[inset-inline-start] peer-checked:start-4 peer-checked:*:first:hidden *:last:hidden peer-checked:*:last:block dark:bg-gray-900 dark:text-gray-200">
+                                <span class="absolute inset-y-0 start-0 m-1 grid size-4 place-content-center rounded-full bg-white text-gray-700 transition-[inset-inline-start] *:last:hidden peer-checked:start-4 peer-checked:*:first:hidden peer-checked:*:last:block dark:bg-gray-900 dark:text-gray-200">
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
@@ -182,7 +182,7 @@
                                 type="file"
                                 accept=".jpg,.jpeg,.png"
                                 wire:model="imageUpload"
-                                class="cursor-pointer mt-1 block w-full text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm file:font-medium hover:file:bg-gray-200 dark:text-gray-200 dark:file:bg-white/10 dark:hover:file:bg-white/20"
+                                class="mt-1 block w-full cursor-pointer text-sm text-gray-700 file:mr-3 file:rounded-md file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-sm file:font-medium hover:file:bg-gray-200 dark:text-gray-200 dark:file:bg-white/10 dark:hover:file:bg-white/20"
                             >
                             @error('form.image')
                                 <div class="mt-1 text-xs text-red-600 dark:text-red-400">{{ $message }}</div>
@@ -196,7 +196,7 @@
                         {{-- Preview --}}
                         <div>
                             <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Preview</label>
-                            <div class="mt-1 h-auto w-full max-w-sm overflow-hidden rounded border border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-gray-800 flex items-center justify-center">
+                            <div class="mt-1 flex h-auto w-full max-w-sm items-center justify-center overflow-hidden rounded border border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-gray-800">
                                 @if ($imageUpload)
                                     <img
                                         src="{{ $imageUpload->temporaryUrl() }}"
@@ -235,7 +235,7 @@
                                     <button
                                         type="button"
                                         wire:click="removeFilter('{{ $filter }}')"
-                                        class="cursor-pointer -mr-1 rounded p-0.5 hover:bg-gray-200 dark:hover:bg-white/20"
+                                        class="-mr-1 cursor-pointer rounded p-0.5 hover:bg-gray-200 dark:hover:bg-white/20"
                                         aria-label="Remove {{ $filter }}"
                                     >×</button>
                                 </span>
@@ -277,17 +277,17 @@
                             <button
                                 type="button"
                                 x-on:click.prevent="if (confirm('Delete {{ addslashes($editing) }}? This cannot be undone.')) { $wire.delete() }"
-                                class="cursor-pointer mr-auto rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:bg-red-500 dark:hover:bg-red-400 dark:focus-visible:outline-red-500"
+                                class="shadow-xs mr-auto cursor-pointer rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 dark:bg-red-500 dark:hover:bg-red-400 dark:focus-visible:outline-red-500"
                             >Delete</button>
                         @endif
                         <button
                             type="button"
                             wire:click="cancel"
-                            class="cursor-pointer rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 shadow-xs hover:bg-gray-50 dark:border-white/10 dark:bg-transparent dark:text-gray-200 dark:hover:bg-white/10"
+                            class="shadow-xs cursor-pointer rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-white/10 dark:bg-transparent dark:text-gray-200 dark:hover:bg-white/10"
                         >Cancel</button>
                         <button
                             type="submit"
-                            class="cursor-pointer rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
+                            class="shadow-xs cursor-pointer rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
                         >Save</button>
                     </div>
                 </div>
@@ -307,7 +307,7 @@
                     id="map-search"
                     type="search"
                     wire:model.live.debounce.100ms="search"
-                    class="block w-full rounded-md border-gray-300 text-sm shadow-xs focus:border-indigo-500 focus:ring-indigo-500 dark:border-white/10 dark:bg-gray-800 dark:text-white"
+                    class="shadow-xs block w-full rounded-md border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-white/10 dark:bg-gray-800 dark:text-white"
                     placeholder="Filter by name or game"
                     autocomplete="off"
                 >
@@ -321,7 +321,7 @@
                         type="button"
                         wire:key="game-filter-{{ $key }}"
                         wire:click="filterByGame('{{ $key }}')"
-                        class="cursor-pointer rounded-md px-3 py-1.5 text-xs font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 {{ $isActive ? 'bg-indigo-600 text-white hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20' }}"
+                        class="shadow-xs {{ $isActive ? 'bg-indigo-600 text-white hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20' }} cursor-pointer rounded-md px-3 py-1.5 text-xs font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         aria-pressed="{{ $isActive ? 'true' : 'false' }}"
                     >{{ $game['name'] ?? strtoupper($key) }}</button>
                 @endforeach
@@ -331,14 +331,14 @@
                     type="button"
                     wire:key="preset-filter-{{ $key }}"
                     wire:click="setFilterByMissingImage()"
-                    class="cursor-pointer rounded-md px-3 py-1.5 text-xs font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 {{ $filterByMissingImage ? 'bg-indigo-600 text-white hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20' }}"
+                    class="shadow-xs {{ $filterByMissingImage ? 'bg-indigo-600 text-white hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20' }} cursor-pointer rounded-md px-3 py-1.5 text-xs font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     aria-pressed="{{ $filterByMissingImage ? 'true' : 'false' }}"
                 >🚫🌃</button>
                 <button
                     type="button"
                     wire:key="preset-filter-{{ $key }}"
                     wire:click="setFilterByInactive()"
-                    class="cursor-pointer rounded-md px-3 py-1.5 text-xs font-semibold shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 {{ $filterByInactive ? 'bg-indigo-600 text-white hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20' }}"
+                    class="shadow-xs {{ $filterByInactive ? 'bg-indigo-600 text-white hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20' }} cursor-pointer rounded-md px-3 py-1.5 text-xs font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     aria-pressed="{{ $filterByInactive ? 'true' : 'false' }}"
                 >Inactive</button>
             </div>
@@ -350,7 +350,7 @@
                 <tr>
                     <th
                         scope="col"
-                        class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-3 dark:text-white"
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3 dark:text-white"
                     >Name</th>
                     <th
                         scope="col"
@@ -370,7 +370,7 @@
                     >Is Active</th>
                     <th
                         scope="col"
-                        class="py-3.5 pr-4 pl-3 sm:pr-3"
+                        class="py-3.5 pl-3 pr-4 sm:pr-3"
                     >
                         <span class="sr-only">Edit</span>
                     </th>
@@ -384,13 +384,13 @@
                         data-map-key="{{ $rowKey }}"
                         id="map-row-{{ $rowKey }}"
                     >
-                        <td class="w-full max-w-0 py-4 pr-3 pl-4 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-3 dark:text-white">
+                        <td class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-3 dark:text-white">
                             <div class="flex items-center gap-3">
                                 @if (!empty($this->imageUrl($map['image'])))
                                     <img
                                         src="{{ $this->imageUrl($map['image'], $map['updated_at_timestamp'] ?? null) }}"
                                         alt="{{ $map['name'] }}"
-                                        class="h-10 w-16 rounded object-cover border border-gray-200 dark:border-white/10"
+                                        class="h-10 w-16 rounded border border-gray-200 object-cover dark:border-white/10"
                                     >
                                 @endif
                                 <div>
@@ -420,12 +420,12 @@
                             @endforeach
                         </td>
                         <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell dark:text-gray-400">{{ $map['is_active'] ? '✅' : '🚫' }}</td>
-                        <td class="py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-3">
+                        <td class="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
                             @if (!$editing)
                                 <button
                                     wire:click="edit('{{ $map['id'] }}')"
                                     type="button"
-                                    class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 cursor-pointer"
+                                    class="cursor-pointer text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
                                 >Edit</button>
                             @endif
                         </td>
@@ -433,7 +433,7 @@
                 @empty
                     <tr>
                         <td
-                            class="py-6 px-4 text-center text-sm text-gray-500 sm:px-6 dark:text-gray-400"
+                            class="px-4 py-6 text-center text-sm text-gray-500 sm:px-6 dark:text-gray-400"
                             colspan="4"
                         >
                             No maps match your filters yet.

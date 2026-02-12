@@ -5,7 +5,7 @@
                 href="{{ route('maps') }}"
                 title="Admin"
                 aria-label="Admin"
-                class="fixed top-3 right-3 z-50 inline-flex items-center justify-center rounded-full bg-white/70 text-gray-700 shadow-sm backdrop-blur hover:bg-white dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20"
+                class="fixed right-3 top-3 z-50 inline-flex items-center justify-center rounded-full bg-white/70 text-gray-700 shadow-sm backdrop-blur hover:bg-white dark:bg-white/10 dark:text-gray-100 dark:hover:bg-white/20"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -25,17 +25,17 @@
         <div
             x-cloak
             x-data="randomizer"
-            class="flex flex-col justify-between items-center h-full gap-6 py-6 px-6 md:px-12 lg:px-24"
+            class="flex h-full flex-col items-center justify-between gap-6 px-6 py-6 md:px-12 lg:px-24"
         >
             @if (session('error'))
-                <div class="w-full sm:w-2/3 text-center rounded-lg bg-red-100 text-red-900 px-4 py-2 font-semibold">
+                <div class="w-full rounded-lg bg-red-100 px-4 py-2 text-center font-semibold text-red-900 sm:w-2/3">
                     {{ session('error') }}
                 </div>
             @endif
 
             {{-- Top filter buttons --}}
-            <div class="w-full flex flex-col-reverse gap-4 sm:flex-row sm:justify-between z-20">
-                <div class="w-full flex-row h-10 gap-y-2 flex justify-center sm:justify-start flex-wrap">
+            <div class="z-20 flex w-full flex-col-reverse gap-4 sm:flex-row sm:justify-between">
+                <div class="flex h-10 w-full flex-row flex-wrap justify-center gap-y-2 sm:justify-start">
                     <template
                         x-for="filter in filters"
                         class="inline-block"
@@ -43,7 +43,7 @@
                         <button
                             @click="toggleFilter(filter)"
                             {{-- x-text="filter" --}}
-                            class="rounded-lg font-semibold bg-purple-100 text-gray-600 dark:bg-white/5 dark:text-purple-300/50 text-md sm:text-lg tracking-wide px-1.5 py-0.5 sm:px-3 sm:py-2 mr-2 border border-transparent"
+                            class="text-md mr-2 rounded-lg border border-transparent bg-purple-100 px-1.5 py-0.5 font-semibold tracking-wide text-gray-600 sm:px-3 sm:py-2 sm:text-lg dark:bg-white/5 dark:text-purple-300/50"
                             :class="{ 'bg-purple-950 text-white dark:bg-purple-950 dark:text-white dark:border dark:border-white/50': filterIsActive(filter) }"
                         >
                             <!-- SVG for favorites filter -->
@@ -71,7 +71,7 @@
                         </button>
                     </template>
                 </div>
-                <div class="w-full h-10 flex justify-center sm:justify-end flex-wrap">
+                <div class="flex h-10 w-full flex-wrap justify-center sm:justify-end">
                     <template
                         x-for="(game, gameId) in games"
                         class="inline-block"
@@ -79,7 +79,7 @@
                         <button
                             @click="filterMapsForGame(gameId)"
                             x-text="game.name"
-                            class="rounded-lg font-semibold text-md sm:text-lg tracking-wide px-1.5 py-0.5 mr-1 sm:px-4 sm:py-2.5 sm:mr-2"
+                            class="text-md mr-1 rounded-lg px-1.5 py-0.5 font-semibold tracking-wide sm:mr-2 sm:px-4 sm:py-2.5 sm:text-lg"
                             :class="{
                                 'bg-purple-100 text-gray-600 dark:bg-white/5 dark:text-purple-300/50': !gameIsActive(
                                     gameId),
@@ -95,32 +95,32 @@
                 </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-start z-10">
+            <div class="z-10 flex flex-col items-start justify-center gap-4 sm:flex-row">
                 {{-- Map name/error text --}}
-                <div class="flex flex-1 flex-col justify-center items-center gap-2 sm:gap-6 w-full">
+                <div class="flex w-full flex-1 flex-col items-center justify-center gap-2 sm:gap-6">
                     <div
                         x-show="noPossibleMaps"
-                        class="text-4xl lg:text-6xl font-bold text-center rotate-90"
+                        class="rotate-90 text-center text-4xl font-bold lg:text-6xl"
                         :style="`color: ${activeGameColor()}`"
                     >:(</div>
                     <div
                         x-show="!noPossibleMaps"
-                        class="text-4xl lg:text-6xl font-bold text-center"
+                        class="text-center text-4xl font-bold lg:text-6xl"
                         x-text="selected?.name"
                     ></div>
 
                     {{-- Map image --}}
                     <template x-if="noPossibleMaps">
-                        <div class="rounded-xl relative sm:h-auto w-full">
+                        <div class="relative w-full rounded-xl sm:h-auto">
                             <!-- Invisible image for sizing purposes -->
                             <img
                                 src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3C/svg%3E"
-                                class="object-cover z-10 h-full aspect-video sm:h-80 md:h-[360px] lg:h-[420px] mx-auto rounded-xl opacity-0"
+                                class="z-10 mx-auto aspect-video h-full rounded-xl object-cover opacity-0 sm:h-80 md:h-[360px] lg:h-[420px]"
                                 alt=""
                             />
 
                             <div
-                                class="absolute inset-0 flex flex-col justify-center items-center text-4xl text-transparent bg-clip-text text-center"
+                                class="absolute inset-0 flex flex-col items-center justify-center bg-clip-text text-center text-4xl text-transparent"
                                 style="background-image: radial-gradient(at 87.93103448275862% 9.375%, #d70000 0px, transparent 50%), radial-gradient(at 32.543103448275865% 21.041666666666668%, #2b9bff 0px, transparent 50%), radial-gradient(at 22.844827586206897% 89.16666666666667%, #e38535 0px, transparent 50%), radial-gradient(at 68.75% 86.66666666666667%, #2b9bff 0px, transparent 50%), radial-gradient(at 5.711206896551724% 34.791666666666664%, #e38535 0px, transparent 50%), radial-gradient(at 99.13793103448276% 56.875%, #e38535 0px, transparent 50%), radial-gradient(at 51.400862068965516% 52.916666666666664%, #121523 0px, transparent 50%);"
                             >
                                 No maps available
@@ -131,17 +131,17 @@
                     </template>
                     <template x-if="!noPossibleMaps">
 
-                        <div class="rounded-xl relative h-full sm:h-auto">
+                        <div class="relative h-full rounded-xl sm:h-auto">
                             <img
                                 :src="imageSrc"
-                                class="object-cover z-10 h-full w-full aspect-video sm:h-80 md:h-[360px] lg:h-[420px] mx-auto rounded-xl"
+                                class="z-10 mx-auto aspect-video h-full w-full rounded-xl object-cover sm:h-80 md:h-[360px] lg:h-[420px]"
                                 alt="Map Image"
                             />
                             <img
                                 :src="imageSrc"
                                 x-ref="bgBlurImage"
                                 x-show="selected?.image"
-                                class="object-cover absolute top-0 -z-10 h-full w-full blur-xs rounded-xl"
+                                class="blur-xs absolute top-0 -z-10 h-full w-full rounded-xl object-cover"
                                 alt="Image ambient blur-sm"
                             />
                         </div>
@@ -149,33 +149,33 @@
                 </div>
 
                 {{-- Buttons below map image --}}
-                <div class="flex gap-2 sm:gap-6 w-full h-full mt-auto sm:w-auto sm:flex-col-reverse justify-between relative self-end">
+                <div class="relative mt-auto flex h-full w-full justify-between gap-2 self-end sm:w-auto sm:flex-col-reverse sm:gap-6">
                     {{-- Hide map button --}}
-                    <div class="flex flex-col justify-center items-center gap-1 min-w-24 sm:min-w-32 text-sm sm:text-base">
+                    <div class="flex min-w-24 flex-col items-center justify-center gap-1 text-sm sm:min-w-32 sm:text-base">
                         <button
                             @click="hideMap"
-                            class="rounded-lg font-semibold bg-purple-100 text-gray-600 dark:bg-white/5 dark:text-purple-300/50 sm:text-lg tracking-wide px-4 py-2.5 cursor-pointer"
+                            class="cursor-pointer rounded-lg bg-purple-100 px-4 py-2.5 font-semibold tracking-wide text-gray-600 sm:text-lg dark:bg-white/5 dark:text-purple-300/50"
                             :class="{ 'opacity-30 cursor-not-allowed': noPossibleMaps }"
                             :disabled="noPossibleMaps"
                         >Hide Map</button>
-                        <div class="text-gray-500 dark:text-gray-300 text-center relative">
+                        <div class="relative text-center text-gray-500 dark:text-gray-300">
                             <div>
                                 <span x-text="hiddenMaps.length"></span> hidden
                             </div>
                             <div
                                 x-show="hiddenMaps.length > 0"
-                                class="w-full text-xs text-gray-500 dark:text-gray-300 cursor-pointer absolute -bottom-4 left-0 sm:relative sm:bottom-0"
+                                class="absolute -bottom-4 left-0 w-full cursor-pointer text-xs text-gray-500 sm:relative sm:bottom-0 dark:text-gray-300"
                                 @click="unhideAllMaps"
                             >Unhide all</div>
                         </div>
                     </div>
 
                     {{-- fav button --}}
-                    <div class="group flex flex-col justify-center items-center gap-1 flex-1">
+                    <div class="group flex flex-1 flex-col items-center justify-center gap-1">
                         <button
                             @click="fav"
                             x-cloak
-                            class="relative rounded-lg font-semibold bg-none text-pink-500/20 dark:bg-none dark:text-pink-100 sm:text-lg tracking-wide px-4 py-2.5 cursor-pointer"
+                            class="relative cursor-pointer rounded-lg bg-none px-4 py-2.5 font-semibold tracking-wide text-pink-500/20 sm:text-lg dark:bg-none dark:text-pink-100"
                             :class="{
                                 'text-pink-500 bg-pink-500/10': !noPossibleMaps && isFavorite(),
                                 'text-pink-500/20': !noPossibleMaps && !isFavorite(),
@@ -204,7 +204,7 @@
                                 />
                             </svg>
                         </button>
-                        <div class="text-pink-500/35 dark:text-pink-300 text-center text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-100 min-w-24 flex flex-col justify-center items-center">
+                        <div class="flex min-w-24 flex-col items-center justify-center text-center text-sm text-pink-500/35 opacity-0 transition-opacity duration-100 group-hover:opacity-100 dark:text-pink-300">
                             <span x-show="noPossibleMaps"><span class="flex">&nbsp;</span></span>
                             <span x-show="isFavorite() && !noPossibleMaps"><span class="flex sm:hidden">Unfav</span><span class="hidden sm:flex">Remove Fav</span></span>
                             <span x-show="!isFavorite() && !noPossibleMaps"><span class="flex sm:hidden">Fav</span><span class="hidden sm:flex">Add Favorite</span></span>
@@ -212,30 +212,30 @@
                     </div>
 
                     {{-- roll button --}}
-                    <div class="flex flex-col justify-center items-center gap-1 min-w-24 sm:min-w-32 text-sm sm:text-base">
+                    <div class="flex min-w-24 flex-col items-center justify-center gap-1 text-sm sm:min-w-32 sm:text-base">
                         <button
                             @click="roll"
-                            class="rounded-lg font-semibold  sm:text-lg tracking-wide px-4 py-2.5 cursor-pointer"
+                            class="cursor-pointer rounded-lg px-4 py-2.5 font-semibold tracking-wide sm:text-lg"
                             :class="{
                                 'bg-bo6 text-gray-900 dark:bg-bo6/10 dark:text-bo6 dark:border dark:border-bo6': gameIsActive('bo6'),
                                 'bg-mwiii text-white dark:bg-mwiii-800/50 dark:text-white/90 dark:border dark:border-mwiii-700': gameIsActive('mwiii'),
                                 'bg-bo7 text-white dark:bg-bo7/10 dark:text-bo7 dark:border dark:border-bo7': gameIsActive('bo7'),
                             }"
                         >Re-roll</button>
-                        <div class="text-gray-500 dark:text-gray-300 text-center"><span x-text="filteredMaps.length"></span> <span x-text="filteredMaps.length == 1 ? 'map' : 'maps'"></span><span class="hidden sm:block"> possible</span>
+                        <div class="text-center text-gray-500 dark:text-gray-300"><span x-text="filteredMaps.length"></span> <span x-text="filteredMaps.length == 1 ? 'map' : 'maps'"></span><span class="hidden sm:block"> possible</span>
                         </div>
                     </div>
 
                     {{-- Add the same top padding (flex-col-reverse, so at the end) as the image gets with its title, to center the buttons correctly on the image --}}
-                    <div class="hidden sm:block text-4xl lg:text-6xl font-bold text-center">&nbsp;</div>
+                    <div class="hidden text-center text-4xl font-bold sm:block lg:text-6xl">&nbsp;</div>
 
                 </div>
-                <div class="absolute right-0 bottom-0 p-1.5 text-xs text-gray-100 dark:text-gray-200/5">{{ $commitHash }}
+                <div class="absolute bottom-0 right-0 p-1.5 text-xs text-gray-100 dark:text-gray-200/5">{{ $commitHash }}
                 </div>
             </div>
 
             {{-- Footer --}}
-            <div class="p-0 flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-7 text-sm text-gray-500 dark:text-gray-400">
+            <div class="flex flex-col items-center justify-center gap-3 p-0 text-sm text-gray-500 sm:flex-row sm:gap-7 dark:text-gray-400">
                 <div class="flex flex-col items-center gap-0.5">
                     <div class="text-sm">
                         Made with 💜 (and no AI) by <a

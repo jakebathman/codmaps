@@ -1,5 +1,5 @@
 <div
-    class="bg-white dark:bg-gray-900 p-6 sm:p-10"
+    class="bg-white p-6 sm:p-10 dark:bg-gray-900"
     x-data="{ isOpen: false, isOpenWeapons: false }"
     x-init="$watch('isOpen', () => {
         $nextTick(() => {
@@ -11,8 +11,8 @@
     })"
 >
 
-    <div class="max-w-3xl mx-auto">
-        <div class="p-8 border-b border-gray-200 flex justify-between">
+    <div class="mx-auto max-w-3xl">
+        <div class="flex justify-between border-b border-gray-200 p-8">
             <div>
                 <div class="flex items-center gap-4">
                     <h2 class="text-3xl font-medium text-gray-900">Weapon Attachments</h2>
@@ -28,18 +28,18 @@
 
             <div class="flex flex-col gap-4">
                 {{-- Type dropdown --}}
-                <el-dropdown class="w-full flex justify-end">
-                    <button class="inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20 capitalize">
+                <el-dropdown class="flex w-full justify-end">
+                    <button class="shadow-xs inset-ring-1 inset-ring-gray-300 dark:inset-ring-white/5 inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold capitalize text-gray-900 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:hover:bg-white/20">
                         <div class="flex items-center">
-                            <div class="flex items-center w-full pr-2">
+                            <div class="flex w-full items-center pr-2">
                                 <div class="flex items-center">
                                     <div
                                         aria-hidden="true"
-                                        class="inline-block size-2 shrink-0 rounded-full border border-transparent {{ $typesWithCounts[$currentType]['percent_complete'] == 100 ? 'bg-green-400' : ($typesWithCounts[$currentType]['percent_complete'] > 60 ? 'bg-blue-400' : ($typesWithCounts[$currentType]['percent_complete'] > 40 ? 'bg-yellow-400' : ($typesWithCounts[$currentType]['percent_complete'] > 0 ? 'bg-orange-400' : 'bg-red-400'))) }} forced-colors:bg-[Highlight]"
+                                        class="{{ $typesWithCounts[$currentType]['percent_complete'] == 100 ? 'bg-green-400' : ($typesWithCounts[$currentType]['percent_complete'] > 60 ? 'bg-blue-400' : ($typesWithCounts[$currentType]['percent_complete'] > 40 ? 'bg-yellow-400' : ($typesWithCounts[$currentType]['percent_complete'] > 0 ? 'bg-orange-400' : 'bg-red-400'))) }} inline-block size-2 shrink-0 rounded-full border border-transparent forced-colors:bg-[Highlight]"
                                     ></div>
                                     <div class="ml-1">{{ $typesWithCounts[$currentType]['percent_complete'] }}%</div>
                                 </div>
-                                <div class="ml-3 block truncate font-normal group-aria-selected/option:font-semibold capitalize">
+                                <div class="ml-3 block truncate font-normal capitalize group-aria-selected/option:font-semibold">
                                     {{ $currentType }}
                                 </div>
                             </div>
@@ -62,23 +62,23 @@
                     <el-menu
                         anchor="bottom end"
                         popover="auto"
-                        class="w-56 origin-top-right rounded-md bg-white shadow-lg outline-1 outline-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10"
+                        class="transition-discrete data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in w-56 origin-top-right rounded-md bg-white shadow-lg outline-1 outline-black/5 transition [--anchor-gap:--spacing(2)] dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10"
                     >
                         <div class="py-1">
                             @foreach ($typesWithCounts as $type => $counts)
                                 <button
                                     wire:click="setType('{{ $type }}')"
-                                    class="group/item w-full flex items-center px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:text-gray-900 focus:outline-hidden dark:text-gray-300 dark:focus:bg-white/5 dark:focus:text-white"
+                                    class="group/item focus:outline-hidden flex w-full items-center px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:text-gray-900 dark:text-gray-300 dark:focus:bg-white/5 dark:focus:text-white"
                                 >
-                                    <div class="flex items-center w-full">
-                                        <div class="flex items-center w-14">
+                                    <div class="flex w-full items-center">
+                                        <div class="flex w-14 items-center">
                                             <div
                                                 aria-hidden="true"
-                                                class="inline-block size-2 shrink-0 rounded-full border border-transparent {{ $counts['percent_complete'] == 100 ? 'bg-green-400' : ($counts['percent_complete'] > 60 ? 'bg-blue-400' : ($counts['percent_complete'] > 40 ? 'bg-yellow-400' : ($counts['percent_complete'] > 0 ? 'bg-orange-400' : 'bg-red-400'))) }} forced-colors:bg-[Highlight]"
+                                                class="{{ $counts['percent_complete'] == 100 ? 'bg-green-400' : ($counts['percent_complete'] > 60 ? 'bg-blue-400' : ($counts['percent_complete'] > 40 ? 'bg-yellow-400' : ($counts['percent_complete'] > 0 ? 'bg-orange-400' : 'bg-red-400'))) }} inline-block size-2 shrink-0 rounded-full border border-transparent forced-colors:bg-[Highlight]"
                                             ></div>
                                             <div class="ml-1">{{ $counts['percent_complete'] }}%</div>
                                         </div>
-                                        <div class="ml-3 block truncate font-normal group-aria-selected/option:font-semibold capitalize">
+                                        <div class="ml-3 block truncate font-normal capitalize group-aria-selected/option:font-semibold">
                                             {{ $type }}
                                         </div>
                                     </div>
@@ -94,7 +94,7 @@
                     @click.outside="isOpen = false"
                 >
                     <button
-                        class="inline-flex items-center justify-between w-full gap-x-1 text-sm/6 font-semibold text-gray-900 dark:text-white cursor-pointer"
+                        class="inline-flex w-full cursor-pointer items-center justify-between gap-x-1 text-sm/6 font-semibold text-gray-900 dark:text-white"
                         @click="isOpen = !isOpen"
                         x-ref="attachmentButton"
                     >
@@ -122,22 +122,22 @@
                         x-cloak
                         :class="{ 'hidden': !isOpen }"
                         x-anchor="$refs.attachmentButton"
-                        class="z-50 w-screen max-w-max bg-transparent px-4 transition rounded-lg [--anchor-gap:--spacing(5)] backdrop:bg-transparent open:flex data-closed:translate-y-1 data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-150 data-leave:ease-in"
+                        class="data-closed:translate-y-1 data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-150 data-leave:ease-in z-50 w-screen max-w-max rounded-lg bg-transparent px-4 transition [--anchor-gap:--spacing(5)] backdrop:bg-transparent open:flex"
                     >
-                        <div class="h-96 overflow-y-scroll bg-white text-sm/6 shadow-lg outline-1 rounded-lg outline-gray-900/5 lg:max-w-5xl dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
+                        <div class="h-96 overflow-y-scroll rounded-lg bg-white text-sm/6 shadow-lg outline-1 outline-gray-900/5 lg:max-w-5xl dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
                             <input
                                 wire:model.live="attachmentSearchInput"
                                 type="text"
                                 placeholder="Search attachments..."
                                 x-ref="attachmentSearchInput"
-                                class="block w-1/2 mx-auto rounded-md bg-white px-3 py-1.5 mt-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500 mb-2"
+                                class="mx-auto mb-2 mt-2 block w-1/2 rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
                             />
 
                             <div class="grid grid-cols-2 gap-x-6 gap-y-1 p-4 md:grid-cols-3">
 
                                 @foreach ($this->allAttachments as $attachment)
                                     <div
-                                        class="group relative flex gap-x-4 rounded-lg px-2 py-1 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer"
+                                        class="group relative flex cursor-pointer gap-x-4 rounded-lg px-2 py-1 hover:bg-gray-50 dark:hover:bg-white/5"
                                         @click="$wire.setAttachment({{ $attachment->id }}).then(() => { isOpen = false;$refs.codeInput.focus() })"
                                     >
                                         <div>
@@ -162,40 +162,40 @@
         </div>
 
         {{-- Attachment info --}}
-        <div class="p-6 flex flex-col gap-4 max-w-4xl mx-auto">
+        <div class="mx-auto flex max-w-4xl flex-col gap-4 p-6">
             @if (!$this->attachment)
-                <div class="flex self-center items-center justify-center h-72 text-xl text-gray-600 dark:text-gray-400">All attachments of this type have been entered.</div>
+                <div class="flex h-72 items-center justify-center self-center text-xl text-gray-600 dark:text-gray-400">All attachments of this type have been entered.</div>
             @else
-                <div class="flex flex-col gap-2 max-w-xl mx-auto">
+                <div class="mx-auto flex max-w-xl flex-col gap-2">
                     <div class="flex items-baseline">
                         <div class="w-32">ID</div>
-                        <div class="font-bold text-xl capitalize">{{ $this->attachment->id }}</div>
+                        <div class="text-xl font-bold capitalize">{{ $this->attachment->id }}</div>
                     </div>
                     <div class="flex items-baseline">
                         <div class="w-32">Type</div>
-                        <div class="font-bold text-xl capitalize">{{ $this->attachment->type }}</div>
+                        <div class="text-xl font-bold capitalize">{{ $this->attachment->type }}</div>
                     </div>
                     <div class="flex items-baseline">
                         <div class="w-32">Name</div>
-                        <div class="font-bold text-xl">{{ $this->attachment->name }}</div>
+                        <div class="text-xl font-bold">{{ $this->attachment->name }}</div>
                     </div>
                     <div class="flex items-baseline">
                         <div class="w-32">Label</div>
-                        <div class="font-bold text-xl">{{ $this->attachment->label }}</div>
+                        <div class="text-xl font-bold">{{ $this->attachment->label }}</div>
                     </div>
                     <div class="flex items-baseline">
                         <div class="w-32">Unlocked On</div>
-                        <div class="font-bold text-xl">{{ $this->attachment->weapon_unlock }}</div>
+                        <div class="text-xl font-bold">{{ $this->attachment->weapon_unlock }}</div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-xl mx-auto">
-                    <div class="w-full mx-auto">
+                <div class="mx-auto grid w-full max-w-xl grid-cols-1 gap-6 md:grid-cols-2">
+                    <div class="mx-auto w-full">
                         <label
                             for="attachedWeaponsInput"
                             class="block text-sm/6 font-medium text-gray-900 dark:text-white"
                         >Attached Weapons</label>
-                        <div class="mt-2 w-full mx-auto">
+                        <div class="mx-auto mt-2 w-full">
 
                             {{-- Attached weapons dropdown --}}
                             <div
@@ -203,7 +203,7 @@
                                 @click.outside="isOpenWeapons = false"
                             >
                                 <button
-                                    class="inline-flex items-center justify-between w-full gap-x-1 text-sm/6 font-semibold text-gray-900 dark:text-white cursor-pointer"
+                                    class="inline-flex w-full cursor-pointer items-center justify-between gap-x-1 text-sm/6 font-semibold text-gray-900 dark:text-white"
                                     @click="isOpenWeapons = !isOpenWeapons"
                                     x-ref="attachedWeaponsDropdownButton"
                                 >
@@ -212,8 +212,8 @@
                                             <div class="text-sm text-gray-400 dark:text-gray-500">No weapons</div>
                                         @else
                                             @foreach ($this->attachedWeapons?->groupBy('type') as $type => $weapons)
-                                                <div class="flex gap-3 items-center">
-                                                    <div class="text-sm text-gray-400 dark:text-gray-500 w-12">{{ $weapons?->count() ?? '—' }} / {{ $this->allWeapons->where('type', $type)->count() ?? '—' }}</div>
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-12 text-sm text-gray-400 dark:text-gray-500">{{ $weapons?->count() ?? '—' }} / {{ $this->allWeapons->where('type', $type)->count() ?? '—' }}</div>
                                                     <div class="font-semibold">{{ $type }}</div>
                                                 </div>
                                             @endforeach
@@ -239,12 +239,12 @@
                                     x-cloak
                                     :class="{ 'hidden': !isOpenWeapons }"
                                     x-anchor.right-start="$refs.attachedWeaponsDropdownButton"
-                                    class="z-50 w-screen max-w-max bg-transparent px-4 transition rounded-lg [--anchor-gap:--spacing(5)] backdrop:bg-transparent open:flex data-closed:translate-y-1 data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-150 data-leave:ease-in"
+                                    class="data-closed:translate-y-1 data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-150 data-leave:ease-in z-50 w-screen max-w-max rounded-lg bg-transparent px-4 transition [--anchor-gap:--spacing(5)] backdrop:bg-transparent open:flex"
                                 >
-                                    <div class="h-96 overflow-y-scroll bg-white text-sm/6 shadow-lg outline-1 rounded-lg outline-gray-900/5 lg:max-w-5xl dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
+                                    <div class="h-96 overflow-y-scroll rounded-lg bg-white text-sm/6 shadow-lg outline-1 outline-gray-900/5 lg:max-w-5xl dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
 
                                         @foreach ($this->allWeapons->groupBy('type') as $type => $weapons)
-                                            <div class="px-4 py-2 text-gray-500 dark:text-gray-400 uppercase">{{ $type }}</div>
+                                            <div class="px-4 py-2 uppercase text-gray-500 dark:text-gray-400">{{ $type }}</div>
 
                                             <div class="grid grid-cols-2 gap-x-6 gap-y-1 p-4 md:grid-cols-3">
 
@@ -265,21 +265,21 @@
                                                                 <svg
                                                                     viewBox="0 0 14 14"
                                                                     fill="none"
-                                                                    class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25"
+                                                                    class="group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25 pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white"
                                                                 >
                                                                     <path
                                                                         d="M3 8L6 11L11 3.5"
                                                                         stroke-width="2"
                                                                         stroke-linecap="round"
                                                                         stroke-linejoin="round"
-                                                                        class="opacity-0 group-has-checked:opacity-100"
+                                                                        class="group-has-checked:opacity-100 opacity-0"
                                                                     />
                                                                     <path
                                                                         d="M3 7H11"
                                                                         stroke-width="2"
                                                                         stroke-linecap="round"
                                                                         stroke-linejoin="round"
-                                                                        class="opacity-0 group-has-indeterminate:opacity-100"
+                                                                        class="group-has-indeterminate:opacity-100 opacity-0"
                                                                     />
                                                                 </svg>
                                                             </div>
@@ -303,12 +303,12 @@
                     </div>
 
                     <div class="flex flex-col gap-4">
-                        <div class="mt-4 w-full  mx-auto">
+                        <div class="mx-auto mt-4 w-full">
                             <label
                                 for="codeInput"
                                 class="block text-sm/6 font-medium text-gray-900 dark:text-white"
                             >Weapon Code</label>
-                            <div class="mt-2 w-full mx-auto">
+                            <div class="mx-auto mt-2 w-full">
                                 <input
                                     wire:keydown.enter="saveAndNext"
                                     autofocus
@@ -323,12 +323,12 @@
                             </div>
                         </div>
 
-                        <div class="w-full  mx-auto">
+                        <div class="mx-auto w-full">
                             <label
                                 for="notesInput"
                                 class="block text-sm/6 font-medium text-gray-900 dark:text-white"
                             >Notes</label>
-                            <div class="mt-2 w-full mx-auto">
+                            <div class="mx-auto mt-2 w-full">
                                 <textarea
                                     id="notesInput"
                                     x-ref="notesInput"
@@ -344,14 +344,14 @@
 
                 </div>
 
-                <div class="grid grid-cols-3 gap-6 w-full max-w-xl mx-auto mt-4">
+                <div class="mx-auto mt-4 grid w-full max-w-xl grid-cols-3 gap-6">
                     <div class="flex flex-col gap-2 text-center">
                         <div class="font-bold">Input Value</div>
                         <div>{{ $codeInput }}</div>
                     </div>
                     <div class="flex flex-col gap-2 text-center">
                         <div class="font-bold">Base34 Value</div>
-                        <div class="flex gap-1 justify-center items-center">
+                        <div class="flex items-center justify-center gap-1">
                             <div>{{ $this->attachmentsCodeIdExists === null ? '' : ($this->attachmentsCodeIdExists === true ? '✅' : '🚫') }}</div>
                             <div>{{ $this->attachmentsCode }}</div>
                         </div>
@@ -364,8 +364,8 @@
 
                 @if ($this->attachment?->code_base34)
                     <div>
-                        <div class="mb-2 text-gray-400 dark:text-gray-400 text-center">Current values for this attachment:</div>
-                        <div class="grid grid-cols-3 gap-6 w-full max-w-xl mx-auto mt-4">
+                        <div class="mb-2 text-center text-gray-400 dark:text-gray-400">Current values for this attachment:</div>
+                        <div class="mx-auto mt-4 grid w-full max-w-xl grid-cols-3 gap-6">
                             <div class="flex flex-col gap-2 text-center">
                                 <div class="font-bold">Has Weapon(s)?</div>
                                 <div>{{ $this->attachment?->weapons->count() > 0 ? '✅' : '🚫' }}</div>
@@ -384,40 +384,40 @@
             @endif
         </div>
 
-        <div class="max-w-3xl mx-auto">
+        <div class="mx-auto max-w-3xl">
             @if ($this->isDuplicate)
-                <p class="text-sm text-yellow-600 text-center">This code has already been entered for another attachment.</p>
+                <p class="text-center text-sm text-yellow-600">This code has already been entered for another attachment.</p>
             @elseif (!$this->isValid && strlen($this->codeInput) > 0)
-                <p class="text-sm text-red-600 text-center">The code entered is not valid. Please check and try again.</p>
+                <p class="text-center text-sm text-red-600">The code entered is not valid. Please check and try again.</p>
             @endif
 
         </div>
 
-        <div class="p-6 flex justify-between border-t border-gray-200 dark:border-gray-700">
+        <div class="flex justify-between border-t border-gray-200 p-6 dark:border-gray-700">
             <button
                 wire:click="skip"
                 tabindex="-1"
                 type="button"
-                class="cursor-pointer rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20"
+                class="shadow-xs inset-ring inset-ring-gray-300 dark:inset-ring-white/5 cursor-pointer rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:hover:bg-white/20"
             >Skip</button>
 
             <button
                 wire:click="cloneAttachment"
                 tabindex="-1"
                 type="button"
-                class="cursor-pointer rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20"
+                class="shadow-xs inset-ring inset-ring-gray-300 dark:inset-ring-white/5 cursor-pointer rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:hover:bg-white/20"
             >Clone</button>
 
             <button
                 wire:click="saveAndNext"
                 type="button"
-                class="cursor-pointer rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 shadow-xs hover:bg-indigo-100 dark:bg-indigo-500/20 dark:text-indigo-400 dark:shadow-none dark:hover:bg-indigo-500/30 disabled:dark:bg-indigo-500/10 disabled:bg-gray-100 disabled:text-gray-400 disabled:dark:text-gray-500 disabled:cursor-not-allowed"
+                class="shadow-xs cursor-pointer rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-100 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400 dark:bg-indigo-500/20 dark:text-indigo-400 dark:shadow-none dark:hover:bg-indigo-500/30 disabled:dark:bg-indigo-500/10 disabled:dark:text-gray-500"
             >Save & Next</button>
         </div>
     </div>
 
     <div>
-        <h2 class="text-3xl font-medium text-gray-900 capitalize">{{ $currentType }} Attachments ({{ $typesWithCounts[$currentType]['filled'] ?? 0 }}/{{ $typesWithCounts[$currentType]['total'] ?? 0 }})</h2>
+        <h2 class="text-3xl font-medium capitalize text-gray-900">{{ $currentType }} Attachments ({{ $typesWithCounts[$currentType]['filled'] ?? 0 }}/{{ $typesWithCounts[$currentType]['total'] ?? 0 }})</h2>
 
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="mt-8 flow-root">
@@ -428,35 +428,35 @@
                                 <tr>
                                     <th
                                         scope="col"
-                                        class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold whitespace-nowrap text-gray-900 sm:pl-0 dark:text-white"
+                                        class="whitespace-nowrap py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0 dark:text-white"
                                     >Name</th>
                                     <th
                                         scope="col"
-                                        class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900 dark:text-white"
+                                        class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
                                     >Weapons</th>
                                     <th
                                         scope="col"
-                                        class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900 dark:text-white"
+                                        class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
                                     >Base 34</th>
                                     <th
                                         scope="col"
-                                        class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900 dark:text-white"
+                                        class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
                                     ></th>
                                     <th
                                         scope="col"
-                                        class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900 dark:text-white"
+                                        class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
                                     >Base 10</th>
                                     <th
                                         scope="col"
-                                        class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900 dark:text-white"
+                                        class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
                                     >Weapon Unlock</th>
                                     <th
                                         scope="col"
-                                        class="px-2 py-3.5 text-left text-sm font-semibold whitespace-nowrap text-gray-900 dark:text-white"
+                                        class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
                                     >Notes</th>
                                     <th
                                         scope="col"
-                                        class="py-3.5 pr-4 pl-3 whitespace-nowrap sm:pr-0"
+                                        class="whitespace-nowrap py-3.5 pl-3 pr-4 sm:pr-0"
                                     >
                                         <span>Updated At</span>
                                     </th>
@@ -466,19 +466,19 @@
                                 @foreach ($attachments as $attachment)
                                     <tr>
                                         <td
-                                            class="py-2 pr-3 pl-4 text-sm whitespace-nowrap text-gray-500 sm:pl-0 dark:text-gray-400"
+                                            class="whitespace-nowrap py-2 pl-4 pr-3 text-sm text-gray-500 sm:pl-0 dark:text-gray-400"
                                             @click="$wire.setAttachment({{ $attachment->id }}).then(() => { isOpen = false;$refs.codeInput.focus() })"
                                         >
                                             <div class="text-sm text-gray-400">{{ $attachment->name }}</div>
                                             <div>{{ $attachment->label }}</div>
                                         </td>
-                                        <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400 uppercase">{{ $attachment->weapons?->count() }}</td>
-                                        <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400 uppercase">{{ $attachment->code_base34 }}</td>
-                                        <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $attachment->validBase34() === false ? '⚠️' : '' }}</td>
-                                        <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $attachment->code_base10 }}</td>
-                                        <td class="px-2 py-2 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $attachment->weapon_unlock }}</td>
-                                        <td class="px-2 py-2 text-sm text-gray-500 dark:text-gray-400 ">{{ $attachment->notes }}</td>
-                                        <td class="px-2 py-2 text-sm text-center whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $attachment->updated_at }}</td>
+                                        <td class="whitespace-nowrap px-2 py-2 text-sm uppercase text-gray-500 dark:text-gray-400">{{ $attachment->weapons?->count() }}</td>
+                                        <td class="whitespace-nowrap px-2 py-2 text-sm uppercase text-gray-500 dark:text-gray-400">{{ $attachment->code_base34 }}</td>
+                                        <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500 dark:text-gray-400">{{ $attachment->validBase34() === false ? '⚠️' : '' }}</td>
+                                        <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500 dark:text-gray-400">{{ $attachment->code_base10 }}</td>
+                                        <td class="whitespace-nowrap px-2 py-2 text-sm text-gray-500 dark:text-gray-400">{{ $attachment->weapon_unlock }}</td>
+                                        <td class="px-2 py-2 text-sm text-gray-500 dark:text-gray-400">{{ $attachment->notes }}</td>
+                                        <td class="whitespace-nowrap px-2 py-2 text-center text-sm text-gray-500 dark:text-gray-400">{{ $attachment->updated_at }}</td>
 
                                     </tr>
                                 @endforeach

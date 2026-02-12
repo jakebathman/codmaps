@@ -15,13 +15,13 @@
 
             {{-- Modal panel --}}
             <div class="flex min-h-full items-center justify-center p-4">
-                <div class="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 dark:bg-gray-800">
                     {{-- Close button --}}
                     <div class="absolute right-0 top-0 pr-4 pt-4">
                         <button
                             type="button"
                             wire:click="closeModal"
-                            class="rounded-md bg-white dark:bg-gray-800 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-gray-800"
                         >
                             <span class="sr-only">Close</span>
                             <svg
@@ -98,7 +98,7 @@
                                         <select
                                             id="attachment-type"
                                             wire:model="type"
-                                            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:focus:outline-indigo-500 capitalize"
+                                            class="block w-full rounded-md bg-white px-3 py-1.5 text-base capitalize text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:focus:outline-indigo-500"
                                         >
                                             @foreach ($types as $attachmentType)
                                                 <option
@@ -130,14 +130,14 @@
                                             <svg
                                                 viewBox="0 0 14 14"
                                                 fill="none"
-                                                class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25"
+                                                class="group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25 pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white"
                                             >
                                                 <path
                                                     d="M3 8L6 11L11 3.5"
                                                     stroke-width="2"
                                                     stroke-linecap="round"
                                                     stroke-linejoin="round"
-                                                    class="opacity-0 group-has-checked:opacity-100"
+                                                    class="group-has-checked:opacity-100 opacity-0"
                                                 />
                                             </svg>
                                         </div>
@@ -171,7 +171,7 @@
                     </div>
 
                     {{-- Modal actions --}}
-                    <div class="mt-6 sm:flex sm:flex-row-reverse gap-3">
+                    <div class="mt-6 gap-3 sm:flex sm:flex-row-reverse">
                         <button
                             type="button"
                             wire:click="save"
@@ -180,7 +180,7 @@
                         <button
                             type="button"
                             wire:click="closeModal"
-                            class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20 sm:mt-0 sm:w-auto"
+                            class="inset-ring-1 inset-ring-gray-300 dark:inset-ring-white/5 mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 sm:mt-0 sm:w-auto dark:bg-white/10 dark:text-white dark:shadow-none dark:hover:bg-white/20"
                         >Cancel</button>
                     </div>
                 </div>

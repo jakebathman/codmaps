@@ -1,17 +1,17 @@
-<div class="bg-white dark:bg-gray-900 p-6 sm:p-10">
+<div class="bg-white p-6 sm:p-10 dark:bg-gray-900">
 
-    <div class="max-w-7xl mx-auto">
-        <h1 class="text-2xl font-bold mb-4">Overview</h1>
+    <div class="mx-auto max-w-7xl">
+        <h1 class="mb-4 text-2xl font-bold">Overview</h1>
         <div>
-            <h2 class="text-xl font-semibold mb-2">Weapons</h2>
+            <h2 class="mb-2 text-xl font-semibold">Weapons</h2>
             <table>
                 <thead>
                     <tr>
-                        <th class="text-left pr-4">Type</th>
-                        <th class="text-left pr-4">Name</th>
-                        <th class="text-left pr-4">%</th>
+                        <th class="pr-4 text-left">Type</th>
+                        <th class="pr-4 text-left">Name</th>
+                        <th class="pr-4 text-left">%</th>
                         @foreach ($attachmentTypes as $at)
-                            <th class="pr-4 capitalize whitespace-nowrap text-center">{{ $at }}</th>
+                            <th class="whitespace-nowrap pr-4 text-center capitalize">{{ $at }}</th>
                         @endforeach
                     </tr>
                 </thead>
@@ -20,14 +20,14 @@
                         <tr class="border-t border-gray-200 dark:border-gray-700">
                             <td class="pr-4 align-top">{{ $weapon->type }}</td>
                             <td class="pr-4 align-top">{{ $weapon->name }}</td>
-                            <td>{{ number_format($weapon->attachmentProgress(),0) }}%</td>
+                            <td>{{ number_format($weapon->attachmentProgress(), 0) }}%</td>
                             @foreach ($attachmentTypes as $at)
-                                <td class="pr-4 align-top w-20 text-center">
+                                <td class="w-20 pr-4 text-center align-top">
                                     @php
                                         $count = $weapon->attachments->where('type', $at)->count();
                                         $expected = $weapon->expected_attachment_counts[$at] ?? 0;
                                     @endphp
-                                    <span class="whitespace-nowrap {{ $expected === 0 ? 'text-gray-500 dark:text-gray-400' : ($count < $expected ? 'text-pink-300 dark:text-pink-300' : ($count > $expected ? 'text-red-600 dark:text-red-500 font-semibold' : 'text-green-600 dark:text-green-400 font-bold')) }}">
+                                    <span class="{{ $expected === 0 ? 'text-gray-500 dark:text-gray-400' : ($count < $expected ? 'text-pink-300 dark:text-pink-300' : ($count > $expected ? 'text-red-600 dark:text-red-500 font-semibold' : 'text-green-600 dark:text-green-400 font-bold')) }} whitespace-nowrap">
                                         {{ $count }} / {{ $expected }}
                                     </span>
                                 </td>

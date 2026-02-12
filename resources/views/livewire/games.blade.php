@@ -1,16 +1,16 @@
-<div class="px-4 sm:px-6 lg:px-8 py-10">
+<div class="px-4 py-10 sm:px-6 lg:px-8">
 
-    <div class="sm:flex sm:items-center pt-5">
+    <div class="pt-5 sm:flex sm:items-center">
         <div class="sm:flex-auto">
             <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Games</h1>
         </div>
-        <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
             <button
                 wire:cloak
                 wire:show="!showForm"
                 wire:click="$set('showForm', !$wire.showForm)"
                 type="button"
-                class="cursor-pointer block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
+                class="shadow-xs block cursor-pointer rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
             >Add game</button>
         </div>
     </div>
@@ -20,8 +20,8 @@
         wire:show="showForm"
     >
         @if ($errors->any())
-            <div class="p-4 mt-6 rounded bg-red-100 text-red-800 text-sm">
-                <ul class="list-disc pl-5 space-y-1">
+            <div class="mt-6 rounded bg-red-100 p-4 text-sm text-red-800">
+                <ul class="list-disc space-y-1 pl-5">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -31,7 +31,7 @@
 
         <form
             wire:submit.prevent="save"
-            class="flex justify-start mt-6 gap-8"
+            class="mt-6 flex justify-start gap-8"
         >
             <input
                 type="hidden"
@@ -83,7 +83,7 @@
 
                 <label
                     for="isActive"
-                    class="group relative block h-6 w-10 mt-2 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:transparent] has-checked:bg-indigo-500 dark:bg-gray-600 dark:has-checked:bg-indigo-600 cursor-pointer"
+                    class="has-checked:bg-indigo-500 dark:has-checked:bg-indigo-600 group relative mt-2 block h-6 w-10 cursor-pointer rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:transparent] dark:bg-gray-600"
                 >
                     <input
                         wire:model="isActive"
@@ -92,7 +92,7 @@
                         class="peer sr-only"
                     >
 
-                    <span class="absolute inset-y-0 start-0 m-1 grid size-4 place-content-center rounded-full bg-white text-gray-700 transition-[inset-inline-start] peer-checked:start-4 peer-checked:*:first:hidden *:last:hidden peer-checked:*:last:block dark:bg-gray-900 dark:text-gray-200">
+                    <span class="absolute inset-y-0 start-0 m-1 grid size-4 place-content-center rounded-full bg-white text-gray-700 transition-[inset-inline-start] *:last:hidden peer-checked:start-4 peer-checked:*:first:hidden peer-checked:*:last:block dark:bg-gray-900 dark:text-gray-200">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -130,12 +130,12 @@
             <div class="flex gap-2">
                 <button
                     type="submit"
-                    class="mt-7 cursor-pointer block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
+                    class="shadow-xs mt-7 block cursor-pointer rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
                 >Save game</button>
                 <button
                     wire:click="closeForm()"
                     type="button"
-                    class="mt-7 cursor-pointer block rounded-md bg-gray-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 dark:bg-gray-500 dark:hover:bg-gray-400 dark:focus-visible:outline-gray-500"
+                    class="shadow-xs mt-7 block cursor-pointer rounded-md bg-gray-600 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 dark:bg-gray-500 dark:hover:bg-gray-400 dark:focus-visible:outline-gray-500"
                 >Cancel</button>
             </div>
         </form>
@@ -151,7 +151,7 @@
                                 <tr>
                                     <th
                                         scope="col"
-                                        class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-3 dark:text-white"
+                                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3 dark:text-white"
                                     >Id</th>
                                     <th
                                         scope="col"
@@ -171,7 +171,7 @@
                                     >Is active</th>
                                     <th
                                         scope="col"
-                                        class="py-3.5 pr-4 pl-3 sm:pr-3"
+                                        class="py-3.5 pl-3 pr-4 sm:pr-3"
                                     >
                                         <span class="sr-only">Edit</span>
                                     </th>
@@ -183,12 +183,12 @@
                                         wire:key="game-{{ $game['id'] }}"
                                         class="{{ $gameId == $game['id'] ? 'bg-indigo-50 dark:bg-indigo-900' : '' }}"
                                     >
-                                        <td class="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-3 dark:text-white">{{ $game['id'] }} </td>
-                                        <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $game['key'] }} </td>
-                                        <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $game['name'] }} </td>
-                                        <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $game['filters']->count() }} </td>
-                                        <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">{{ $game['is_active'] ? 'Yes' : 'No' }}</td>
-                                        <td class="py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-3 cursor-pointer">
+                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3 dark:text-white">{{ $game['id'] }} </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $game['key'] }} </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $game['name'] }} </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $game['filters']->count() }} </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $game['is_active'] ? 'Yes' : 'No' }}</td>
+                                        <td class="cursor-pointer whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
                                             <button
                                                 wire:click="edit({{ $game['id'] }})"
                                                 class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
