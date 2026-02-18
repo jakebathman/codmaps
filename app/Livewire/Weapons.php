@@ -299,15 +299,25 @@ class Weapons extends Component
             return;
         }
 
-        $clone = $oldAttachment->replicate();
-        $clone->code_base34 = $code;
-        $clone->code_base10 = $this->base34ToBase10($code);
-        $clone->notes = null;
-        $clone->save();
+        // If the attachment being cloned doesn't have a code_base34
+        // simply update that record instead of making a new one
+        if ($oldAttachment->code_base34 === null) {
+            $oldAttachment->code_base34 = $code;
+            $oldAttachment->code_base10 = $this->base34ToBase10($code);
+            $oldAttachment->save();
 
-        // Unlink the old attachment from the weapon and link the new one
-        $this->weapon->attachments()->detach($oldAttachment);
-        $this->weapon->attachments()->attach($clone);
+            // No need to update the pivot table since the attachment ID is the same and already attached to the weapon
+        } else {
+            $clone = $oldAttachment->replicate();
+            $clone->code_base34 = $code;
+            $clone->code_base10 = $this->base34ToBase10($code);
+            $clone->notes = null;
+            $clone->save();
+
+            // Unlink the old attachment from the weapon and link the new one
+            $this->weapon->attachments()->detach($oldAttachment);
+            $this->weapon->attachments()->attach($clone);
+        }
 
         unset($this->weapon);
 
