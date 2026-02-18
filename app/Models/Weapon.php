@@ -40,6 +40,6 @@ class Weapon extends Model
 
     public function attachments(): BelongsToMany
     {
-        return $this->belongsToMany(Attachment::class)->withPivot('order')->orderBy('order');
+        return $this->belongsToMany(Attachment::class)->withPivot('order')->withTimestamps()->orderBy('order');
     }
 }

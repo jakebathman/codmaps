@@ -288,7 +288,7 @@
                     </div>
 
                     <div class="mt-4 max-w-3xl">
-                        @foreach ($this->weapon->attachments->where('type', $activeTab)->sortByDesc('updated_at') as $attachment)
+                        @foreach ($this->weapon->attachments->where('type', $activeTab)->sortByDesc('pivot.updated_at') as $attachment)
                             <div class="mt-2 grid grid-cols-2 grid-rows-2 items-center gap-x-10 rounded-md border border-gray-200 p-3 md:grid-cols-4 md:grid-rows-1 dark:border-gray-700">
                                 <div>
                                     <div class="font-medium text-gray-900 dark:text-white">{{ $attachment->name }}</div>
