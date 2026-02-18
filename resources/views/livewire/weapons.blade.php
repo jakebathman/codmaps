@@ -223,7 +223,7 @@
                                         tabindex="0"
                                     >
                                         <div class="flex justify-between">
-                                            <div>{{ $result->name }} ({{ $result->label }})</div>
+                                            <div>{{ $result->name }} ({{ $result->label }}) {{ $result->prestige === true ? '💎' : '' }}</div>
                                             <div class="text-sm text-gray-400 dark:text-gray-500">{{ $result->formatCode() }}</div>
                                         </div>
                                     </div>
@@ -270,7 +270,7 @@
                             <div class="border-b border-gray-200 dark:border-white/10">
                                 <nav
                                     aria-label="Tabs"
-                                    class="no-scrollbar -mb-px flex max-w-3xl space-x-3 overflow-x-auto"
+                                    class="no-scrollbar -mb-px flex space-x-3 overflow-x-auto"
                                 >
                                     @foreach ($attachmentTypes as $t)
                                         <a

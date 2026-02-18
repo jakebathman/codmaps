@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             ->get('https://randomcod.com/api/data');
 
         if (! $response->successful()) {
-            throw new \Exception('Failed to fetch data from production site: '.$response->body());
+            throw new \Exception('Failed to fetch data from production site: ' . $response->body());
         }
 
         $data = $response->json();
@@ -92,6 +92,8 @@ class DatabaseSeeder extends Seeder
                 'attachment_id' => $aw['attachment_id'],
                 'weapon_id' => $aw['weapon_id'],
                 'order' => $aw['order'],
+                'created_at' => $aw['created_at'],
+                'updated_at' => $aw['updated_at'],
             ]);
         }
 

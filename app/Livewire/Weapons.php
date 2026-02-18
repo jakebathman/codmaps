@@ -312,6 +312,7 @@ class Weapons extends Component
             $clone->code_base34 = $code;
             $clone->code_base10 = $this->base34ToBase10($code);
             $clone->notes = null;
+            $clone->prestige = false;
             $clone->save();
 
             // Unlink the old attachment from the weapon and link the new one
