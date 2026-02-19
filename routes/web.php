@@ -31,12 +31,12 @@ Route::group(['middleware' => ['github.auth']], function () {
     Route::view('filters', 'filters')->name('filters')->defaults('nav', 'Filters');
     Route::view('games', 'games')->name('games')->defaults('nav', 'Games');
 
-    Route::view('codes', 'codes')->name('codes')->defaults('nav', 'Codes');
+    Route::view('codes', 'codes')->name('codes')->defaults('nav', 'Attachments');
     Route::view('weapons', 'weapons')->name('weapons')->defaults('nav', 'Weapons');
-    Route::view('binary', 'binary')->name('binary')->defaults('nav', 'Binary');
+    Route::view('binary', 'binary')->name('binary');
     Route::view('tools', 'tools')->name('tools')->defaults('nav', 'Tools');
 
-    Route::view('decode', 'decode')->name('decode');
+    Route::view('decode', 'decode')->name('decode')->defaults('nav', 'Decode');
 });
 
 Route::view('data', 'data');
